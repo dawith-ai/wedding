@@ -1,0 +1,345 @@
+import type { WeddingData, ThemeId } from '../../types';
+import { ThemePicker } from './ThemePicker';
+import { ImageUpload } from './ImageUpload';
+import { PhotoListEditor } from './PhotoListEditor';
+import { AccountEditor } from './AccountEditor';
+import { hasImgurClientId, setImgurClientId } from '../../lib/imgur';
+import {
+  getFirebaseConfig,
+  isFirebaseEnabled,
+  setFirebaseConfig,
+} from '../../lib/firebase';
+import { useState } from 'react';
+
+interface Props {
+  data: WeddingData;
+  onChange: (next: WeddingData) => void;
+  onPublish: () => void;
+}
+
+export function BuilderForm({ data, onChange, onPublish }: Props) {
+  const [showSettings, setShowSettings] = useState(false);
+  const [imgurId, setImgurId] = useState(localStorage.getItem('imgur_client_id') || '');
+  const [fb, setFb] = useState(
+    getFirebaseConfig() || { apiKey: '', authDomain: '', projectId: '' }
+  );
+
+  function set<K extends keyof WeddingData>(k: K, v: WeddingData[K]) {
+    onChange({ ...data, [k]: v });
+  }
+
+  return (
+    <div className="builder-form">
+      <div className="builder-toolbar">
+        <h1>청첩장 만들기</h1>
+        <button className="secondary" type="button" onClick={() => setShowSettings(true)}>설정</button>
+        <button type="button" onClick={onPublish}>공유 링크 생성</button>
+      </div>
+
+      <div className="note-box">
+        💡 입력하시는 모든 내용은 <b>이 브라우저에만</b> 저장됩니다. 공유 링크를 만들면 모든 정보가 URL에 인코딩되어 누구나 그 링크로 청첩장을 볼 수 있어요.
+      </div>
+
+      <h2>1. 테마 선택</h2>
+      <ThemePicker value={data.theme} onChange={(id: ThemeId) => set('theme', id)} />
+
+      <h2>2. 신랑·신부</h2>
+      <div className="row-2">
+        <div className="field">
+          <label>신랑 이름</label>
+          <input value={data.groom.name} onChange={(e) => set('groom', { ...data.groom, name: e.target.value })} />
+        </div>
+        <div className="field">
+          <label>신부 이름</label>
+          <input value={data.bride.name} onChange={(e) => set('bride', { ...data.bride, name: e.target.value })} />
+        </div>
+      </div>
+      <div className="row-2">
+        <div>
+          <div className="field">
+            <label>신랑 아버지</label>
+            <input value={data.groom.father} onChange={(e) => set('groom', { ...data.groom, father: e.target.value })} />
+          </div>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={!!data.groom.fatherDeceased}
+              onChange={(e) => set('groom', { ...data.groom, fatherDeceased: e.target.checked })}
+            />
+            故 표시
+          </label>
+          <div className="field">
+            <label>신랑 어머니</label>
+            <input value={data.groom.mother} onChange={(e) => set('groom', { ...data.groom, mother: e.target.value })} />
+          </div>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={!!data.groom.motherDeceased}
+              onChange={(e) => set('groom', { ...data.groom, motherDeceased: e.target.checked })}
+            />
+            故 표시
+          </label>
+        </div>
+        <div>
+          <div className="field">
+            <label>신부 아버지</label>
+            <input value={data.bride.father} onChange={(e) => set('bride', { ...data.bride, father: e.target.value })} />
+          </div>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={!!data.bride.fatherDeceased}
+              onChange={(e) => set('bride', { ...data.bride, fatherDeceased: e.target.checked })}
+            />
+            故 표시
+          </label>
+          <div className="field">
+            <label>신부 어머니</label>
+            <input value={data.bride.mother} onChange={(e) => set('bride', { ...data.bride, mother: e.target.value })} />
+          </div>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={!!data.bride.motherDeceased}
+              onChange={(e) => set('bride', { ...data.bride, motherDeceased: e.target.checked })}
+            />
+            故 표시
+          </label>
+        </div>
+      </div>
+
+      <h2>3. 결혼식 일시·장소</h2>
+      <div className="row-2">
+        <div className="field">
+          <label>날짜</label>
+          <input type="date" value={data.wedding.date} onChange={(e) => set('wedding', { ...data.wedding, date: e.target.value })} />
+        </div>
+        <div className="field">
+          <label>시간</label>
+          <input type="time" value={data.wedding.time} onChange={(e) => set('wedding', { ...data.wedding, time: e.target.value })} />
+        </div>
+      </div>
+      <div className="field">
+        <label>예식장 이름</label>
+        <input value={data.wedding.venue} onChange={(e) => set('wedding', { ...data.wedding, venue: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>층/홀 (선택)</label>
+        <input value={data.wedding.venueDetail || ''} onChange={(e) => set('wedding', { ...data.wedding, venueDetail: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>주소</label>
+        <input value={data.wedding.address} onChange={(e) => set('wedding', { ...data.wedding, address: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>예식장 전화번호 (선택)</label>
+        <input value={data.wedding.phone || ''} onChange={(e) => set('wedding', { ...data.wedding, phone: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>카카오맵 링크 (선택, 비워두면 자동)</label>
+        <input value={data.wedding.mapKakao || ''} onChange={(e) => set('wedding', { ...data.wedding, mapKakao: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>네이버지도 링크 (선택)</label>
+        <input value={data.wedding.mapNaver || ''} onChange={(e) => set('wedding', { ...data.wedding, mapNaver: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>T맵 링크 (선택)</label>
+        <input value={data.wedding.mapTmap || ''} onChange={(e) => set('wedding', { ...data.wedding, mapTmap: e.target.value })} />
+      </div>
+
+      <h2>4. 메인 사진 & 인사말</h2>
+      <div className="field">
+        <label>대표 사진 (세로 비율 권장)</label>
+        <ImageUpload value={data.hero} onChange={(url) => set('hero', url)} aspectHint="세로 3:4 비율 추천" />
+      </div>
+      <div className="field">
+        <label>인사말 제목</label>
+        <input value={data.greeting.title} onChange={(e) => set('greeting', { ...data.greeting, title: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>인사말 본문</label>
+        <textarea value={data.greeting.body} onChange={(e) => set('greeting', { ...data.greeting, body: e.target.value })} />
+      </div>
+
+      <h2>5. 우리의 이야기 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.story.enabled}
+          onChange={(e) => set('story', { ...data.story, enabled: e.target.checked })}
+        />
+        스토리 섹션 표시
+      </label>
+      {data.story.enabled && (
+        <>
+          <div className="field">
+            <label>제목</label>
+            <input value={data.story.title} onChange={(e) => set('story', { ...data.story, title: e.target.value })} />
+          </div>
+          <div className="field">
+            <label>본문</label>
+            <textarea value={data.story.body} onChange={(e) => set('story', { ...data.story, body: e.target.value })} />
+          </div>
+          <div className="field">
+            <label>스토리 사진 (최대 4장)</label>
+            <PhotoListEditor
+              photos={data.story.photos}
+              onChange={(photos) => set('story', { ...data.story, photos })}
+              max={4}
+            />
+          </div>
+        </>
+      )}
+
+      <h2>6. 갤러리</h2>
+      <PhotoListEditor photos={data.gallery} onChange={(p) => set('gallery', p)} max={24} />
+
+      <h2>7. 약도 이미지 (선택)</h2>
+      <ImageUpload value={data.mapImage || ''} onChange={(url) => set('mapImage', url)} aspectHint="가로형 16:9 추천" />
+
+      <h2>8. 마음 전하실 곳 (계좌)</h2>
+      <div style={{ marginBottom: 18 }}>
+        <p className="muted-text" style={{ marginBottom: 6 }}>신랑측</p>
+        <AccountEditor list={data.accounts.groom} onChange={(groom) => set('accounts', { ...data.accounts, groom })} />
+      </div>
+      <div>
+        <p className="muted-text" style={{ marginBottom: 6 }}>신부측</p>
+        <AccountEditor list={data.accounts.bride} onChange={(bride) => set('accounts', { ...data.accounts, bride })} />
+      </div>
+
+      <h2>9. 방명록 / RSVP</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.guestbook.enabled}
+          onChange={(e) => set('guestbook', { enabled: e.target.checked })}
+        />
+        방명록 표시
+      </label>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.rsvp.enabled}
+          onChange={(e) => set('rsvp', { ...data.rsvp, enabled: e.target.checked })}
+        />
+        참석 의사(RSVP) 표시
+      </label>
+      {data.rsvp.enabled && (
+        <div className="field">
+          <label>RSVP 마감일 (선택)</label>
+          <input type="date" value={data.rsvp.deadline || ''} onChange={(e) => set('rsvp', { ...data.rsvp, deadline: e.target.value })} />
+        </div>
+      )}
+      {!isFirebaseEnabled() && (
+        <p className="muted-text">
+          ※ 방명록·RSVP는 기본적으로 보는 사람의 기기에만 저장됩니다. 모든 응답을 한 곳에 모으려면 설정에서 Firebase를 연결해주세요.
+        </p>
+      )}
+
+      <h2>10. 배경음악 / 옵션</h2>
+      <div className="field">
+        <label>BGM URL (선택, mp3 직링크)</label>
+        <input
+          value={data.bgm || ''}
+          onChange={(e) => set('bgm', e.target.value)}
+          placeholder="https://...mp3"
+        />
+        <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+          모바일에서는 자동재생이 막혀 있어 우측 상단 버튼으로 켜야 합니다
+        </div>
+      </div>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.useCurtain}
+          onChange={(e) => set('useCurtain', e.target.checked)}
+        />
+        커튼 인트로 사용
+      </label>
+
+      <h2>11. 공유 정보 (메타)</h2>
+      <div className="field">
+        <label>공유 시 제목</label>
+        <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>공유 시 설명</label>
+        <input value={data.meta.description} onChange={(e) => set('meta', { ...data.meta, description: e.target.value })} />
+      </div>
+
+      {showSettings && (
+        <div className="modal-overlay" onClick={() => setShowSettings(false)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3>환경설정</h3>
+            <p className="muted-text" style={{ marginBottom: 18 }}>
+              브라우저에만 저장되며 청첩장 데이터에 포함되지 않습니다.
+            </p>
+
+            <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Imgur Client ID (이미지 업로드)</h4>
+            <p className="muted-text" style={{ marginBottom: 6 }}>
+              <a href="https://api.imgur.com/oauth2/addclient" target="_blank" rel="noopener" style={{ color: '#3a6' }}>
+                imgur 개발자 센터
+              </a>에서 무료 발급. "Anonymous usage without user authorization" 선택.
+            </p>
+            <input
+              value={imgurId}
+              onChange={(e) => setImgurId(e.target.value)}
+              placeholder="546c2..."
+              style={{
+                width: '100%', background: '#fafafa', border: '1px solid #e2e2e2',
+                borderRadius: 6, padding: '10px 12px', fontSize: 13, marginBottom: 18,
+              }}
+            />
+
+            <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Firebase Firestore (방명록·RSVP 공유)</h4>
+            <p className="muted-text" style={{ marginBottom: 6 }}>
+              Firestore 보안 규칙을 공개 read/write로 설정해야 합니다 (개인 청첩장이라 무방).
+            </p>
+            <input
+              value={fb.apiKey}
+              onChange={(e) => setFb({ ...fb, apiKey: e.target.value })}
+              placeholder="apiKey"
+              style={{ width: '100%', background: '#fafafa', border: '1px solid #e2e2e2', borderRadius: 6, padding: '8px 10px', fontSize: 12, marginBottom: 6 }}
+            />
+            <input
+              value={fb.authDomain}
+              onChange={(e) => setFb({ ...fb, authDomain: e.target.value })}
+              placeholder="authDomain"
+              style={{ width: '100%', background: '#fafafa', border: '1px solid #e2e2e2', borderRadius: 6, padding: '8px 10px', fontSize: 12, marginBottom: 6 }}
+            />
+            <input
+              value={fb.projectId}
+              onChange={(e) => setFb({ ...fb, projectId: e.target.value })}
+              placeholder="projectId"
+              style={{ width: '100%', background: '#fafafa', border: '1px solid #e2e2e2', borderRadius: 6, padding: '8px 10px', fontSize: 12, marginBottom: 6 }}
+            />
+
+            <div className="actions">
+              <button onClick={() => setShowSettings(false)}>닫기</button>
+              <button
+                className="primary"
+                onClick={() => {
+                  setImgurClientId(imgurId);
+                  if (fb.apiKey && fb.projectId) {
+                    setFirebaseConfig(fb);
+                  } else {
+                    setFirebaseConfig(null);
+                  }
+                  setShowSettings(false);
+                }}
+              >
+                저장
+              </button>
+            </div>
+            <p className="muted-text" style={{ marginTop: 14 }}>
+              현재 상태: 이미지 업로드 {hasImgurClientId() ? '✓ 활성' : '✗ 비활성'} · Firebase{' '}
+              {isFirebaseEnabled() ? '✓ 활성' : '✗ 비활성 (이 기기에만 저장)'}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

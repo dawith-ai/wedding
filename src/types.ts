@@ -1,0 +1,104 @@
+export type ThemeId =
+  | 'original-warm'
+  | 'classic-elegant'
+  | 'modern-minimal'
+  | 'romantic-flower'
+  | 'nature-green'
+  | 'luxury-gold'
+  | 'simple-clean'
+  | 'vintage-film'
+  | 'watercolor-soft'
+  | 'midnight-navy'
+  | 'pastel-dream'
+  | 'korean-traditional';
+
+export interface Person {
+  name: string;
+  father: string;
+  mother: string;
+  fatherDeceased?: boolean;
+  motherDeceased?: boolean;
+}
+
+export interface Account {
+  role: string;
+  bank: string;
+  number: string;
+}
+
+export interface WeddingData {
+  theme: ThemeId;
+  useCurtain: boolean;
+  bgm?: string;
+
+  groom: Person;
+  bride: Person;
+
+  wedding: {
+    date: string;
+    time: string;
+    venue: string;
+    venueDetail?: string;
+    address: string;
+    phone?: string;
+    mapKakao?: string;
+    mapNaver?: string;
+    mapTmap?: string;
+  };
+
+  greeting: {
+    title: string;
+    body: string;
+  };
+
+  story: {
+    enabled: boolean;
+    title: string;
+    body: string;
+    photos: string[];
+  };
+
+  hero: string;
+  gallery: string[];
+  mapImage?: string;
+  ogImage?: string;
+
+  accounts: {
+    groom: Account[];
+    bride: Account[];
+  };
+
+  guestbook: {
+    enabled: boolean;
+  };
+
+  rsvp: {
+    enabled: boolean;
+    deadline?: string;
+  };
+
+  meta: {
+    title: string;
+    description: string;
+  };
+}
+
+export interface GuestbookEntry {
+  id: string;
+  name: string;
+  message: string;
+  password: string;
+  createdAt: number;
+}
+
+export interface RsvpEntry {
+  id: string;
+  side: 'groom' | 'bride';
+  name: string;
+  attending: 'yes' | 'no';
+  count: number;
+  meal: 'yes' | 'no' | 'undecided';
+  phone?: string;
+  message?: string;
+  createdAt: number;
+}
