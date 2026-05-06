@@ -59,6 +59,7 @@ export interface WeddingData {
   };
 
   hero: string;
+  videoHero?: string;
   gallery: string[];
   mapImage?: string;
   ogImage?: string;
@@ -75,6 +76,21 @@ export interface WeddingData {
   rsvp: {
     enabled: boolean;
     deadline?: string;
+  };
+
+  likes: {
+    enabled: boolean;
+  };
+
+  timeline: {
+    enabled: boolean;
+    title: string;
+    items: Array<{ time: string; label: string; note?: string }>;
+  };
+
+  shuttle: {
+    enabled: boolean;
+    info: string;
   };
 
   meta: {

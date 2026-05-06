@@ -1,0 +1,1127 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme signature components — distinct structural identity
+   per theme. Original implementation based on common
+   editorial / wedding-stationery patterns.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Fade-up scroll animation ── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms var(--easing-decel, cubic-bezier(0.16, 1, 0.3, 1)),
+              transform 700ms var(--easing-decel, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: opacity, transform;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fade-up { opacity: 1; transform: none; transition: none; }
+}
+
+/* ═══ Calendar Widget ═══ */
+.cal-widget {
+  max-width: 320px;
+  margin: 0 auto;
+  text-align: center;
+}
+.cal-head {
+  font-family: var(--font-display);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: var(--space-md);
+}
+.cal-month {
+  font-size: var(--t-xl);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text);
+  font-weight: 400;
+}
+.cal-year {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-uppercase);
+  font-feature-settings: "tnum","lnum";
+}
+.cal-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--divider);
+}
+.cal-week .cal-w { padding: 4px 0; }
+.cal-week .cal-w.sun { color: #c45151; }
+.cal-week .cal-w.sat { color: #5170c4; }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-feature-settings: "tnum","lnum";
+  font-size: var(--t-sm);
+  color: var(--text);
+  position: relative;
+}
+.cal-cell.sun { color: #c45151; }
+.cal-cell.sat { color: #5170c4; }
+.cal-cell.empty { visibility: hidden; }
+.cal-cell.marked .cal-num {
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  font-weight: 500;
+}
+.cal-cell.marked .cal-mark {
+  position: absolute;
+  inset: 14%;
+  background: var(--accent);
+  border-radius: 50%;
+  z-index: 1;
+}
+[data-theme="modern-minimal"] .cal-cell.marked .cal-mark { border-radius: 0; }
+.cal-caption {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-md);
+  letter-spacing: var(--tracking-uppercase);
+}
+
+/* ═══════════════════════════════════════════
+   0. Signature media primitives
+   ═══════════════════════════════════════════ */
+.letterpress-photo img,
+.letterpress-photo video,
+.minimal-photo img,
+.minimal-photo video,
+.garden-photo img,
+.garden-photo video,
+.watercolor-photo img,
+.watercolor-photo video,
+.poster-photo img,
+.poster-photo video,
+.monogram-photo img,
+.monogram-photo video,
+.arch-photo img,
+.arch-photo video,
+.const-photo img,
+.const-photo video,
+.hanji-photo img,
+.hanji-photo video,
+.sticker-photo img,
+.sticker-photo video,
+.cinema-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════
+   1. Warm Letterpress (original-warm)
+   ═══════════════════════════════════════════ */
+.hero--letterpress {
+  padding: 32px 24px 44px;
+  background:
+    repeating-linear-gradient(90deg, rgba(184, 99, 64, 0.035) 0 1px, transparent 1px 18px),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+}
+.letterpress-card {
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 38px 28px 32px;
+  text-align: center;
+  color: var(--text);
+  background: color-mix(in srgb, var(--card) 76%, var(--bg));
+  border: 1px solid var(--divider);
+  box-shadow: inset 0 0 0 8px rgba(255, 255, 255, 0.28), var(--shadow);
+}
+.letterpress-label {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--t-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.letterpress-rule {
+  width: 64px;
+  height: 1px;
+  margin: 0 auto var(--space-md);
+  background: var(--accent);
+}
+.letterpress-names {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 42px;
+  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+}
+.letterpress-names em {
+  font-size: 0.55em;
+  font-weight: 300;
+  color: var(--accent);
+}
+.letterpress-date {
+  margin: var(--space-sm) 0 var(--space-md);
+  color: var(--accent);
+  font-feature-settings: "tnum","lnum";
+  letter-spacing: var(--tracking-uppercase);
+}
+.letterpress-photo {
+  width: 72%;
+  aspect-ratio: 4 / 5;
+  margin: 0 auto var(--space-md);
+  overflow: hidden;
+  border: 1px solid var(--divider);
+  background: var(--bg-alt);
+}
+.letterpress-photo img,
+.letterpress-photo video {
+  filter: sepia(0.12) saturate(1.02);
+}
+.letterpress-full-date,
+.letterpress-venue {
+  margin: 0 0 4px;
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   2. Minimal Split (modern-minimal)
+   ═══════════════════════════════════════════ */
+.hero--minimal-split {
+  display: grid;
+  min-height: 620px;
+  padding: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
+}
+.minimal-copy {
+  padding: 42px 28px 24px;
+  align-self: end;
+}
+.minimal-index,
+.minimal-date,
+.minimal-meta {
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-uppercase);
+  font-feature-settings: "tnum","lnum";
+}
+.minimal-names {
+  display: grid;
+  gap: 2px;
+  margin: var(--space-lg) 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: 50px;
+  font-weight: 200;
+  line-height: 0.98;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.minimal-photo {
+  width: calc(100% - 56px);
+  aspect-ratio: 3 / 4;
+  margin: 0 28px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+.minimal-photo img,
+.minimal-photo video {
+  filter: grayscale(1) contrast(1.06);
+}
+.minimal-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 28px 34px;
+  border-top: 1px solid var(--divider);
+}
+.minimal-meta span:last-child {
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════
+   3. Botanical Vow (nature-green)
+   ═══════════════════════════════════════════ */
+.hero--garden {
+  position: relative;
+  padding: 54px 24px 44px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(126, 148, 114, 0.08), transparent 45%),
+    var(--bg);
+}
+.garden-wreath {
+  position: absolute;
+  inset: 24px;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.garden-wreath span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 28px;
+  border-radius: 100% 0 100% 0;
+  background: var(--accent);
+  transform-origin: 0 150px;
+}
+.garden-wreath span:nth-child(1) { transform: rotate(0deg) translateY(-150px); }
+.garden-wreath span:nth-child(2) { transform: rotate(20deg) translateY(-150px); }
+.garden-wreath span:nth-child(3) { transform: rotate(40deg) translateY(-150px); }
+.garden-wreath span:nth-child(4) { transform: rotate(60deg) translateY(-150px); }
+.garden-wreath span:nth-child(5) { transform: rotate(80deg) translateY(-150px); }
+.garden-wreath span:nth-child(6) { transform: rotate(100deg) translateY(-150px); }
+.garden-wreath span:nth-child(7) { transform: rotate(120deg) translateY(-150px); }
+.garden-wreath span:nth-child(8) { transform: rotate(140deg) translateY(-150px); }
+.garden-wreath span:nth-child(9) { transform: rotate(160deg) translateY(-150px); }
+.garden-wreath span:nth-child(10) { transform: rotate(180deg) translateY(-150px); }
+.garden-wreath span:nth-child(11) { transform: rotate(200deg) translateY(-150px); }
+.garden-wreath span:nth-child(12) { transform: rotate(220deg) translateY(-150px); }
+.garden-wreath span:nth-child(13) { transform: rotate(240deg) translateY(-150px); }
+.garden-wreath span:nth-child(14) { transform: rotate(260deg) translateY(-150px); }
+.garden-wreath span:nth-child(15) { transform: rotate(280deg) translateY(-150px); }
+.garden-wreath span:nth-child(16) { transform: rotate(300deg) translateY(-150px); }
+.garden-wreath span:nth-child(17) { transform: rotate(320deg) translateY(-150px); }
+.garden-wreath span:nth-child(18) { transform: rotate(340deg) translateY(-150px); }
+.garden-photo {
+  position: relative;
+  width: 68%;
+  aspect-ratio: 1;
+  margin: 0 auto var(--space-md);
+  overflow: hidden;
+  border-radius: 50%;
+  border: 10px solid color-mix(in srgb, var(--bg) 78%, white);
+  background: var(--bg-alt);
+  box-shadow: var(--shadow);
+}
+.garden-photo img,
+.garden-photo video {
+  filter: saturate(0.9) brightness(1.02);
+}
+.garden-copy {
+  position: relative;
+  text-align: center;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.garden-label {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-uppercase);
+  color: var(--accent);
+}
+.garden-names {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--t-xl);
+  line-height: 1.15;
+  font-weight: 400;
+  color: var(--text);
+}
+.garden-names em {
+  color: var(--accent);
+  font-weight: 300;
+  font-style: italic;
+  margin: 0 8px;
+}
+.garden-date,
+.garden-venue {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  font-size: var(--t-sm);
+}
+
+/* ═══════════════════════════════════════════
+   4. Watercolor Wash (watercolor-soft)
+   ═══════════════════════════════════════════ */
+.hero--watercolor-card {
+  padding: 34px 24px 44px;
+  background:
+    radial-gradient(circle at 22% 12%, rgba(167, 139, 191, 0.20), transparent 32%),
+    radial-gradient(circle at 78% 28%, rgba(232, 185, 192, 0.18), transparent 30%),
+    var(--bg);
+}
+.watercolor-paper {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 38px 28px 34px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(167, 139, 191, 0.22);
+  overflow: hidden;
+}
+.watercolor-bloom {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(18px);
+  opacity: 0.5;
+}
+.bloom-a {
+  width: 140px;
+  height: 110px;
+  left: -44px;
+  top: 18px;
+  background: #d8c8e3;
+}
+.bloom-b {
+  width: 120px;
+  height: 130px;
+  right: -38px;
+  bottom: 34px;
+  background: #e8b9c0;
+}
+.watercolor-script {
+  position: relative;
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-script, var(--font-display));
+  font-size: var(--t-2xl);
+  line-height: 0.95;
+  color: var(--accent);
+}
+.watercolor-photo {
+  position: relative;
+  width: 74%;
+  aspect-ratio: 4 / 5;
+  margin: 0 auto var(--space-md);
+  overflow: hidden;
+  border-radius: 26px 26px 6px 6px;
+  background: var(--bg-alt);
+  box-shadow: 0 10px 28px rgba(140, 110, 170, 0.12);
+}
+.watercolor-photo img,
+.watercolor-photo video {
+  filter: saturate(0.86) brightness(1.04);
+}
+.watercolor-names {
+  position: relative;
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--t-xl);
+  font-weight: 700;
+  color: var(--text);
+}
+.watercolor-names em {
+  margin: 0 8px;
+  color: var(--accent);
+  font-weight: 400;
+  font-style: italic;
+}
+.watercolor-date,
+.watercolor-venue {
+  position: relative;
+  margin: 0 0 4px;
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   5. Typography Poster (simple-clean)
+   ═══════════════════════════════════════════ */
+.hero--poster {
+  padding: 64px 28px 40px;
+  background: var(--bg);
+}
+.poster-stage {
+  text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.poster-eyebrow {
+  font-size: var(--t-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--text-muted);
+  font-feature-settings: "tnum","lnum";
+  margin: 0 0 var(--space-xl);
+}
+.poster-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: 56px;
+  line-height: 0.95;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  text-transform: uppercase;
+}
+@media (min-width: 480px) { .poster-stack { font-size: 76px; } }
+.poster-stack .poster-amp {
+  font-style: italic;
+  font-weight: 300;
+  font-size: 0.6em;
+  opacity: 0.6;
+}
+.poster-tag {
+  margin: var(--space-md) 0 var(--space-lg);
+  font-size: var(--t-md);
+  font-weight: 300;
+  letter-spacing: 0.6em;
+  text-indent: 0.6em;
+  color: var(--text);
+  text-align: center;
+}
+.poster-photo {
+  width: 56%;
+  margin: 0 auto var(--space-lg);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--bg-alt);
+}
+.poster-photo img,
+.poster-photo video { width: 100%; height: 100%; object-fit: cover; }
+.poster-bottom {
+  font-size: var(--t-sm);
+  color: var(--text);
+  letter-spacing: var(--tracking-wide);
+  font-feature-settings: "tnum","lnum";
+  margin: 0 0 4px;
+}
+.poster-venue {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   2. Polaroid Scatter (vintage-film)
+   ═══════════════════════════════════════════ */
+.hero--polaroid {
+  padding: 56px 24px 40px;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(196, 149, 106, 0.07) 0, transparent 35%),
+    radial-gradient(circle at 75% 70%, rgba(60, 40, 20, 0.06) 0, transparent 35%),
+    var(--bg);
+  text-align: center;
+}
+.polaroid-eyebrow {
+  font-family: 'Caveat', 'Gowun Batang', cursive;
+  font-size: var(--t-md);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin: 0 0 var(--space-md);
+}
+.polaroid-deck {
+  position: relative;
+  height: 360px;
+  width: 100%;
+  margin: 0 auto var(--space-lg);
+}
+.polaroid {
+  position: absolute;
+  width: 60%;
+  max-width: 240px;
+  aspect-ratio: 3 / 4;
+  background: #fbf3e1;
+  padding: 10px 10px 38px;
+  box-shadow: 0 8px 24px rgba(60, 40, 20, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  left: 50%;
+  top: 50%;
+}
+.polaroid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.45) saturate(0.85) contrast(1.05);
+  background: #ddd;
+}
+.polaroid-caption {
+  position: absolute;
+  bottom: 8px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: 'Caveat', 'Gowun Batang', cursive;
+  font-size: var(--t-md);
+  color: #4a3a28;
+  letter-spacing: 0.02em;
+}
+.polaroid-0 { transform: translate(-50%, -50%) rotate(-9deg); z-index: 1; }
+.polaroid-1 { transform: translate(-50%, -50%) rotate(6deg) translateX(8%); z-index: 2; }
+.polaroid-2 { transform: translate(-50%, -50%) rotate(-3deg) translate(-12%, 6%); z-index: 3; }
+
+.polaroid-names {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-2xl);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+  margin: 0 0 12px;
+}
+.polaroid-names em {
+  font-style: italic;
+  font-weight: 300;
+  opacity: 0.7;
+  margin: 0 6px;
+  font-size: 0.85em;
+}
+.polaroid-date,
+.polaroid-venue {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  margin: 0 0 4px;
+  font-feature-settings: "tnum","lnum";
+}
+
+/* ═══════════════════════════════════════════
+   3. Monogram (classic-elegant)
+   ═══════════════════════════════════════════ */
+.hero--monogram {
+  position: relative;
+  padding: 0;
+}
+.monogram-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.monogram-photo img,
+.monogram-photo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) brightness(1.02);
+}
+.monogram-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 100%);
+}
+.monogram-card {
+  position: relative;
+  margin: -80px auto 0;
+  max-width: 380px;
+  background: var(--card);
+  border: 1px solid var(--divider);
+  padding: 36px 24px 32px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  z-index: 5;
+}
+.monogram-eyebrow {
+  font-family: var(--font-script, var(--font-display));
+  font-size: var(--t-md);
+  color: var(--accent);
+  margin: 0 0 var(--space-sm);
+  letter-spacing: 0.02em;
+}
+.monogram-circle {
+  width: 130px;
+  height: 130px;
+  margin: 0 auto var(--space-md);
+  color: var(--accent);
+}
+.monogram-circle svg { width: 100%; height: 100%; }
+.monogram-names {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-xl);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text);
+  margin: 0 0 var(--space-sm);
+}
+.monogram-names em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
+  margin: 0 6px;
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+.monogram-date {
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+  font-feature-settings: "tnum","lnum";
+  margin: 0 0 4px;
+}
+.monogram-venue {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════
+   4. Floral Arch (romantic-flower)
+   ═══════════════════════════════════════════ */
+.hero--arch {
+  position: relative;
+  padding: 0;
+  background: var(--bg);
+}
+.arch-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.arch-photo img,
+.arch-photo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) brightness(1.02);
+}
+.arch-shell {
+  position: relative;
+  text-align: center;
+  padding: 36px 24px 36px;
+  margin-top: -32px;
+  background: var(--bg);
+}
+.arch-svg {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto -160px;
+  color: var(--accent);
+  position: relative;
+  z-index: 1;
+}
+.arch-script {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-script);
+  font-size: var(--t-2xl);
+  color: var(--accent);
+  margin: 0 0 6px;
+  line-height: 0.9;
+}
+.arch-names {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-xl);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text);
+  margin: 0 0 var(--space-sm);
+}
+.arch-names em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--accent);
+  margin: 0 6px;
+  font-size: 0.85em;
+  opacity: 0.9;
+}
+.arch-date {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  margin: var(--space-sm) 0 4px;
+  font-feature-settings: "tnum","lnum";
+}
+.arch-venue {
+  position: relative;
+  z-index: 2;
+  font-size: var(--t-sm);
+  color: var(--text);
+}
+
+/* ═══════════════════════════════════════════
+   5. Constellation (midnight-navy)
+   ═══════════════════════════════════════════ */
+.hero--constellation {
+  position: relative;
+  padding: 0;
+  background: var(--bg);
+}
+.const-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.const-photo img,
+.const-photo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7) saturate(0.95);
+}
+.const-shell {
+  position: relative;
+  text-align: center;
+  padding: 36px 24px 40px;
+  margin-top: -64px;
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 30%, var(--bg) 100%);
+}
+.const-svg {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto var(--space-md);
+  color: var(--accent);
+  filter: drop-shadow(0 0 10px rgba(212, 197, 150, 0.35));
+  animation: constTwinkle 4s ease-in-out infinite;
+}
+@keyframes constTwinkle {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(212, 197, 150, 0.25)); }
+  50% { filter: drop-shadow(0 0 14px rgba(212, 197, 150, 0.55)); }
+}
+.const-eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--accent);
+  margin: 0 0 var(--space-sm);
+}
+.const-names {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-xl);
+  letter-spacing: var(--tracking-wide);
+  margin: 0 0 var(--space-sm);
+  background: linear-gradient(135deg, #fff5d8 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.const-names em {
+  font-style: italic;
+  font-weight: 300;
+  margin: 0 6px;
+  font-size: 0.85em;
+  -webkit-text-fill-color: var(--accent);
+  opacity: 0.8;
+}
+.const-date,
+.const-venue {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  margin: 0 0 4px;
+  font-feature-settings: "tnum","lnum";
+}
+
+/* ═══════════════════════════════════════════
+   6. Hanji Envelope (korean-traditional)
+   ═══════════════════════════════════════════ */
+.hero--hanji {
+  padding: 32px 24px;
+  background:
+    repeating-linear-gradient(0deg, rgba(212, 195, 154, 0.06) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(90deg, rgba(212, 195, 154, 0.06) 0 1px, transparent 1px 12px),
+    var(--bg);
+}
+.hanji-paper {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--divider);
+  padding: 56px 32px 40px;
+  text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
+  box-shadow: 0 4px 18px rgba(80, 30, 30, 0.08);
+}
+.hanji-paper::before,
+.hanji-paper::after {
+  content: '';
+  position: absolute;
+  left: 16px; right: 16px;
+  height: 1px;
+  background: var(--accent-soft);
+}
+.hanji-paper::before { top: 12px; }
+.hanji-paper::after { bottom: 12px; }
+.hanji-seal {
+  position: absolute;
+  top: -22px;
+  right: 28px;
+  width: 56px;
+  height: 56px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff9ea;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  transform: rotate(-6deg);
+  box-shadow: 0 4px 12px rgba(80, 30, 30, 0.3);
+  border: 2px solid #fff9ea;
+}
+.hanji-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-xl);
+  letter-spacing: 0.6em;
+  text-indent: 0.6em;
+  color: var(--accent);
+  margin: 0 0 4px;
+}
+.hanji-han {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-sm);
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-md);
+}
+.hanji-photo {
+  width: 70%;
+  aspect-ratio: 3 / 4;
+  margin: 0 auto var(--space-md);
+  border: 1px solid var(--accent-soft);
+  padding: 6px;
+  background: var(--bg-alt);
+  overflow: hidden;
+}
+.hanji-photo img,
+.hanji-photo video {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: sepia(0.12) saturate(1.05);
+}
+.hanji-names {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-xl);
+  color: var(--text);
+  margin: 0 0 var(--space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.hanji-amp {
+  color: var(--accent);
+  font-size: 0.7em;
+  opacity: 0.8;
+}
+.hanji-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--accent);
+  margin: var(--space-sm) auto;
+}
+.hanji-date {
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  color: var(--text);
+  letter-spacing: var(--tracking-wide);
+  font-feature-settings: "tnum","lnum";
+  margin: 0 0 4px;
+}
+.hanji-venue {
+  font-size: var(--t-sm);
+  color: var(--text);
+  margin: 0 0 var(--space-md);
+}
+.hanji-parents-row {
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.04em;
+}
+.hanji-parents-row .dot { opacity: 0.5; }
+
+/* ═══════════════════════════════════════════
+   7. Sticker Pack (pastel-dream)
+   ═══════════════════════════════════════════ */
+.hero--stickers {
+  position: relative;
+  padding: 56px 24px 40px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 159, 177, 0.18) 0, transparent 35%),
+    radial-gradient(circle at 85% 75%, rgba(213, 181, 255, 0.18) 0, transparent 38%),
+    radial-gradient(circle at 50% 90%, rgba(181, 240, 214, 0.16) 0, transparent 35%),
+    var(--bg);
+  overflow: hidden;
+}
+.sticker {
+  position: absolute;
+  font-size: 36px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+  user-select: none;
+  animation: stickerFloat 4s ease-in-out infinite;
+}
+.sticker.s-ring { top: 8%; left: 8%; animation-delay: 0s; }
+.sticker.s-heart { top: 14%; right: 12%; animation-delay: 1s; font-size: 28px; }
+.sticker.s-flower { bottom: 22%; left: 6%; animation-delay: 2s; font-size: 32px; }
+.sticker.s-balloon { bottom: 34%; right: 8%; animation-delay: 0.5s; }
+.sticker.s-cake { bottom: 8%; right: 22%; animation-delay: 1.5s; font-size: 30px; }
+@keyframes stickerFloat {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-10px) rotate(4deg); }
+}
+.sticker-shell {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.sticker-eyebrow {
+  font-family: var(--font-script, var(--font-display));
+  font-size: var(--t-2xl);
+  color: var(--accent);
+  margin: 0 0 var(--space-md);
+  line-height: 0.9;
+}
+.sticker-photo {
+  width: 64%;
+  aspect-ratio: 1;
+  margin: 0 auto var(--space-md);
+  border-radius: 30px;
+  overflow: hidden;
+  background: var(--bg-alt);
+  box-shadow: 0 8px 24px rgba(255, 159, 177, 0.2);
+  border: 4px solid #fff;
+}
+.sticker-photo img,
+.sticker-photo video { width: 100%; height: 100%; object-fit: cover; }
+.sticker-names {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--t-xl);
+  color: var(--text);
+  margin: 0 0 var(--space-sm);
+}
+.sticker-names em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  margin: 0 8px;
+  font-size: 0.85em;
+}
+.sticker-date,
+.sticker-venue {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+  margin: 0 0 4px;
+  font-feature-settings: "tnum","lnum";
+}
+
+/* ═══════════════════════════════════════════
+   8. Cinematic Letterbox (luxury-gold)
+   ═══════════════════════════════════════════ */
+.hero--cinema {
+  position: relative;
+  background: #000;
+  padding: 0;
+}
+.cinema-bars-top,
+.cinema-bars-bot {
+  height: 32px;
+  background: #000;
+}
+@media (min-width: 480px) {
+  .cinema-bars-top, .cinema-bars-bot { height: 56px; }
+}
+.cinema-stage {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  background: #000;
+}
+.cinema-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55) saturate(1.1);
+}
+.cinema-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+}
+.cinema-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  color: #f0e6d3;
+}
+.cinema-presents {
+  font-family: var(--font-display);
+  font-size: var(--t-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  margin: 0 0 var(--space-sm);
+  opacity: 0.75;
+}
+.cinema-names {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--t-2xl);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 var(--space-sm);
+  background: linear-gradient(135deg, #f0d59e 0%, #fff3d0 50%, #d4a86b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+@media (min-width: 480px) { .cinema-names { font-size: 56px; } }
+.cinema-names em {
+  font-style: italic;
+  font-weight: 300;
+  margin: 0 8px;
+  font-size: 0.7em;
+  -webkit-text-fill-color: #d4a86b;
+  opacity: 0.85;
+}
+.cinema-tag {
+  font-family: var(--font-script, var(--font-display));
+  font-size: var(--t-md);
+  letter-spacing: 0.04em;
+  opacity: 0.82;
+  margin: 0 0 var(--space-md);
+}
+.cinema-date,
+.cinema-venue {
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-wide);
+  opacity: 0.85;
+  margin: 0 0 4px;
+  font-feature-settings: "tnum","lnum";
+}
+
+/* Calendar widget on dark themes */
+[data-theme="luxury-gold"] .cal-cell,
+[data-theme="midnight-navy"] .cal-cell { color: var(--text); }
+[data-theme="luxury-gold"] .cal-cell.sun,
+[data-theme="midnight-navy"] .cal-cell.sun { color: #e88c8c; }
+[data-theme="luxury-gold"] .cal-cell.sat,
+[data-theme="midnight-navy"] .cal-cell.sat { color: #8caee8; }
+[data-theme="luxury-gold"] .cal-week,
+[data-theme="midnight-navy"] .cal-week { border-bottom-color: var(--accent-soft); }

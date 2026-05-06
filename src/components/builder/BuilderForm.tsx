@@ -155,6 +155,17 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <ImageUpload value={data.hero} onChange={(url) => set('hero', url)} aspectHint="세로 3:4 비율 추천" />
       </div>
       <div className="field">
+        <label>대표 영상 URL (선택, mp4/webm 직링크)</label>
+        <input
+          value={data.videoHero || ''}
+          onChange={(e) => set('videoHero', e.target.value)}
+          placeholder="https://...mp4"
+        />
+        <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+          입력하면 지원 테마의 첫 화면에서 무음 반복 재생되고, 대표 사진은 포스터로 사용됩니다
+        </div>
+      </div>
+      <div className="field">
         <label>인사말 제목</label>
         <input value={data.greeting.title} onChange={(e) => set('greeting', { ...data.greeting, title: e.target.value })} />
       </div>
@@ -259,7 +270,123 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         커튼 인트로 사용
       </label>
 
-      <h2>11. 공유 정보 (메타)</h2>
+      <h2>11. 식순 (예식 순서)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.timeline.enabled}
+          onChange={(e) => set('timeline', { ...data.timeline, enabled: e.target.checked })}
+        />
+        식순 표시
+      </label>
+      {data.timeline.enabled && (
+        <>
+          <div className="field">
+            <label>제목</label>
+            <input
+              value={data.timeline.title}
+              onChange={(e) => set('timeline', { ...data.timeline, title: e.target.value })}
+            />
+          </div>
+          <div style={{ display: 'grid', gap: 6 }}>
+            {data.timeline.items.map((it, i) => (
+              <div
+                key={i}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '70px 1fr 1fr auto',
+                  gap: 6,
+                  alignItems: 'center',
+                }}
+              >
+                <input
+                  placeholder="13:00"
+                  value={it.time}
+                  onChange={(e) => {
+                    const items = data.timeline.items.map((x, idx) =>
+                      idx === i ? { ...x, time: e.target.value } : x
+                    );
+                    set('timeline', { ...data.timeline, items });
+                  }}
+                  style={{ padding: '8px 10px', fontSize: 13 }}
+                />
+                <input
+                  placeholder="순서"
+                  value={it.label}
+                  onChange={(e) => {
+                    const items = data.timeline.items.map((x, idx) =>
+                      idx === i ? { ...x, label: e.target.value } : x
+                    );
+                    set('timeline', { ...data.timeline, items });
+                  }}
+                  style={{ padding: '8px 10px', fontSize: 13 }}
+                />
+                <input
+                  placeholder="비고 (선택)"
+                  value={it.note || ''}
+                  onChange={(e) => {
+                    const items = data.timeline.items.map((x, idx) =>
+                      idx === i ? { ...x, note: e.target.value } : x
+                    );
+                    set('timeline', { ...data.timeline, items });
+                  }}
+                  style={{ padding: '8px 10px', fontSize: 13 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const items = data.timeline.items.filter((_, idx) => idx !== i);
+                    set('timeline', { ...data.timeline, items });
+                  }}
+                  style={{ background: 'transparent', border: 0, color: '#b00', fontSize: 16 }}
+                >×</button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="add-row"
+              onClick={() =>
+                set('timeline', {
+                  ...data.timeline,
+                  items: [...data.timeline.items, { time: '', label: '', note: '' }],
+                })
+              }
+            >
+              + 순서 추가
+            </button>
+          </div>
+        </>
+      )}
+
+      <h2>12. 셔틀버스 / 응원하기</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.shuttle.enabled}
+          onChange={(e) => set('shuttle', { ...data.shuttle, enabled: e.target.checked })}
+        />
+        셔틀버스 안내 표시
+      </label>
+      {data.shuttle.enabled && (
+        <div className="field">
+          <label>셔틀버스 안내 (운행 시간·정류장 등)</label>
+          <textarea
+            value={data.shuttle.info}
+            onChange={(e) => set('shuttle', { ...data.shuttle, info: e.target.value })}
+            placeholder={'서울역 출발 12:00 / 13:00\n예식장 출발 15:30 (신랑측 / 신부측)'}
+          />
+        </div>
+      )}
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.likes.enabled}
+          onChange={(e) => set('likes', { enabled: e.target.checked })}
+        />
+        응원하기(♥ 카운터) 표시
+      </label>
+
+      <h2>13. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />

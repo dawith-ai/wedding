@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════════════════════
+   Feature components — Like button, Timeline (식순),
+   Shuttle bus, Save the Date.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Like / 응원 button ── */
+.section-likes {
+  text-align: center;
+  background: var(--bg);
+}
+.like-wrap {
+  display: flex;
+  justify-content: center;
+}
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1px solid var(--divider);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-family: var(--font-body);
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  transition:
+    color var(--motion-default) var(--easing-standard),
+    background var(--motion-default) var(--easing-standard),
+    transform var(--motion-default) var(--easing-decel);
+  font-feature-settings: "tnum","lnum";
+}
+.like-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.like-btn.liked {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+[data-theme="luxury-gold"] .like-btn.liked,
+[data-theme="midnight-navy"] .like-btn.liked {
+  background: rgba(212, 168, 107, 0.12);
+}
+.like-btn.pop { transform: scale(1.06); }
+.like-count {
+  font-weight: 600;
+  font-size: var(--t-base);
+  font-feature-settings: "tnum","lnum";
+}
+.like-label {
+  font-size: var(--t-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+.like-caption {
+  margin-top: 14px;
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Save the Date button ── */
+.save-date-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-size: var(--t-sm);
+  letter-spacing: var(--tracking-wide);
+  cursor: pointer;
+  transition:
+    background var(--motion-default) var(--easing-standard),
+    color var(--motion-default) var(--easing-standard);
+}
+[data-theme="modern-minimal"] .save-date-btn { border-radius: 0; }
+.save-date-btn:hover {
+  background: var(--accent);
+  color: var(--card);
+}
+
+/* ── Timeline (식순) ── */
+.timeline-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 360px;
+}
+.timeline-item {
+  display: grid;
+  grid-template-columns: 64px 18px 1fr;
+  gap: 12px;
+  align-items: stretch;
+  min-height: 56px;
+}
+.timeline-time {
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  color: var(--accent);
+  letter-spacing: var(--tracking-wide);
+  font-feature-settings: "tnum","lnum";
+  line-height: 1.4;
+  padding-top: 2px;
+  font-weight: 500;
+}
+.timeline-rail {
+  position: relative;
+  width: 18px;
+}
+.timeline-rail .dot {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 0 0 3px var(--bg);
+}
+[data-theme="modern-minimal"] .timeline-rail .dot { border-radius: 0; }
+.timeline-rail .line {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  bottom: -8px;
+  transform: translateX(-50%);
+  width: 1px;
+  background: var(--divider);
+  z-index: 1;
+}
+.timeline-body {
+  padding-bottom: 14px;
+}
+.timeline-label {
+  display: block;
+  font-size: var(--t-base);
+  color: var(--text);
+  line-height: 1.5;
+}
+.timeline-note {
+  display: block;
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Shuttle bus info ── */
+.section-shuttle .shuttle-info {
+  white-space: pre-line;
+  text-align: center;
+  font-size: var(--t-base);
+  color: var(--text);
+  line-height: 2;
+  max-width: 380px;
+  margin: var(--space-md) auto 0;
+}
+
+/* ── YouTube iframe sizing ── */
+.hero-bg iframe,
+.cinema-stage iframe,
+.framed-photo iframe,
+.stacked-photo iframe,
+.monogram-photo iframe,
+.arch-photo iframe,
+.const-photo iframe,
+.hanji-photo iframe,
+.sticker-photo iframe,
+.poster-photo iframe,
+.letterpress-photo iframe,
+.minimal-photo iframe,
+.garden-photo iframe,
+.watercolor-photo iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  pointer-events: auto;
+}

@@ -5,9 +5,63 @@ import { Countdown } from './Countdown';
 import { CalendarButtons } from './CalendarButtons';
 import { Divider } from './Divider';
 import { DancheongCorners } from './Ornaments';
+import { parseYouTubeId, youtubeEmbedSrc } from '../../lib/media';
+import {
+  TypographyPoster,
+  WarmLetterpress,
+  MinimalSplit,
+  PolaroidScatter,
+  Monogram,
+  FloralArch,
+  GardenVow,
+  WatercolorWashCard,
+  Constellation,
+  HanjiEnvelope,
+  StickerPack,
+  CinematicLetterbox,
+} from './Signatures';
 
 interface Props {
   data: WeddingData;
+}
+
+function HeroMedia({
+  data,
+  className,
+  loading,
+}: Props & {
+  className?: string;
+  loading?: 'eager' | 'lazy';
+}) {
+  if (data.videoHero) {
+    const ytId = parseYouTubeId(data.videoHero);
+    if (ytId) {
+      return (
+        <iframe
+          className={className}
+          src={youtubeEmbedSrc(ytId)}
+          title="hero video"
+          frameBorder={0}
+          allow="autoplay; encrypted-media; picture-in-picture"
+          allowFullScreen
+        />
+      );
+    }
+    return (
+      <video
+        className={className}
+        src={data.videoHero}
+        poster={data.hero || undefined}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+    );
+  }
+  if (!data.hero) return null;
+  return <img className={className} src={data.hero} alt="" loading={loading} />;
 }
 
 function ParentLine({
@@ -66,9 +120,9 @@ function HeroOverlay({ data }: Props) {
   const theme = THEME_MAP[data.theme];
   return (
     <section className="hero hero--overlay" data-treatment={theme.photoTreatment}>
-      {data.hero && (
+      {(data.hero || data.videoHero) && (
         <div className="hero-bg">
-          <img src={data.hero} alt="" loading="eager" />
+          <HeroMedia data={data} loading="eager" />
           <div className="hero-vignette" aria-hidden />
           <div className="hero-overlay-tint" aria-hidden />
         </div>
@@ -105,7 +159,7 @@ function HeroFramed({ data }: Props) {
           {theme.id === 'korean-traditional' ? '청 첩 장' : 'Wedding Invitation'}
         </p>
         <div className="framed-photo" data-treatment={theme.photoTreatment}>
-          {data.hero && <img src={data.hero} alt="" />}
+          <HeroMedia data={data} />
           <div className="frame-corners" aria-hidden>
             <span /><span /><span /><span />
           </div>
@@ -114,14 +168,7 @@ function HeroFramed({ data }: Props) {
           <p className="hero-script-large">{data.groom.name} &amp; {data.bride.name}</p>
         )}
         <h1 className="hero-names">
-          {theme.id === 'korean-traditional' ? (
-            <span className="korean-names">
-              {data.groom.name.split('').join(' ')} <span className="amp">·</span>{' '}
-              {data.bride.name.split('').join(' ')}
-            </span>
-          ) : (
-            <>{data.groom.name} <span className="amp">&amp;</span> {data.bride.name}</>
-          )}
+          {data.groom.name} <span className="amp">&amp;</span> {data.bride.name}
         </h1>
         <Divider kind={theme.divider} />
         <p className="hero-date">{formatKoreanDate(data.wedding.date, data.wedding.time)}</p>
@@ -141,9 +188,9 @@ function HeroStacked({ data }: Props) {
   const theme = THEME_MAP[data.theme];
   return (
     <section className="hero hero--stacked">
-      {data.hero && (
+      {(data.hero || data.videoHero) && (
         <div className="stacked-photo" data-treatment={theme.photoTreatment}>
-          <img src={data.hero} alt="" loading="eager" />
+          <HeroMedia data={data} loading="eager" />
         </div>
       )}
       <div className="hero-text">
@@ -166,24 +213,194 @@ function HeroStacked({ data }: Props) {
 }
 
 export function Hero({ data }: Props) {
-  const theme = THEME_MAP[data.theme];
-  let inner;
-  if (theme.layout === 'overlay') inner = <HeroOverlay data={data} />;
-  else if (theme.layout === 'framed') inner = <HeroFramed data={data} />;
-  else inner = <HeroStacked data={data} />;
+  // Theme-specific signature dispatch — distinct structural identity per theme
+  switch (data.theme) {
+    case 'original-warm':
+      return (
+        <>
+          <WarmLetterpress data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
 
-  return (
-    <>
-      {inner}
-      {theme.layout === 'overlay' && (
-        <section className="invite-section section-couple">
-          <ParentBlock data={data} />
-        </section>
-      )}
-      <section className="invite-section section-cd">
-        <Countdown date={data.wedding.date} time={data.wedding.time} />
-        <CalendarButtons data={data} />
-      </section>
-    </>
-  );
+    case 'simple-clean':
+      return (
+        <>
+          <TypographyPoster data={data} />
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+        </>
+      );
+
+    case 'modern-minimal':
+      return (
+        <>
+          <MinimalSplit data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'vintage-film':
+      return (
+        <>
+          <PolaroidScatter data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'nature-green':
+      return (
+        <>
+          <GardenVow data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'classic-elegant':
+      return (
+        <>
+          <Monogram data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'watercolor-soft':
+      return (
+        <>
+          <WatercolorWashCard data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'romantic-flower':
+      return (
+        <>
+          <FloralArch data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'midnight-navy':
+      return (
+        <>
+          <Constellation data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'korean-traditional':
+      return (
+        <>
+          <HanjiEnvelope data={data} />
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'pastel-dream':
+      return (
+        <>
+          <StickerPack data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'luxury-gold':
+      return (
+        <>
+          <CinematicLetterbox data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    default: {
+      // Runtime fallback for malformed decoded data.
+      const theme = THEME_MAP['original-warm'];
+      let inner;
+      if (theme.layout === 'overlay') inner = <HeroOverlay data={data} />;
+      else if (theme.layout === 'framed') inner = <HeroFramed data={data} />;
+      else inner = <HeroStacked data={data} />;
+      return (
+        <>
+          {inner}
+          {theme.layout === 'overlay' && (
+            <section className="invite-section section-couple">
+              <ParentBlock data={data} />
+            </section>
+          )}
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+    }
+  }
 }

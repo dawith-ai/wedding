@@ -15,6 +15,12 @@ import { BgmToggle } from './BgmToggle';
 import { ShareBar } from './ShareBar';
 import { OrnamentCanvas } from './Ornaments';
 import { Divider } from './Divider';
+import { CalendarWidget } from './CalendarWidget';
+import { Timeline } from './Timeline';
+import { ShuttleBus } from './ShuttleBus';
+import { LikeButton } from './LikeButton';
+import { SaveTheDate } from './SaveTheDate';
+import { useFadeUpObserver } from '../../lib/intersect';
 
 interface Props {
   data: WeddingData;
@@ -25,6 +31,8 @@ interface Props {
 
 export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Props) {
   const theme = THEME_MAP[data.theme] || THEME_MAP['original-warm'];
+
+  useFadeUpObserver([data.theme, isPreview]);
 
   useEffect(() => {
     if (isPreview) return;
@@ -67,35 +75,82 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         <Hero data={data} />
 
         {data.greeting.body.trim() && (
-          <Greeting
-            title={data.greeting.title}
-            body={data.greeting.body}
-            theme={data.theme}
-          />
+          <div className="fade-up">
+            <Greeting
+              title={data.greeting.title}
+              body={data.greeting.body}
+              theme={data.theme}
+            />
+          </div>
         )}
+
+        <section className="invite-section section-calendar fade-up">
+          <CalendarWidget date={data.wedding.date} theme={data.theme} />
+        </section>
 
         {showStory && (
-          <Story
-            title={data.story.title}
-            body={data.story.body}
-            photos={data.story.photos}
-            theme={data.theme}
-          />
+          <div className="fade-up">
+            <Story
+              title={data.story.title}
+              body={data.story.body}
+              photos={data.story.photos}
+              theme={data.theme}
+            />
+          </div>
         )}
 
-        {data.gallery.length > 0 && <Gallery photos={data.gallery} />}
+        {data.gallery.length > 0 && (
+          <div className="fade-up">
+            <Gallery photos={data.gallery} />
+          </div>
+        )}
 
-        <Location data={data} />
+        <div className="fade-up">
+          <Location data={data} />
+        </div>
 
-        <Accounts groom={data.accounts.groom} bride={data.accounts.bride} />
+        {data.shuttle.enabled && data.shuttle.info.trim() && (
+          <div className="fade-up">
+            <ShuttleBus info={data.shuttle.info} theme={data.theme} />
+          </div>
+        )}
+
+        {data.timeline.enabled && data.timeline.items.length > 0 && (
+          <div className="fade-up">
+            <Timeline
+              title={data.timeline.title}
+              items={data.timeline.items}
+              theme={data.theme}
+            />
+          </div>
+        )}
+
+        <div className="fade-up">
+          <Accounts groom={data.accounts.groom} bride={data.accounts.bride} />
+        </div>
 
         {data.rsvp.enabled && (
-          <Rsvp inviteId={inviteId} deadline={data.rsvp.deadline} />
+          <div className="fade-up">
+            <Rsvp inviteId={inviteId} deadline={data.rsvp.deadline} />
+          </div>
         )}
-        {data.guestbook.enabled && <Guestbook inviteId={inviteId} />}
+        {data.guestbook.enabled && (
+          <div className="fade-up">
+            <Guestbook inviteId={inviteId} />
+          </div>
+        )}
+
+        {data.likes.enabled && (
+          <div className="fade-up">
+            <section className="invite-section invite-section--tight section-likes">
+              <LikeButton inviteId={inviteId} />
+              <p className="like-caption">신랑 신부에게 응원의 마음을 전해주세요</p>
+            </section>
+          </div>
+        )}
 
         {!isPreview && (
-          <section className="invite-section invite-section--tight section-share">
+          <section className="invite-section invite-section--tight section-share fade-up">
             <p className="section-label">
               {theme.fonts.script ? <em className="script-label">Share</em> : 'SHARE'}
             </p>
@@ -103,6 +158,9 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             <Divider kind={theme.divider} />
             <p className="share-intro">소중한 분들에게 청첩장을 전달해보세요</p>
             <ShareBar title={data.meta.title} description={data.meta.description} url={shareUrl} />
+            <div style={{ textAlign: 'center', marginTop: 14 }}>
+              <SaveTheDate data={data} />
+            </div>
           </section>
         )}
 

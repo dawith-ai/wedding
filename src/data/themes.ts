@@ -199,7 +199,7 @@ export const THEMES: Theme[] = [
       display: "'Cormorant Garamond', 'Nanum Myeongjo', serif",
       body: "'Nanum Myeongjo', serif",
       googleQuery:
-        'family=Cormorant+Garamond:wght@400;500&family=Nanum+Myeongjo:wght@400;700&display=swap',
+        'family=Caveat:wght@400;600&family=Cormorant+Garamond:wght@400;500&family=Nanum+Myeongjo:wght@400;700&display=swap',
     },
     layout: 'overlay',
     ornament: 'film-grain',

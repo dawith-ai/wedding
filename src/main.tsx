@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import './styles/global.css';
 import './styles/invite.css';
 import './styles/editorial.css';
+import './styles/signatures.css';
+import './styles/features.css';
 import './styles/builder.css';
 import App from './App.tsx';
 

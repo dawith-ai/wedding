@@ -44,6 +44,7 @@ export const DEFAULT_DATA: WeddingData = {
   },
   hero:
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80',
+  videoHero: '',
   gallery: [
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80',
     'https://images.unsplash.com/photo-1525258946800-98cfd641d0de?w=900&q=80',
@@ -68,6 +69,25 @@ export const DEFAULT_DATA: WeddingData = {
   },
   guestbook: { enabled: true },
   rsvp: { enabled: true, deadline: '2026-10-01' },
+  likes: { enabled: true },
+  timeline: {
+    enabled: true,
+    title: '예식 순서',
+    items: [
+      { time: '12:30', label: '하객 입장' },
+      { time: '13:00', label: '신랑 신부 입장' },
+      { time: '13:10', label: '성혼 선언문' },
+      { time: '13:15', label: '주례사' },
+      { time: '13:25', label: '신랑 신부 인사' },
+      { time: '13:30', label: '축가', note: '친구 박OO' },
+      { time: '13:40', label: '신랑 신부 행진' },
+      { time: '13:50', label: '폐백 / 식사' },
+    ],
+  },
+  shuttle: {
+    enabled: false,
+    info: '',
+  },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',
     description: '2026년 10월 10일 토요일, 소중한 분들을 초대합니다.',
