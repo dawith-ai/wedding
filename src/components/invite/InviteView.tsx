@@ -13,6 +13,8 @@ import { Guestbook } from './Guestbook';
 import { Rsvp } from './Rsvp';
 import { BgmToggle } from './BgmToggle';
 import { ShareBar } from './ShareBar';
+import { OrnamentCanvas } from './Ornaments';
+import { Divider } from './Divider';
 
 interface Props {
   data: WeddingData;
@@ -37,6 +39,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
       ...theme.vars,
       '--font-display': theme.fonts.display,
       '--font-body': theme.fonts.body,
+      '--font-script': theme.fonts.script || theme.fonts.display,
     } as React.CSSProperties;
   }, [theme]);
 
@@ -44,7 +47,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     data.story.enabled && (data.story.body.trim() || data.story.photos.length > 0);
 
   return (
-    <div className="invite-root" data-theme={data.theme} style={styleVars}>
+    <div className="invite-root" data-theme={data.theme} data-layout={theme.layout} style={styleVars}>
       <div className="invite-frame">
         {!isPreview && data.useCurtain && (
           <Curtain
@@ -55,10 +58,20 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         )}
         {data.bgm && !isPreview && <BgmToggle src={data.bgm} />}
 
+        {theme.ornament !== 'none' && (
+          <div className="ornament-layer" aria-hidden>
+            <OrnamentCanvas kind={theme.ornament} />
+          </div>
+        )}
+
         <Hero data={data} />
 
         {data.greeting.body.trim() && (
-          <Greeting title={data.greeting.title} body={data.greeting.body} />
+          <Greeting
+            title={data.greeting.title}
+            body={data.greeting.body}
+            theme={data.theme}
+          />
         )}
 
         {showStory && (
@@ -66,6 +79,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             title={data.story.title}
             body={data.story.body}
             photos={data.story.photos}
+            theme={data.theme}
           />
         )}
 
@@ -81,18 +95,23 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         {data.guestbook.enabled && <Guestbook inviteId={inviteId} />}
 
         {!isPreview && (
-          <section className="invite-section invite-section--tight" style={{ background: 'var(--bg-alt)' }}>
-            <p className="section-title">SHARE</p>
-            <h2 className="section-heading">초대장 공유하기</h2>
-            <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', marginTop: -16 }}>
-              소중한 분들에게 청첩장을 전달해보세요
+          <section className="invite-section invite-section--tight section-share">
+            <p className="section-label">
+              {theme.fonts.script ? <em className="script-label">Share</em> : 'SHARE'}
             </p>
+            <h2 className="section-heading">초대장 공유하기</h2>
+            <Divider kind={theme.divider} />
+            <p className="share-intro">소중한 분들에게 청첩장을 전달해보세요</p>
             <ShareBar title={data.meta.title} description={data.meta.description} url={shareUrl} />
           </section>
         )}
 
         <footer className="invite-footer">
-          {data.groom.name} &amp; {data.bride.name} · {data.wedding.date.replace(/-/g, '.')}
+          <span className="footer-line" aria-hidden />
+          <span>{data.groom.name} &amp; {data.bride.name}</span>
+          <span className="footer-dot">·</span>
+          <span>{data.wedding.date.replace(/-/g, '.')}</span>
+          <span className="footer-line" aria-hidden />
         </footer>
       </div>
       {!isPreview && <Toast />}
