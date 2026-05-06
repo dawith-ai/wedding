@@ -1,0 +1,16 @@
+Wedding · 모바일 청첩장 빌더
+============================
+
+This project incorporates design principles studied from:
+
+- nexu-io/open-design (https://github.com/nexu-io/open-design)
+  Apache License 2.0
+  Specifically the warm-editorial DESIGN.md provided guidance on
+  typography scale, top-biased hero composition, accent discipline,
+  off-white tonal foundations, and motion timing.
+  All implementation code is original.
+
+Wedding invitation structure (countdown, gallery, account copy,
+guestbook, RSVP) follows widespread industry patterns common to
+Korean mobile wedding invitations. No code was copied from any
+specific wedding invitation template repository.

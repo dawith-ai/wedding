@@ -8,6 +8,19 @@ interface Props {
   theme: ThemeId;
 }
 
+function renderWithDropCap(body: string) {
+  const trimmed = body.trimStart();
+  if (!trimmed) return body;
+  const first = trimmed.charAt(0);
+  const rest = trimmed.slice(1);
+  return (
+    <>
+      <span className="drop-cap">{first}</span>
+      {rest}
+    </>
+  );
+}
+
 export function Greeting({ title, body, theme }: Props) {
   const t = THEME_MAP[theme];
   return (
@@ -17,7 +30,7 @@ export function Greeting({ title, body, theme }: Props) {
       </p>
       <h2 className="section-heading">{title}</h2>
       <Divider kind={t.divider} />
-      <p className="greeting-body">{body}</p>
+      <p className="greeting-body">{renderWithDropCap(body)}</p>
     </section>
   );
 }

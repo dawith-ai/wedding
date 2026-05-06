@@ -72,6 +72,14 @@ npm run preview  # 빌드 미리보기
 
 `src/types.ts` 참조. URL에 인코딩되는 데이터는 신랑·신부 정보, 일시, 장소, 인사말, 사진 URL, 계좌, 옵션입니다. 사진 자체는 외부 호스팅(Imgur 등)에 있으므로 URL만 인코딩됩니다.
 
+## 디자인 크레딧
+
+타이포그래피 스케일·top-biased 히어로·드롭 캡·off-white 톤 등 에디토리얼 원칙은
+[nexu-io/open-design](https://github.com/nexu-io/open-design)의 `warm-editorial`
+스타터 가이드(Apache-2.0)에서 가져왔습니다. 코드 구현은 모두 자체 작성입니다.
+자세한 attribution은 [NOTICE](./NOTICE) 참조.
+
 ## 라이선스
 
-MIT
+MIT (소스 코드)
+
