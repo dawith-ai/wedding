@@ -7,12 +7,12 @@ import {
   MinimalSplit,
   PolaroidScatter,
   Monogram,
-  FloralArch,
-  GardenVow,
-  WatercolorWashCard,
+  StorybookSpread,
+  BoardingPass,
+  HandwrittenLetter,
+  ScrapbookDiary,
   Constellation,
   HanjiEnvelope,
-  StickerPack,
   CinematicLetterbox,
 } from './Signatures';
 
@@ -134,7 +134,7 @@ export function Hero({ data }: Props) {
     case 'nature-green':
       return (
         <>
-          <GardenVow data={data} />
+          <BoardingPass data={data} />
           <section className="invite-section section-couple">
             <ParentBlock data={data} />
           </section>
@@ -162,7 +162,7 @@ export function Hero({ data }: Props) {
     case 'watercolor-soft':
       return (
         <>
-          <WatercolorWashCard data={data} />
+          <HandwrittenLetter data={data} />
           <section className="invite-section section-couple">
             <ParentBlock data={data} />
           </section>
@@ -176,7 +176,7 @@ export function Hero({ data }: Props) {
     case 'romantic-flower':
       return (
         <>
-          <FloralArch data={data} />
+          <StorybookSpread data={data} />
           <section className="invite-section section-couple">
             <ParentBlock data={data} />
           </section>
@@ -215,7 +215,7 @@ export function Hero({ data }: Props) {
     case 'pastel-dream':
       return (
         <>
-          <StickerPack data={data} />
+          <ScrapbookDiary data={data} />
           <section className="invite-section section-couple">
             <ParentBlock data={data} />
           </section>

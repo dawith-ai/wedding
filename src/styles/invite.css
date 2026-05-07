@@ -236,12 +236,20 @@
   font-size: 44px;
   margin: 0 0 18px;
   letter-spacing: 0.06em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  text-align: center;
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
+  /* keep "name & name" on one line; if container is too narrow,
+     break only between name and ampersand at the whitespace */
+  white-space: nowrap;
+}
+.hero-names--overlay span { display: inline; }
+.hero-names--overlay .amp {
+  display: inline;
+  margin: 0 0.4em;
+  white-space: normal;
+}
+@media (max-width: 360px) {
+  .hero-names--overlay { white-space: normal; line-height: 1.15; }
 }
 .hero-names--overlay .amp {
   font-size: 0.7em;

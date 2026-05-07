@@ -1,6 +1,13 @@
 import type { ThemeId } from '../types';
 
-export type HeroLayout = 'overlay' | 'framed' | 'stacked';
+export type HeroLayout =
+  | 'overlay'
+  | 'framed'
+  | 'stacked'
+  | 'storybook'
+  | 'boardingpass'
+  | 'letter'
+  | 'scrapbook';
 export type OrnamentKind =
   | 'none'
   | 'petals'
@@ -103,47 +110,47 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'romantic-flower',
-    name: '로맨틱 플라워',
-    description: '핑크 + 로즈, 플로럴 프레임',
-    preview: { bg: '#fdf0ec', accent: '#b76e79', text: '#4a3737' },
+    name: '동화책',
+    description: '펼친 책 + 손그림 화관, 그림책 일러스트 무드',
+    preview: { bg: '#fbf2e2', accent: '#c46f5b', text: '#3d2a1f' },
     fonts: {
       display: "'Cormorant Garamond', 'Noto Serif KR', serif",
       body: "'Noto Serif KR', serif",
-      script: "'Pinyon Script', cursive",
+      script: "'Caveat', 'Gowun Batang', cursive",
       googleQuery:
-        'family=Cormorant+Garamond:wght@400;500&family=Pinyon+Script&family=Noto+Serif+KR:wght@300;400;500&display=swap',
+        'family=Cormorant+Garamond:wght@400;500;600&family=Caveat:wght@500;700&family=Noto+Serif+KR:wght@300;400;500&display=swap',
     },
-    layout: 'framed',
+    layout: 'storybook',
     ornament: 'petals',
     divider: 'floral-branch',
-    photoTreatment: 'soft',
+    photoTreatment: 'warm-tint',
     vars: {
-      '--bg': '#fdf0ec', '--bg-alt': '#f7d9d2', '--card': '#ffffff',
-      '--text': '#4a3737', '--text-muted': '#856b6b',
-      '--accent': '#b76e79', '--accent-soft': '#e8b9c0',
-      '--divider': '#f0d0cd', '--shadow': '0 4px 24px rgba(183, 110, 121, 0.12)',
+      '--bg': '#fbf2e2', '--bg-alt': '#f4e4c8', '--card': '#fff9ee',
+      '--text': '#3d2a1f', '--text-muted': '#8a6d54',
+      '--accent': '#c46f5b', '--accent-soft': '#ecc6a8',
+      '--divider': '#e6d3aa', '--shadow': '0 4px 22px rgba(140, 80, 50, 0.12)',
     },
   },
   {
     id: 'nature-green',
-    name: '내추럴 그린',
-    description: '세이지그린, 떨어지는 잎사귀',
-    preview: { bg: '#f6f3e8', accent: '#7e9472', text: '#2f3a28' },
+    name: '여행 보딩패스',
+    description: 'WEDDING AIRWAYS — 항공권 + 빈티지 스탬프',
+    preview: { bg: '#f1ece0', accent: '#3d5a4a', text: '#1d2a25' },
     fonts: {
-      display: "'Cormorant Garamond', 'Noto Serif KR', serif",
-      body: "'Noto Serif KR', serif",
+      display: "'IBM Plex Mono', 'Noto Sans KR', monospace",
+      body: "'IBM Plex Mono', 'Noto Sans KR', monospace",
       googleQuery:
-        'family=Cormorant+Garamond:wght@400;500&family=Noto+Serif+KR:wght@300;400;500&display=swap',
+        'family=IBM+Plex+Mono:wght@400;500;700&family=Noto+Sans+KR:wght@300;400;500&display=swap',
     },
-    layout: 'overlay',
-    ornament: 'leaves',
-    divider: 'leaf-sprig',
-    photoTreatment: 'soft',
+    layout: 'boardingpass',
+    ornament: 'none',
+    divider: 'plain',
+    photoTreatment: 'warm-tint',
     vars: {
-      '--bg': '#f6f3e8', '--bg-alt': '#e9e3d0', '--card': '#ffffff',
-      '--text': '#2f3a28', '--text-muted': '#6f7868',
-      '--accent': '#7e9472', '--accent-soft': '#c6d3b9',
-      '--divider': '#d6cfb8', '--shadow': '0 4px 24px rgba(80, 100, 70, 0.08)',
+      '--bg': '#f1ece0', '--bg-alt': '#e3dcc7', '--card': '#fdfaf0',
+      '--text': '#1d2a25', '--text-muted': '#6a7568',
+      '--accent': '#3d5a4a', '--accent-soft': '#b9c5b1',
+      '--divider': '#cdc7b3', '--shadow': '0 4px 18px rgba(40, 60, 50, 0.1)',
     },
   },
   {
@@ -214,25 +221,25 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'watercolor-soft',
-    name: '수채화 소프트',
-    description: '파스텔 라벤더, 수채 워시 + 스파클',
-    preview: { bg: '#fbf6fb', accent: '#a78bbf', text: '#4b4254' },
+    name: '손편지',
+    description: '밀납 인장 + 커시브 손글씨, 정성스레 접은 편지',
+    preview: { bg: '#fbf3e2', accent: '#7a3f3f', text: '#3a2e26' },
     fonts: {
-      display: "'Gowun Batang', 'Noto Serif KR', serif",
-      body: "'Gowun Batang', 'Noto Serif KR', serif",
-      script: "'Pinyon Script', cursive",
+      display: "'Caveat', 'Gowun Batang', cursive",
+      body: "'Noto Serif KR', serif",
+      script: "'Caveat', 'Gowun Batang', cursive",
       googleQuery:
-        'family=Gowun+Batang:wght@400;700&family=Pinyon+Script&family=Noto+Serif+KR:wght@300;400&display=swap',
+        'family=Caveat:wght@400;500;700&family=Cormorant+Garamond:wght@400;500&family=Noto+Serif+KR:wght@300;400;500&display=swap',
     },
-    layout: 'overlay',
-    ornament: 'watercolor-wash',
+    layout: 'letter',
+    ornament: 'none',
     divider: 'tilde',
-    photoTreatment: 'soft',
+    photoTreatment: 'warm-tint',
     vars: {
-      '--bg': '#fbf6fb', '--bg-alt': '#f1e7f2', '--card': '#ffffff',
-      '--text': '#4b4254', '--text-muted': '#8a7d96',
-      '--accent': '#a78bbf', '--accent-soft': '#d8c8e3',
-      '--divider': '#e6dbed', '--shadow': '0 4px 24px rgba(140, 110, 170, 0.1)',
+      '--bg': '#fbf3e2', '--bg-alt': '#f0e3c4', '--card': '#fef7e6',
+      '--text': '#3a2e26', '--text-muted': '#7d6a5a',
+      '--accent': '#7a3f3f', '--accent-soft': '#c9aa8a',
+      '--divider': '#d8c89e', '--shadow': '0 6px 22px rgba(80, 50, 30, 0.14)',
     },
   },
   {
@@ -260,25 +267,25 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'pastel-dream',
-    name: '파스텔 드림',
-    description: '캔디 파스텔, 떠다니는 하트',
-    preview: { bg: '#fff6f9', accent: '#ff9fb1', text: '#5a4954' },
+    name: '스크랩북 다이어리',
+    description: '마스킹 테이프 + 폴라로이드 + 손글씨 메모',
+    preview: { bg: '#fbf5e8', accent: '#d97a86', text: '#3a3030' },
     fonts: {
-      display: "'Gowun Batang', 'Noto Serif KR', serif",
+      display: "'Caveat', 'Gowun Batang', cursive",
       body: "'Gowun Batang', 'Noto Serif KR', serif",
-      script: "'Pinyon Script', cursive",
+      script: "'Caveat', cursive",
       googleQuery:
-        'family=Gowun+Batang:wght@400;700&family=Pinyon+Script&family=Noto+Serif+KR:wght@300;400&display=swap',
+        'family=Caveat:wght@400;500;700&family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@300;400&display=swap',
     },
-    layout: 'framed',
+    layout: 'scrapbook',
     ornament: 'hearts',
-    divider: 'floral-branch',
-    photoTreatment: 'soft',
+    divider: 'plain',
+    photoTreatment: 'warm-tint',
     vars: {
-      '--bg': '#fff6f9', '--bg-alt': '#ffe4ec', '--card': '#ffffff',
-      '--text': '#5a4954', '--text-muted': '#9b8893',
-      '--accent': '#ff9fb1', '--accent-soft': '#ffd4dd',
-      '--divider': '#f6dde4', '--shadow': '0 4px 22px rgba(255, 159, 177, 0.18)',
+      '--bg': '#fbf5e8', '--bg-alt': '#f3ebd6', '--card': '#fffaf1',
+      '--text': '#3a3030', '--text-muted': '#8a7a72',
+      '--accent': '#d97a86', '--accent-soft': '#f6c0c8',
+      '--divider': '#e8dcc4', '--shadow': '0 4px 18px rgba(120, 80, 60, 0.12)',
     },
   },
   {

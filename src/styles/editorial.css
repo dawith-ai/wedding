@@ -5,6 +5,11 @@
    ═══════════════════════════════════════════════════════════ */
 
 .invite-root {
+  /* Korean text: break at 어절 boundary (whitespace), not mid-syllable.
+     Without this, narrow containers will split words awkwardly. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+
   /* 8-step typography scale */
   --t-xs: 11px;
   --t-sm: 13px;

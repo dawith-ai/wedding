@@ -417,3 +417,294 @@ export function CinematicLetterbox({ data }: { data: WeddingData }) {
     </section>
   );
 }
+
+/* ═══════════════════════════════════════════
+   Storybook Spread (romantic-flower → 동화책)
+   Hand-drawn floral wreath, page-corner curl,
+   "Once Upon a Wedding" handwriting title.
+   ═══════════════════════════════════════════ */
+export function StorybookSpread({ data }: { data: WeddingData }) {
+  return (
+    <section className="hero hero--storybook">
+      <div className="storybook-spine" aria-hidden />
+      <div className="storybook-page">
+        <svg className="storybook-wreath" viewBox="0 0 320 120" aria-hidden>
+          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M40 80 Q100 30 160 50 T280 80" strokeWidth="0.9" opacity="0.55" />
+            <path d="M55 70 Q60 45 80 38" strokeWidth="0.7" opacity="0.5" />
+            <path d="M260 70 Q255 45 235 38" strokeWidth="0.7" opacity="0.5" />
+          </g>
+          {[
+            [60, 60], [78, 38], [102, 30], [130, 38],
+            [190, 38], [218, 30], [242, 38], [260, 60],
+            [160, 50],
+          ].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x} ${y})`}>
+              <circle r="6.5" fill="currentColor" opacity="0.9" />
+              <circle r="3.2" fill="#fff9ee" opacity="0.7" cx="-1.5" cy="-1.2" />
+              <ellipse cx="-9" cy="3" rx="5.2" ry="2.6" fill="currentColor" opacity="0.4" transform="rotate(-25)" />
+              <ellipse cx="9" cy="3" rx="5.2" ry="2.6" fill="currentColor" opacity="0.4" transform="rotate(25)" />
+            </g>
+          ))}
+          {[[35, 88, -35], [285, 88, 35], [105, 86, -10], [215, 86, 10]].map(([x, y, r], i) => (
+            <g key={`leaf${i}`} transform={`translate(${x} ${y}) rotate(${r})`}>
+              <path d="M0 0 Q-10 -6 0 -16 Q10 -6 0 0" fill="currentColor" opacity="0.45" />
+              <line x1="0" y1="0" x2="0" y2="-16" stroke="currentColor" strokeWidth="0.5" opacity="0.6" />
+            </g>
+          ))}
+        </svg>
+
+        <p className="storybook-once">Once Upon a Wedding</p>
+
+        <div className="storybook-illustration">
+          <SignatureMedia data={data} loading="eager" />
+          <div className="storybook-vignette" aria-hidden />
+        </div>
+
+        <p className="storybook-chapter">Chapter One · 우리의 날</p>
+        <h1 className="storybook-names">
+          <span>{data.groom.name}</span>
+          <em>&amp;</em>
+          <span>{data.bride.name}</span>
+        </h1>
+        <svg className="storybook-flourish" viewBox="0 0 200 16" aria-hidden>
+          <path d="M10 8 Q50 0 100 8 T190 8" fill="none" stroke="currentColor" strokeWidth="0.9" opacity="0.7" />
+        </svg>
+        <p className="storybook-date">{formatKoreanDate(data.wedding.date, data.wedding.time)}</p>
+        <p className="storybook-venue">{data.wedding.venue}</p>
+      </div>
+      <div className="storybook-corner" aria-hidden />
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   Boarding Pass (nature-green → 여행 항공권)
+   Mono type, perforation, vintage stamps,
+   tear-off stub with mock barcode.
+   ═══════════════════════════════════════════ */
+export function BoardingPass({ data }: { data: WeddingData }) {
+  const [y, m, d] = data.wedding.date.split('-');
+  const flightCode = `WA-${m}${d}`;
+  const seat = `${y.slice(2)}${m}${d}`;
+  return (
+    <section className="hero hero--boardingpass">
+      <div className="bp-card">
+        <header className="bp-head">
+          <span className="bp-airline">★ WEDDING AIRWAYS</span>
+          <span className="bp-class">FIRST CLASS</span>
+        </header>
+
+        <div className="bp-body">
+          <div className="bp-main">
+            <div className="bp-route">
+              <div className="bp-route-col">
+                <span className="bp-tag">FROM</span>
+                <span className="bp-code">SNG</span>
+                <span className="bp-place">싱글 라이프</span>
+              </div>
+              <span className="bp-plane" aria-hidden>✈</span>
+              <div className="bp-route-col">
+                <span className="bp-tag">TO</span>
+                <span className="bp-code">MRR</span>
+                <span className="bp-place">결혼 생활</span>
+              </div>
+            </div>
+
+            <div className="bp-pax">
+              <span className="bp-tag">PASSENGERS</span>
+              <span className="bp-pax-names">
+                {data.groom.name.toUpperCase()} / {data.bride.name.toUpperCase()}
+              </span>
+            </div>
+
+            <dl className="bp-rows">
+              <div><dt>DATE</dt><dd>{y}.{m}.{d}</dd></div>
+              <div><dt>TIME</dt><dd>{data.wedding.time}</dd></div>
+              <div><dt>FLIGHT</dt><dd>{flightCode}</dd></div>
+              <div><dt>GATE</dt><dd>{data.wedding.venueDetail || 'A1'}</dd></div>
+            </dl>
+
+            <p className="bp-venue">
+              VENUE · {data.wedding.venue}
+            </p>
+
+            {(data.hero || data.videoHero) && (
+              <div className="bp-window">
+                <SignatureMedia data={data} loading="eager" />
+              </div>
+            )}
+
+            <div className="bp-stamp" aria-hidden>
+              <span>{y}</span>
+              <strong>BOARDING</strong>
+              <span>{m}.{d}</span>
+            </div>
+          </div>
+
+          <div className="bp-perf" aria-hidden>
+            {Array.from({ length: 14 }).map((_, i) => <span key={i} />)}
+          </div>
+
+          <div className="bp-stub">
+            <span className="bp-tag">SEAT</span>
+            <span className="bp-stub-seat">{seat}</span>
+            <span className="bp-tag">FLIGHT</span>
+            <span className="bp-stub-flight">{flightCode}</span>
+            <div className="bp-bars" aria-hidden>
+              {Array.from({ length: 24 }).map((_, i) => (
+                <span key={i} style={{ width: `${1 + ((i * 7) % 4)}px` }} />
+              ))}
+            </div>
+            <span className="bp-stub-foot">★ ★ ★</span>
+          </div>
+        </div>
+
+        <footer className="bp-foot">
+          ◆ PLEASE BOARD 30 MIN BEFORE DEPARTURE ◆
+        </footer>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   Handwritten Letter (watercolor-soft → 손편지)
+   Wax seal, lined paper, cursive title,
+   folded-corner shadow.
+   ═══════════════════════════════════════════ */
+export function HandwrittenLetter({ data }: { data: WeddingData }) {
+  const initial = (data.groom.name.charAt(0) + data.bride.name.charAt(0)) || 'GB';
+  return (
+    <section className="hero hero--letter">
+      <div className="letter-paper">
+        <div className="letter-seal" aria-hidden>
+          <svg viewBox="0 0 60 60">
+            <defs>
+              <radialGradient id="sealGrad" cx="35%" cy="32%" r="65%">
+                <stop offset="0%" stopColor="#c45e5e" />
+                <stop offset="55%" stopColor="#7a3f3f" />
+                <stop offset="100%" stopColor="#4a2424" />
+              </radialGradient>
+            </defs>
+            <circle cx="30" cy="30" r="26" fill="url(#sealGrad)" />
+            <circle cx="30" cy="30" r="22" fill="none" stroke="#fbe4d2" strokeWidth="0.8" strokeDasharray="2 3" opacity="0.7" />
+            <text x="30" y="35.5" textAnchor="middle" fill="#fbe4d2" fontFamily="'Cormorant Garamond', serif" fontSize="18" fontWeight="600">{initial}</text>
+            {Array.from({ length: 12 }).map((_, i) => {
+              const a = (i / 12) * Math.PI * 2;
+              return (
+                <circle
+                  key={i}
+                  cx={30 + Math.cos(a) * 27}
+                  cy={30 + Math.sin(a) * 27}
+                  r="1.6"
+                  fill="#7a3f3f"
+                />
+              );
+            })}
+          </svg>
+        </div>
+
+        <p className="letter-script">사랑하는 분께,</p>
+
+        <p className="letter-body">
+          오늘 이 편지는 한 가지 소식을 전하기 위함입니다.
+          서로를 향한 마음이 깊어져, 두 사람이 부부가 되기로
+          하였습니다. 마음을 함께 나누어 주신다면,
+          저희에게 큰 위로와 기쁨이 될 것입니다.
+        </p>
+
+        <div className="letter-couple">
+          <span className="letter-amp">— 이만 줄이며 —</span>
+          <h1 className="letter-names">
+            {data.groom.name} <em>&amp;</em> {data.bride.name}
+          </h1>
+          <p className="letter-date-script">{formatKoreanDate(data.wedding.date, data.wedding.time)}</p>
+          <p className="letter-venue">{data.wedding.venue}</p>
+        </div>
+
+        {(data.hero || data.videoHero) && (
+          <div className="letter-photo">
+            <SignatureMedia data={data} loading="eager" />
+            <span className="letter-photo-tape" aria-hidden />
+          </div>
+        )}
+
+        <div className="letter-fold" aria-hidden />
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   Scrapbook Diary (pastel-dream → 다이어리)
+   Washi tape, taped polaroid, doodles,
+   handwritten margins.
+   ═══════════════════════════════════════════ */
+export function ScrapbookDiary({ data }: { data: WeddingData }) {
+  const [y, m, d] = data.wedding.date.split('-');
+  return (
+    <section className="hero hero--scrapbook">
+      <div className="sb-page">
+        <span className="sb-tape sb-tape-1" aria-hidden />
+        <span className="sb-tape sb-tape-2" aria-hidden />
+        <span className="sb-tape sb-tape-3" aria-hidden />
+
+        <div className="sb-date-stamp" aria-hidden>
+          <span className="sb-date-label">DATE</span>
+          <span className="sb-date-num">{y}.{m}.{d}</span>
+        </div>
+
+        <p className="sb-title">Today is Our Day!</p>
+
+        {(data.hero || data.videoHero) && (
+          <div className="sb-polaroid">
+            <span className="sb-poly-tape" aria-hidden />
+            <div className="sb-poly-photo">
+              <SignatureMedia data={data} loading="eager" />
+            </div>
+            <span className="sb-poly-caption">{m}월 {d}일, 사랑해.</span>
+          </div>
+        )}
+
+        <h1 className="sb-names">
+          <span>{data.groom.name}</span>
+          <span className="sb-amp">+</span>
+          <span>{data.bride.name}</span>
+        </h1>
+        <svg className="sb-underline" viewBox="0 0 200 12" aria-hidden>
+          <path
+            d="M5 6 Q25 1 50 6 T100 6 T150 6 T195 6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        <p className="sb-meta">
+          <span className="sb-meta-row">📍 {data.wedding.venue}</span>
+          <span className="sb-meta-row">🕐 {data.wedding.time}</span>
+        </p>
+
+        <svg className="sb-doodle sb-doodle-heart" viewBox="0 0 40 36" aria-hidden>
+          <path
+            d="M20 30 C5 18 5 6 13 6 C17 6 19 9 20 12 C21 9 23 6 27 6 C35 6 35 18 20 30 Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
+        </svg>
+        <svg className="sb-doodle sb-doodle-spark" viewBox="0 0 30 30" aria-hidden>
+          <path d="M15 2 L17 13 L28 15 L17 17 L15 28 L13 17 L2 15 L13 13 Z" fill="currentColor" opacity="0.85" />
+        </svg>
+        <svg className="sb-doodle sb-doodle-arrow" viewBox="0 0 60 24" aria-hidden>
+          <path d="M2 12 Q20 4 40 12 L36 8 M40 12 L36 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+
+        <p className="sb-margin-note">— 우리만의 작은 이야기가 시작되는 날 —</p>
+      </div>
+    </section>
+  );
+}
