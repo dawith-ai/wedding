@@ -34,7 +34,7 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Smoke test 12 themes
+      - name: Smoke + audit + feature verification
         run: |
           # Boot vite preview in background and wait for it
           npm run preview -- --host 127.0.0.1 --port 4173 &
@@ -44,6 +44,8 @@ jobs:
             sleep 1
           done
           BASE=http://127.0.0.1:4173 node scripts/smoke-themes.mjs
+          BASE=http://127.0.0.1:4173 node scripts/audit-stress.mjs
+          BASE=http://127.0.0.1:4173 node scripts/verify-features.mjs
           kill $PREVIEW_PID 2>/dev/null || true
 
       - name: Upload smoke artifacts

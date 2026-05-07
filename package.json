@@ -11,6 +11,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "smoke": "node scripts/smoke-themes.mjs",
+    "verify": "node scripts/verify-features.mjs",
+    "audit:overflow": "node scripts/debug-overflow.mjs",
+    "audit:stress": "node scripts/audit-stress.mjs",
     "audit:pwa": "node scripts/audit-lighthouse.mjs"
   },
   "dependencies": {

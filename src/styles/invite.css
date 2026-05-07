@@ -727,7 +727,7 @@
   justify-content: center;
   touch-action: pan-y;
 }
-.viewer img { max-width: 96vw; max-height: 80vh; object-fit: contain; }
+.viewer img { max-width: 96vw; max-height: 80vh; object-fit: contain; pointer-events: none; }
 .viewer-btn {
   position: absolute;
   background: rgba(255, 255, 255, 0.14);
@@ -738,6 +738,8 @@
   border-radius: 50%;
   font-size: 22px;
   line-height: 1;
+  z-index: 2;
+  cursor: pointer;
 }
 .viewer-btn:disabled { opacity: 0.3; }
 .viewer-close { top: 24px; right: 24px; }
