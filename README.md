@@ -86,6 +86,15 @@ npm run preview  # 빌드 미리보기
 2. "Anonymous usage without user authorization" 선택
 3. 발급된 Client ID를 빌더 설정에 입력
 
+## Kakao 공유 설정 (선택)
+
+카카오톡 네이티브 공유(노란색 버튼) 활성화. 미설정시 Web Share API / 링크 복사로 자동 폴백.
+
+1. https://developers.kakao.com/console/app 에서 앱 등록
+2. 앱 키 → **JavaScript 키** 복사
+3. 플랫폼 → **Web** → 사이트 도메인에 배포 URL 등록 (예: `https://myjun090-spec.github.io`)
+4. 빌더 우상단 **설정** → JavaScript Key 입력 → 저장
+
 ## Firebase 설정 (선택)
 
 1. https://console.firebase.google.com/ 에서 프로젝트 생성
@@ -93,6 +102,24 @@ npm run preview  # 빌드 미리보기
 3. 프로젝트 설정 → 일반 → 웹 앱 추가 → `apiKey`, `authDomain`, `projectId` 복사
 4. 빌더 설정에 입력
 5. Firestore 규칙: 개인 청첩장 용도라면 `allow read, write: if true;` 무방
+
+## 자동화 / 품질 검증
+
+```bash
+npm run smoke       # 12 테마 × 6 어설션 Playwright 스모크 (모바일 viewport)
+npm run audit:pwa   # Lighthouse — PWA / 성능 / 접근성 / SEO 점수 임계값 검증
+npm run icons:generate  # SVG → PNG 6장 (192/512/1024 + maskable + apple-touch)
+```
+
+`npm run prebuild`은 `build` 직전에 자동 실행되어 PNG가 SVG 소스에서 드리프트되지 않도록 합니다.
+
+`main` 브랜치 푸시 시 GitHub Actions(`.github/workflows/deploy.yml`)가 자동으로:
+1. 빌드 (icons + tsc + vite)
+2. Playwright 스모크 (12 테마, 콘솔 에러·요청 실패·어설션 검증)
+3. GitHub Pages 배포
+4. 스크린샷 아티팩트 업로드 (`scripts/.smoke-out/`)
+
+스모크 실패 시 배포 차단됩니다. 아티팩트는 Actions 탭에서 14일 보관.
 
 ## 데이터 구조
 

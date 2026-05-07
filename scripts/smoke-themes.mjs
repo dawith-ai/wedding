@@ -56,7 +56,9 @@ async function smokeOne(browser, theme) {
     if (
       url.includes('imgur.com') ||
       url.includes('firestore') ||
-      url.includes('qrserver')
+      url.includes('qrserver') ||
+      url.includes('kakaocdn') ||
+      url.includes('developers.kakao')
     ) {
       return;
     }
@@ -68,10 +70,14 @@ async function smokeOne(browser, theme) {
     testResults.push({ name, pass: !!cond, detail: detail || '' });
   }
 
-  // Builder entry — clear localStorage so theme query takes effect
+  // Builder entry — clear localStorage so theme query takes effect, then
+  // pre-seed a fake Kakao key so the share button is exercised.
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
   await page.evaluate(() => {
-    try { localStorage.clear(); } catch { /* noop */ }
+    try {
+      localStorage.clear();
+      localStorage.setItem('kakao_js_key', 'smoke-test-fake-key-not-real');
+    } catch { /* noop */ }
   });
   await page.goto(`${BASE}/#/builder?theme=${theme}`, { waitUntil: 'networkidle' });
 
@@ -117,6 +123,16 @@ async function smokeOne(browser, theme) {
       path: path.join(OUT, `${theme}.png`),
       fullPage: false,
     });
+
+    // Scroll to share section, verify Kakao share button is mounted
+    await invitePage.evaluate(() => {
+      const el = document.querySelector('.section-share');
+      if (el) el.scrollIntoView({ block: 'center' });
+    });
+    await invitePage.waitForTimeout(400);
+    const kakaoBtn = await invitePage.$('.share-bar .share-kakao');
+    assert('kakao share button present (fake key seeded)', !!kakaoBtn);
+
     await invitePage.close();
     assert('invite URL navigates and renders', true);
   } else {

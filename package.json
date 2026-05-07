@@ -9,7 +9,9 @@
     "prebuild": "node scripts/generate-icons.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "smoke": "node scripts/smoke-themes.mjs",
+    "audit:pwa": "node scripts/audit-lighthouse.mjs"
   },
   "dependencies": {
     "react": "^19.2.5",
@@ -26,6 +28,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.5.0",
+    "lighthouse": "^13.2.0",
     "playwright": "^1.59.1",
     "sharp": "^0.34.5",
     "typescript": "~6.0.2",

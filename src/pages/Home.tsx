@@ -1,11 +1,62 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { THEMES, loadThemeFonts } from '../data/themes';
-import { useEffect } from 'react';
+import type { ThemeId } from '../types';
+import { DEFAULT_DATA } from '../data/defaults';
+import { buildShareUrl, encodeData } from '../lib/encode';
+import { showToast } from '../lib/toast';
+import { Toast } from '../components/invite/Toast';
 
 export function Home() {
+  const navigate = useNavigate();
+  const [demoUrls, setDemoUrls] = useState<Record<ThemeId, string>>({} as Record<ThemeId, string>);
+
   useEffect(() => {
     THEMES.forEach(loadThemeFonts);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const out = {} as Record<ThemeId, string>;
+      for (const t of THEMES) {
+        try {
+          const data = { ...DEFAULT_DATA, theme: t.id, useCurtain: false };
+          out[t.id] = buildShareUrl(await encodeData(data));
+        } catch { /* skip */ }
+      }
+      if (!cancelled) setDemoUrls(out);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function openDemo(themeId: ThemeId, fallback: () => void) {
+    const url = demoUrls[themeId];
+    if (url) {
+      // Internal navigation — strip origin prefix to use SPA router
+      const hashIndex = url.indexOf('/#/');
+      if (hashIndex >= 0) {
+        navigate(url.slice(hashIndex + 2));
+        return;
+      }
+      window.location.href = url;
+      return;
+    }
+    fallback();
+  }
+
+  async function openCurrentDemo() {
+    showToast('데모 청첩장 여는 중…');
+    try {
+      const data = { ...DEFAULT_DATA, useCurtain: false };
+      const encoded = await encodeData(data);
+      navigate(`/v/${encoded}`);
+    } catch {
+      showToast('데모 열기 실패');
+    }
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#fafafa' }}>
@@ -18,21 +69,40 @@ export function Home() {
           <br />
           정보 입력만으로 5분 안에 완성하세요
         </p>
-        <Link
-          to="/builder"
-          style={{
-            display: 'inline-block',
-            marginTop: 24,
-            background: '#222',
-            color: '#fff',
-            padding: '14px 36px',
-            borderRadius: 999,
-            fontSize: 15,
-            letterSpacing: '0.05em',
-          }}
-        >
-          청첩장 만들기 시작
-        </Link>
+        <div style={{ marginTop: 24, display: 'inline-flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Link
+            to="/builder"
+            style={{
+              background: '#222',
+              color: '#fff',
+              padding: '14px 36px',
+              borderRadius: 999,
+              fontSize: 15,
+              letterSpacing: '0.05em',
+            }}
+          >
+            청첩장 만들기 시작
+          </Link>
+          <button
+            onClick={openCurrentDemo}
+            type="button"
+            style={{
+              background: 'transparent',
+              border: '1px solid #222',
+              color: '#222',
+              padding: '14px 28px',
+              borderRadius: 999,
+              fontSize: 14,
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+            }}
+          >
+            예시 청첩장 둘러보기
+          </button>
+        </div>
+        <p style={{ color: '#aaa', marginTop: 14, fontSize: 12 }}>
+          별도 가입 없이 작동 · 서버 비용 0원 · 카카오톡 공유 지원
+        </p>
       </header>
 
       <section style={{ padding: '40px 20px 60px', maxWidth: 1100, margin: '0 auto' }}>
@@ -40,7 +110,7 @@ export function Home() {
           12가지 테마
         </h2>
         <p style={{ textAlign: 'center', color: '#888', fontSize: 13, marginBottom: 32 }}>
-          마음에 드는 무드를 골라보세요. 빌더에서 자유롭게 변경할 수 있어요.
+          카드를 누르면 실제 청첩장 데모를 볼 수 있어요. 마음에 드는 무드로 빌더 시작.
         </p>
 
         <div
@@ -51,9 +121,8 @@ export function Home() {
           }}
         >
           {THEMES.map((t) => (
-            <Link
+            <article
               key={t.id}
-              to={`/builder?theme=${t.id}`}
               style={{
                 background: t.preview.bg,
                 border: `1px solid ${t.preview.text}20`,
@@ -67,6 +136,22 @@ export function Home() {
                 position: 'relative',
                 overflow: 'hidden',
                 fontFamily: t.fonts.body,
+                cursor: 'pointer',
+              }}
+              onClick={() =>
+                openDemo(t.id, () => {
+                  navigate(`/builder?theme=${t.id}`);
+                })
+              }
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  openDemo(t.id, () => {
+                    navigate(`/builder?theme=${t.id}`);
+                  });
+                }
               }}
             >
               <div>
@@ -88,31 +173,41 @@ export function Home() {
                   {t.description}
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: 6, marginTop: 16 }}>
+              <div style={{ display: 'flex', gap: 6, marginTop: 16, alignItems: 'center' }}>
                 <span style={{ width: 18, height: 18, borderRadius: '50%', background: t.preview.accent }} />
                 <span style={{ width: 18, height: 18, borderRadius: '50%', background: t.preview.text, opacity: 0.4 }} />
-                <span
+                <Link
+                  to={`/builder?theme=${t.id}`}
+                  onClick={(e) => e.stopPropagation()}
                   style={{
                     fontSize: 11,
                     marginLeft: 'auto',
                     border: `1px solid ${t.preview.text}40`,
                     padding: '3px 10px',
                     borderRadius: 999,
+                    color: t.preview.text,
+                    textDecoration: 'none',
                   }}
                 >
-                  미리보기 →
-                </span>
+                  이 테마로 만들기 →
+                </Link>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
 
-        <div style={{ marginTop: 56, textAlign: 'center', color: '#888', fontSize: 13 }}>
-          <p>· 사진은 직접 업로드 (Imgur) 또는 외부 URL 입력 모두 지원</p>
-          <p>· 방명록 / RSVP / BGM / 카운트다운 기본 포함</p>
-          <p>· 공유 링크 한 번 만들면 영구적으로 작동, 서버 비용 0원</p>
+        <div style={{ marginTop: 56, textAlign: 'center', color: '#888', fontSize: 13, lineHeight: 1.9 }}>
+          <p style={{ margin: 0 }}>· 사진 / 영상 / BGM / 카카오톡 공유 / 식순 / 응원하기 / 방명록 / RSVP</p>
+          <p style={{ margin: 0 }}>· 공유 링크 = URL에 모든 데이터 인코딩 — 서버 비용 0원, 영구 작동</p>
+          <p style={{ margin: 0 }}>· PWA 지원, 홈 화면 추가, 오프라인 재오픈 가능</p>
+          <p style={{ margin: '14px 0 0' }}>
+            <Link to="/privacy" style={{ color: '#888', fontSize: 12 }}>
+              개인정보 처리방침
+            </Link>
+          </p>
         </div>
       </section>
+      <Toast />
     </div>
   );
 }
