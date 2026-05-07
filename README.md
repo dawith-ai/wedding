@@ -92,7 +92,7 @@ npm run preview  # 빌드 미리보기
 
 1. https://developers.kakao.com/console/app 에서 앱 등록
 2. 앱 키 → **JavaScript 키** 복사
-3. 플랫폼 → **Web** → 사이트 도메인에 배포 URL 등록 (예: `https://myjun090-spec.github.io`)
+3. 플랫폼 → **Web** → 사이트 도메인에 배포 URL 등록 (예: `https://dawith-ai.github.io`)
 4. 빌더 우상단 **설정** → JavaScript Key 입력 → 저장
 
 ## Firebase 설정 (선택)

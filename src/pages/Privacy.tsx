@@ -81,8 +81,8 @@ export function Privacy() {
         <h2 style={H2}>7. 문의</h2>
         <p>
           본 프로젝트는 오픈소스(MIT)로 운영됩니다. 코드 저장소{' '}
-          <a href="https://github.com/myjun090-spec/wedding" target="_blank" rel="noopener" style={{ color: '#3a6' }}>
-            github.com/myjun090-spec/wedding
+          <a href="https://github.com/dawith-ai/wedding" target="_blank" rel="noopener" style={{ color: '#3a6' }}>
+            github.com/dawith-ai/wedding
           </a>
           의 Issues로 문의해주세요.
         </p>
