@@ -1,5 +1,5 @@
 import type { WeddingData } from '../../types';
-import { showToast } from './Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   data: WeddingData;

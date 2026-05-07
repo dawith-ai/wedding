@@ -11,7 +11,7 @@ import {
   fbListGuestbook,
   isFirebaseEnabled,
 } from '../../lib/firebase';
-import { showToast } from './Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   inviteId: string;

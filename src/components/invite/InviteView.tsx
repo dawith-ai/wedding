@@ -32,15 +32,54 @@ interface Props {
 export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Props) {
   const theme = THEME_MAP[data.theme] || THEME_MAP['original-warm'];
 
-  useFadeUpObserver([data.theme, isPreview]);
+  useFadeUpObserver([
+    data.theme,
+    isPreview,
+    data.story.enabled,
+    data.gallery.length,
+    data.shuttle.enabled,
+    data.timeline.enabled && data.timeline.items.length,
+    data.rsvp.enabled,
+    data.guestbook.enabled,
+    data.likes.enabled,
+  ]);
 
   useEffect(() => {
     if (isPreview) return;
     loadThemeFonts(theme);
     const prevTitle = document.title;
     document.title = data.meta.title || `${data.groom.name} ♥ ${data.bride.name} 결혼합니다`;
+
+    // Update Open Graph + meta description so link previews show couple-specific copy.
+    function setMeta(selector: string, attr: 'content', value: string) {
+      const el = document.querySelector(selector) as HTMLMetaElement | null;
+      if (el) el.setAttribute(attr, value);
+    }
+    const desc = data.meta.description ||
+      `${data.wedding.date.replace(/-/g, '.')} · ${data.wedding.venue}`;
+    setMeta('meta[name="description"]', 'content', desc);
+    setMeta('meta[property="og:title"]', 'content', document.title);
+    setMeta('meta[property="og:description"]', 'content', desc);
+    if (data.ogImage || data.hero) {
+      setMeta('meta[property="og:image"]', 'content', data.ogImage || data.hero);
+      setMeta('meta[name="twitter:image"]', 'content', data.ogImage || data.hero);
+    }
+    setMeta('meta[name="twitter:title"]', 'content', document.title);
+    setMeta('meta[name="twitter:description"]', 'content', desc);
+
     return () => { document.title = prevTitle; };
-  }, [theme, data.meta.title, data.groom.name, data.bride.name, isPreview]);
+  }, [
+    theme,
+    data.meta.title,
+    data.meta.description,
+    data.groom.name,
+    data.bride.name,
+    data.wedding.date,
+    data.wedding.venue,
+    data.ogImage,
+    data.hero,
+    isPreview,
+  ]);
 
   const styleVars = useMemo(() => {
     return {

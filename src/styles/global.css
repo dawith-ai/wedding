@@ -35,3 +35,40 @@ input, textarea, select {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 .toast.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+/* iOS notch / Android edge-to-edge safe area for fixed elements */
+.bgm-toggle { padding-top: env(safe-area-inset-top, 0); }
+.toast { bottom: calc(80px + env(safe-area-inset-bottom, 0)); }
+
+/* Honor user's reduced-motion setting across the app */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-up { opacity: 1 !important; transform: none !important; }
+  .ornament-canvas { opacity: 0.4; }
+}
+
+/* Print stylesheet — paper backup of the digital invitation */
+@media print {
+  body { background: #fff; }
+  .bgm-toggle,
+  .curtain-overlay,
+  .share-bar,
+  .save-date-btn,
+  .toast,
+  .modal-overlay,
+  .ornament-layer,
+  .builder-form,
+  .builder-toolbar,
+  .preview-pane > div:first-child {
+    display: none !important;
+  }
+  .invite-root { background: #fff !important; }
+  .invite-section { break-inside: avoid; page-break-inside: avoid; }
+  a { color: inherit !important; text-decoration: none !important; }
+  a[href]::after { content: ''; }
+}

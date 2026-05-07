@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { lockBodyScroll, unlockBodyScroll } from '../../lib/scrollLock';
 
 interface Props {
   groomName: string;
@@ -12,10 +13,9 @@ export function Curtain({ groomName, brideName, date, onOpened }: Props) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = done ? '' : 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (done) return;
+    lockBodyScroll();
+    return () => unlockBodyScroll();
   }, [done]);
 
   function open() {

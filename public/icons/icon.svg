@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Wedding Invitation">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbf7ee"/>
+      <stop offset="100%" stop-color="#f3e6dc"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c98390"/>
+      <stop offset="100%" stop-color="#a85a68"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
+  <g transform="translate(256 248)">
+    <path
+      d="M0 92 C -118 12 -118 -98 -52 -98 C -22 -98 -6 -78 0 -58 C 6 -78 22 -98 52 -98 C 118 -98 118 12 0 92 Z"
+      fill="url(#heart)"
+    />
+    <circle r="120" fill="none" stroke="#b08664" stroke-width="3" stroke-opacity="0.4"/>
+    <circle r="138" fill="none" stroke="#b08664" stroke-width="1.2" stroke-opacity="0.25"/>
+  </g>
+  <text
+    x="256" y="430"
+    text-anchor="middle"
+    font-family="'Cormorant Garamond', 'Noto Serif KR', serif"
+    font-size="48" font-style="italic"
+    fill="#3a342c" letter-spacing="3"
+  >Wedding</text>
+</svg>

@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
-
-let externalShow: ((m: string) => void) | null = null;
-
-export function showToast(msg: string) {
-  if (externalShow) externalShow(msg);
-}
+import { useEffect, useRef, useState } from 'react';
+import { _registerToast } from '../../lib/toast';
 
 export function Toast() {
   const [msg, setMsg] = useState('');
   const [visible, setVisible] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
-    externalShow = (m: string) => {
+    return _registerToast((m) => {
       setMsg(m);
       setVisible(true);
-      window.clearTimeout((externalShow as unknown as { _t?: number })._t);
-      (externalShow as unknown as { _t?: number })._t = window.setTimeout(() => setVisible(false), 2000);
-    };
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+      timerRef.current = window.setTimeout(() => setVisible(false), 2000);
+    });
+  }, []);
+
+  useEffect(() => {
     return () => {
-      externalShow = null;
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     };
   }, []);
 
   return (
-    <div className={`toast${visible ? ' visible' : ''}`} role="status">
+    <div className={`toast${visible ? ' visible' : ''}`} role="status" aria-live="polite">
       {msg}
     </div>
   );

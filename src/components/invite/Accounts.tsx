@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Account } from '../../types';
-import { showToast } from './Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   groom: Account[];

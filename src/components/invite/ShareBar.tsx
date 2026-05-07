@@ -1,4 +1,4 @@
-import { showToast } from './Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   title: string;

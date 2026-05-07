@@ -4,11 +4,14 @@ import type { ThemeId, WeddingData } from '../types';
 import { DEFAULT_DATA } from '../data/defaults';
 import { THEMES, loadThemeFonts } from '../data/themes';
 import { loadDraft, saveDraft, clearDraft } from '../lib/storage';
-import { buildShareUrl, encodeData } from '../lib/encode';
+import { buildShareUrl, encodeData, urlLengthWarning } from '../lib/encode';
 import { BuilderForm } from '../components/builder/BuilderForm';
 import { InviteView } from '../components/invite/InviteView';
-import { showToast, Toast } from '../components/invite/Toast';
+import { Toast } from '../components/invite/Toast';
+import { showToast } from '../lib/toast';
 import { inviteIdFromEncoded } from '../lib/storage';
+import { qrImageUrl } from '../lib/qrcode';
+import { ShareModal } from '../components/builder/ShareModal';
 
 export function Builder() {
   const [params] = useSearchParams();
@@ -24,20 +27,27 @@ export function Builder() {
 
   const [shareUrl, setShareUrl] = useState<string>('');
   const [showShare, setShowShare] = useState(false);
+  const [shareWarning, setShareWarning] = useState<string | null>(null);
+  const [storageWarned, setStorageWarned] = useState(false);
 
   useEffect(() => {
     THEMES.forEach(loadThemeFonts);
   }, []);
 
   useEffect(() => {
-    saveDraft(data);
-  }, [data]);
+    const ok = saveDraft(data);
+    if (!ok && !storageWarned) {
+      setStorageWarned(true);
+      showToast('브라우저 저장공간이 가득 찼어요. 사진을 줄이거나 이미지 URL로 교체해주세요.');
+    }
+  }, [data, storageWarned]);
 
   async function publish() {
     try {
       const encoded = await encodeData(data);
       const url = buildShareUrl(encoded);
       setShareUrl(url);
+      setShareWarning(urlLengthWarning(url));
       setShowShare(true);
     } catch (e) {
       showToast((e as Error).message);
@@ -49,6 +59,25 @@ export function Builder() {
       () => showToast('링크가 복사되었습니다'),
       () => showToast('복사에 실패했어요')
     );
+  }
+
+  function nativeShare() {
+    if (navigator.share) {
+      navigator
+        .share({ title: data.meta.title, text: data.meta.description, url: shareUrl })
+        .catch(() => {});
+    } else {
+      copyUrl();
+    }
+  }
+
+  function downloadQr() {
+    const qrUrl = qrImageUrl(shareUrl, 600);
+    if (!qrUrl) {
+      showToast('QR을 만들 수 없는 길이입니다. 갤러리 사진을 줄여보세요.');
+      return;
+    }
+    window.open(qrUrl, '_blank', 'noopener');
   }
 
   function reset() {
@@ -96,38 +125,14 @@ export function Builder() {
       </div>
 
       {showShare && (
-        <div className="modal-overlay" onClick={() => setShowShare(false)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <h3>공유 링크가 생성되었어요</h3>
-            <p className="muted-text" style={{ marginBottom: 14 }}>
-              아래 링크 하나만 있으면 누구나 청첩장을 볼 수 있습니다. 카카오톡, 문자 등으로 공유해주세요.
-            </p>
-            <div className="url-display">{shareUrl}</div>
-            <p className="muted-text">
-              ※ 모든 정보가 URL에 인코딩됩니다. 매우 긴 사진을 잔뜩 추가하면 일부 메신저에서 링크가 잘릴 수 있습니다.
-            </p>
-            <div className="actions">
-              <button onClick={() => setShowShare(false)}>닫기</button>
-              <a
-                href={shareUrl}
-                target="_blank"
-                rel="noopener"
-                style={{
-                  display: 'inline-block',
-                  padding: '9px 16px',
-                  border: '1px solid #ddd',
-                  borderRadius: 999,
-                  fontSize: 13,
-                  textDecoration: 'none',
-                  color: '#222',
-                }}
-              >
-                새 탭에서 열기
-              </a>
-              <button className="primary" onClick={copyUrl}>링크 복사</button>
-            </div>
-          </div>
-        </div>
+        <ShareModal
+          shareUrl={shareUrl}
+          warning={shareWarning}
+          onClose={() => setShowShare(false)}
+          onCopy={copyUrl}
+          onShare={nativeShare}
+          onDownloadQr={downloadQr}
+        />
       )}
 
       <Toast />

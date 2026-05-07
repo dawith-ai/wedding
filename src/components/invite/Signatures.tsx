@@ -172,8 +172,10 @@ export function TypographyPoster({ data }: { data: WeddingData }) {
  * 3 tilted polaroid photos with handwritten dates.
  */
 export function PolaroidScatter({ data }: { data: WeddingData }) {
-  const photos = [data.hero, ...data.gallery].filter(Boolean).slice(0, 3);
-  while (photos.length < 3) photos.push(data.hero || '');
+  const sourcePhotos = [data.hero, ...data.gallery].filter(Boolean);
+  const photos: string[] = sourcePhotos.slice(0, 3);
+  // Pad with placeholder slots when the user supplied fewer than 3 photos.
+  while (photos.length < 3) photos.push('');
   const [y, m, d] = data.wedding.date.split('-');
   return (
     <section className="hero hero--polaroid">

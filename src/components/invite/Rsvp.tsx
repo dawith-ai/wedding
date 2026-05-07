@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { RsvpEntry } from '../../types';
 import { addRsvp as lsAdd } from '../../lib/storage';
 import { fbAddRsvp, isFirebaseEnabled } from '../../lib/firebase';
-import { showToast } from './Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   inviteId: string;

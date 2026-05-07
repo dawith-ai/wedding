@@ -2,12 +2,27 @@ import type { GuestbookEntry, RsvpEntry, WeddingData } from '../types';
 
 const DRAFT_KEY = 'wedding_draft';
 
-export function saveDraft(d: WeddingData) {
-  localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+function safeSet(key: string, value: string): boolean {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch {
+    // QuotaExceededError, SecurityError (private mode), etc.
+    return false;
+  }
+}
+
+export function saveDraft(d: WeddingData): boolean {
+  return safeSet(DRAFT_KEY, JSON.stringify(d));
 }
 
 export function loadDraft(): WeddingData | null {
-  const raw = localStorage.getItem(DRAFT_KEY);
+  let raw: string | null;
+  try {
+    raw = localStorage.getItem(DRAFT_KEY);
+  } catch {
+    return null;
+  }
   if (!raw) return null;
   try {
     return JSON.parse(raw) as WeddingData;
@@ -17,7 +32,11 @@ export function loadDraft(): WeddingData | null {
 }
 
 export function clearDraft() {
-  localStorage.removeItem(DRAFT_KEY);
+  try {
+    localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    /* noop */
+  }
 }
 
 function inviteKey(inviteId: string): string {
@@ -28,8 +47,16 @@ function rsvpKey(inviteId: string): string {
   return `wedding_rsvp_${inviteId}`;
 }
 
+function safeGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
 export function listGuestbook(inviteId: string): GuestbookEntry[] {
-  const raw = localStorage.getItem(inviteKey(inviteId));
+  const raw = safeGet(inviteKey(inviteId));
   if (!raw) return [];
   try {
     return JSON.parse(raw) as GuestbookEntry[];
@@ -41,7 +68,7 @@ export function listGuestbook(inviteId: string): GuestbookEntry[] {
 export function addGuestbook(inviteId: string, entry: GuestbookEntry) {
   const list = listGuestbook(inviteId);
   list.unshift(entry);
-  localStorage.setItem(inviteKey(inviteId), JSON.stringify(list));
+  safeSet(inviteKey(inviteId), JSON.stringify(list));
 }
 
 export function removeGuestbook(inviteId: string, id: string, password: string): boolean {
@@ -50,12 +77,12 @@ export function removeGuestbook(inviteId: string, id: string, password: string):
   if (idx < 0) return false;
   if (list[idx].password !== password) return false;
   list.splice(idx, 1);
-  localStorage.setItem(inviteKey(inviteId), JSON.stringify(list));
+  safeSet(inviteKey(inviteId), JSON.stringify(list));
   return true;
 }
 
 export function listRsvp(inviteId: string): RsvpEntry[] {
-  const raw = localStorage.getItem(rsvpKey(inviteId));
+  const raw = safeGet(rsvpKey(inviteId));
   if (!raw) return [];
   try {
     return JSON.parse(raw) as RsvpEntry[];
@@ -67,7 +94,7 @@ export function listRsvp(inviteId: string): RsvpEntry[] {
 export function addRsvp(inviteId: string, entry: RsvpEntry) {
   const list = listRsvp(inviteId);
   list.unshift(entry);
-  localStorage.setItem(rsvpKey(inviteId), JSON.stringify(list));
+  safeSet(rsvpKey(inviteId), JSON.stringify(list));
 }
 
 export function inviteIdFromEncoded(encoded: string): string {

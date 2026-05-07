@@ -270,10 +270,17 @@ export function OrnamentCanvas({ kind, className }: OrnamentProps) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Respect reduced-motion preference: render a single static frame, no animation.
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     let particles: Particle[] = [];
     let rafId = 0;
     let last = performance.now();
     let alive = true;
+    let paused = false;
 
     function size() {
       if (!canvas) return;
@@ -293,8 +300,19 @@ export function OrnamentCanvas({ kind, className }: OrnamentProps) {
       );
     }
 
+    function drawOnce() {
+      if (!canvas) return;
+      ctx!.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) spec!.draw(ctx!, p);
+    }
+
     function frame(now: number) {
       if (!alive || !canvas) return;
+      if (paused) {
+        last = now;
+        rafId = requestAnimationFrame(frame);
+        return;
+      }
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const rect = canvas.getBoundingClientRect();
@@ -307,14 +325,28 @@ export function OrnamentCanvas({ kind, className }: OrnamentProps) {
     }
 
     init();
-    rafId = requestAnimationFrame(frame);
-    const onResize = () => init();
+    if (reduced) {
+      drawOnce();
+    } else {
+      rafId = requestAnimationFrame(frame);
+    }
+
+    const onResize = () => {
+      init();
+      if (reduced) drawOnce();
+    };
+    const onVis = () => {
+      paused = document.hidden;
+      last = performance.now();
+    };
     window.addEventListener('resize', onResize);
+    document.addEventListener('visibilitychange', onVis);
 
     return () => {
       alive = false;
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', onResize);
+      document.removeEventListener('visibilitychange', onVis);
     };
   }, [kind]);
 

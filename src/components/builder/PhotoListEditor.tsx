@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { hasImgurClientId, uploadImage } from '../../lib/imgur';
-import { showToast } from '../invite/Toast';
+import { showToast } from '../../lib/toast';
 
 interface Props {
   photos: string[];

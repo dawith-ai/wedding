@@ -226,3 +226,77 @@
   font-size: 13px; border: 1px solid #ddd; background: #fff;
 }
 .modal-card .actions button.primary { background: #222; color: #fff; border-color: #222; }
+
+/* Share modal — QR + native share */
+.share-modal { max-width: 560px; }
+.share-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+@media (max-width: 520px) {
+  .share-grid { grid-template-columns: 1fr; }
+}
+.share-qr {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f5f5f5;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+}
+.share-qr img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #fff;
+  display: block;
+}
+.share-qr-download {
+  background: transparent;
+  color: #555;
+  border: 0;
+  font-size: 11px;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.share-qr--unavailable {
+  background: #f8f8f8;
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  padding: 16px;
+}
+.share-qr--unavailable p { margin: 0; line-height: 1.6; }
+.share-info { min-width: 0; }
+.share-warning {
+  background: #fff7ec;
+  border: 1px solid #f0d9aa;
+  color: #8b5e1c;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+.actions-share { flex-wrap: wrap; }
+.actions-share .btn-link {
+  display: inline-block;
+  padding: 9px 16px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 13px;
+  text-decoration: none;
+  color: #222;
+  background: #fff;
+}
+.actions-share .btn-link:hover { background: #f6f6f6; }

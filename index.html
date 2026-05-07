@@ -2,13 +2,53 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E💍%3C/text%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="description" content="12가지 테마로 만드는 모바일 청첩장" />
     <title>모바일 청첩장 만들기 · Wedding Invitation</title>
+    <meta name="description" content="12가지 테마로 5분 안에 만드는 모바일 청첩장. 신랑·신부 정보 입력만으로 완성, 링크 하나로 카카오톡 공유. 방명록·RSVP·BGM·식순·셔틀 안내 포함." />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fbf7ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c1830" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="모바일 청첩장" />
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="alternate icon" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.svg" />
+    <link rel="mask-icon" href="./icons/apple-touch-icon.svg" color="#b76e79" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="청첩장" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="모바일 청첩장" />
+    <meta property="og:title" content="모바일 청첩장 만들기" />
+    <meta property="og:description" content="12가지 테마, 5분 컷. 링크 하나로 카카오톡 공유." />
+    <meta property="og:image" content="./icons/icon.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="모바일 청첩장 만들기" />
+    <meta name="twitter:description" content="12가지 테마, 5분 컷. 링크 하나로 카카오톡 공유." />
+    <meta name="twitter:image" content="./icons/icon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register service worker after the page is interactive — never block first paint.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js').catch(function () {
+            /* SW registration is best-effort; the app works without it. */
+          });
+        });
+      }
+    </script>
   </body>
 </html>
