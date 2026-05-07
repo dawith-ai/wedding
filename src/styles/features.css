@@ -62,6 +62,29 @@
   letter-spacing: var(--tracking-wide);
 }
 
+/* ── Kakao share button ── */
+.share-bar--kakao {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.share-bar--kakao .share-kakao {
+  grid-column: 1 / -1;
+}
+.share-kakao {
+  background: #fee500 !important;
+  color: #181600 !important;
+  border: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  transition: filter var(--motion-default) var(--easing-standard);
+}
+.share-kakao:hover { filter: brightness(0.96); }
+.share-kakao svg { color: #181600; }
+
 /* ── Save the Date button ── */
 .save-date-btn {
   background: transparent;

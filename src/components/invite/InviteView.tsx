@@ -196,7 +196,12 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             <h2 className="section-heading">초대장 공유하기</h2>
             <Divider kind={theme.divider} />
             <p className="share-intro">소중한 분들에게 청첩장을 전달해보세요</p>
-            <ShareBar title={data.meta.title} description={data.meta.description} url={shareUrl} />
+            <ShareBar
+              title={data.meta.title}
+              description={data.meta.description}
+              url={shareUrl}
+              imageUrl={data.ogImage || data.hero}
+            />
             <div style={{ textAlign: 'center', marginTop: 14 }}>
               <SaveTheDate data={data} />
             </div>
@@ -209,6 +214,15 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           <span className="footer-dot">·</span>
           <span>{data.wedding.date.replace(/-/g, '.')}</span>
           <span className="footer-line" aria-hidden />
+          {!isPreview && (
+            <a
+              href="#/privacy"
+              className="footer-link"
+              style={{ marginLeft: 12, fontSize: 11, opacity: 0.65 }}
+            >
+              개인정보 처리방침
+            </a>
+          )}
         </footer>
       </div>
       {!isPreview && <Toast />}

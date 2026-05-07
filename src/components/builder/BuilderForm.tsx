@@ -9,6 +9,7 @@ import {
   isFirebaseEnabled,
   setFirebaseConfig,
 } from '../../lib/firebase';
+import { getKakaoKey, hasKakaoKey, setKakaoKey } from '../../lib/kakao';
 import { useState } from 'react';
 
 interface Props {
@@ -20,6 +21,7 @@ interface Props {
 export function BuilderForm({ data, onChange, onPublish }: Props) {
   const [showSettings, setShowSettings] = useState(false);
   const [imgurId, setImgurId] = useState(localStorage.getItem('imgur_client_id') || '');
+  const [kakaoKey, setKakaoKeyState] = useState(getKakaoKey());
   const [fb, setFb] = useState(
     getFirebaseConfig() || { apiKey: '', authDomain: '', projectId: '' }
   );
@@ -420,6 +422,22 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
               }}
             />
 
+            <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Kakao JavaScript Key (카카오톡 공유)</h4>
+            <p className="muted-text" style={{ marginBottom: 6 }}>
+              <a href="https://developers.kakao.com/console/app" target="_blank" rel="noopener" style={{ color: '#3a6' }}>
+                카카오 디벨로퍼스
+              </a>에서 앱 등록 → JavaScript 키 복사. 플랫폼 → Web → 사이트 도메인에 배포 URL 등록 필요.
+            </p>
+            <input
+              value={kakaoKey}
+              onChange={(e) => setKakaoKeyState(e.target.value)}
+              placeholder="abc123def456..."
+              style={{
+                width: '100%', background: '#fafafa', border: '1px solid #e2e2e2',
+                borderRadius: 6, padding: '10px 12px', fontSize: 13, marginBottom: 18,
+              }}
+            />
+
             <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Firebase Firestore (방명록·RSVP 공유)</h4>
             <p className="muted-text" style={{ marginBottom: 6 }}>
               Firestore 보안 규칙을 공개 read/write로 설정해야 합니다 (개인 청첩장이라 무방).
@@ -449,6 +467,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
                 className="primary"
                 onClick={() => {
                   setImgurClientId(imgurId);
+                  setKakaoKey(kakaoKey);
                   if (fb.apiKey && fb.projectId) {
                     setFirebaseConfig(fb);
                   } else {
@@ -461,8 +480,9 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
               </button>
             </div>
             <p className="muted-text" style={{ marginTop: 14 }}>
-              현재 상태: 이미지 업로드 {hasImgurClientId() ? '✓ 활성' : '✗ 비활성'} · Firebase{' '}
-              {isFirebaseEnabled() ? '✓ 활성' : '✗ 비활성 (이 기기에만 저장)'}
+              현재 상태: 이미지 업로드 {hasImgurClientId() ? '✓' : '✗'} · 카카오톡 공유{' '}
+              {hasKakaoKey() ? '✓' : '✗'} · Firebase{' '}
+              {isFirebaseEnabled() ? '✓' : '✗ (이 기기에만 저장)'}
             </p>
           </div>
         </div>
