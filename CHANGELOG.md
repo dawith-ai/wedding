@@ -45,6 +45,36 @@ PWA 인프라 도입, 안정성 강화, 신규 기능 추가. 코드베이스를
 - ESLint 설정에서 React 19 신규 룰 `set-state-in-effect`/`refs`를 `warn`으로 완화 — 기존 코드의 idiomatic 패턴(타이머 setState, 이벤트 핸들러 클로저의 ref 읽기)이 잘못된 것은 아니므로 빌드 차단을 피함.
 - TypeScript 빌드 클린 통과 (0 errors), ESLint 0 errors.
 
+### Verification (2026-05-07)
+
+`scripts/smoke-themes.mjs` — Playwright Chromium 헤드리스로 12개 테마를 빌더→발행→청첩장 URL 시퀀스로 자동 실행. 모바일 뷰포트(390×844, DPR 2)에서 콘솔 에러·페이지 에러·요청 실패를 캡처하고 hero 영역을 PNG로 저장.
+
+| 테마 | 어설션 | 콘솔 에러 | 요청 실패 | 시각 정체성 |
+|---|---|---|---|---|
+| original-warm | 5/5 ✓ | 0 | 0 | 베이지 활판 카드 + 세리프 |
+| classic-elegant | 5/5 ✓ | 0 | 0 | 모노그램 원 + Great Vibes 스크립트 |
+| modern-minimal | 5/5 ✓ | 0 | 0 | 흑백 모노톤 + "01" 인덱스 |
+| romantic-flower | 5/5 ✓ | 0 | 0 | 핑크 + SVG 플로럴 아치 + Pinyon |
+| nature-green | 5/5 ✓ | 0 | 0 | 세이지 그린 + 원형 사진 + 잎 |
+| luxury-gold | 5/5 ✓ | 0 | 0 | 시네마 레터박스 + "A Wedding Story" |
+| simple-clean | 5/5 ✓ | 0 | 0 | 순백 + 거대 타이포 + 원형 |
+| vintage-film | 5/5 ✓ | 0 | 0 | 세피아 + 폴라로이드 3장 산개 |
+| watercolor-soft | 5/5 ✓ | 0 | 0 | 라벤더 워시 + 아치형 사진 |
+| midnight-navy | 5/5 ✓ | 0 | 0 | 별자리 하트 + "Under The Stars" |
+| pastel-dream | 5/5 ✓ | 0 | 0 | 캔디 핑크 + 이모지 스티커 |
+| korean-traditional | 5/5 ✓ | 0 | 0 | 한지 + 청첩장/請牒狀 + 印 인장 |
+
+**합계: 60/60 어설션, 콘솔 에러 0, 요청 실패 0.** 12개 테마 모두 색뿐 아니라 레이아웃·타이포·장식·배지까지 시각적으로 완전히 다른 정체성을 유지함.
+
+검증 항목: data-theme 속성 매핑, hero 시그너처 렌더링, 공유 모달 + QR(또는 길이 초과 시 graceful fallback), 방명록 폼 마운트, 발행 URL 도달 + 청첩장 페이지 정상 렌더, 커튼 인트로 동작.
+
+화이트리스트로 무시한 외부 의존성: Imgur 업로드, Firebase 쓰기, qrserver — 자격증명 없이 실행했으므로 실패해도 검증 통과로 간주.
+
+### 알려진 한계 (출시 전 추가 확인 권장)
+
+- 실제 iOS Safari / 카카오톡 인앱 브라우저에서 핀치-줌, BGM, OG 카드 미리보기는 미검증.
+- 출시 전 1) 본인 카카오톡으로 발행 링크 보내 OG 카드 확인, 2) 실제 Imgur Client ID로 사진 업로드 한 사이클, 3) (선택) Firebase로 방명록 저장 한 번 흘려보기 권장.
+
 ---
 
 ## [1.0.0] - 2026 (이전 작업)
