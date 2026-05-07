@@ -9,6 +9,35 @@
      Without this, narrow containers will split words awkwardly. */
   word-break: keep-all;
   overflow-wrap: break-word;
+}
+
+/* Face-safe cropping for all hero / signature photos.
+   Wedding portraits typically have faces in the upper third — without
+   this, square/round crops chop off heads. */
+.invite-root .hero img,
+.invite-root .hero video,
+.invite-root section.hero img,
+.invite-root section.hero video,
+.invite-root .stacked-photo img,
+.invite-root .framed-photo img,
+.invite-root .monogram-photo img,
+.invite-root .arch-photo img,
+.invite-root .const-photo img,
+.invite-root .hanji-photo img,
+.invite-root .sticker-photo img,
+.invite-root .poster-photo img,
+.invite-root .letterpress-photo img,
+.invite-root .minimal-photo img,
+.invite-root .garden-photo img,
+.invite-root .watercolor-photo img,
+.invite-root .storybook-illustration img,
+.invite-root .bp-window img,
+.invite-root .letter-photo img,
+.invite-root .sb-poly-photo img {
+  object-position: center 28%;
+}
+
+.invite-root {
 
   /* 8-step typography scale */
   --t-xs: 11px;
@@ -97,16 +126,13 @@
   font-feature-settings: "ss01";
 }
 
-/* Bigger, more confident hero names */
+/* Bigger, more confident hero names — clamp so long Korean names never
+   overflow the viewport. 32px floor / scales with width / 64px ceiling. */
 .hero-names--overlay {
-  font-size: var(--t-2xl);
+  font-size: clamp(28px, 9.2vw, 64px);
   letter-spacing: var(--tracking-tight);
   line-height: 1.05;
   font-weight: 400;
-  gap: 18px;
-}
-@media (min-width: 480px) {
-  .hero-names--overlay { font-size: var(--t-3xl); }
 }
 .hero-names--overlay .amp {
   font-style: italic;
@@ -120,9 +146,9 @@
 /* Modern-minimal: keep ultra-thin */
 [data-theme="modern-minimal"] .hero-names--overlay {
   font-weight: 200;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-size: var(--t-xl);
+  font-size: clamp(22px, 7vw, 38px);
 }
 [data-theme="modern-minimal"] .hero-names--overlay .amp {
   letter-spacing: 0;
@@ -132,12 +158,8 @@
 /* Luxury & midnight: larger display */
 [data-theme="luxury-gold"] .hero-names--overlay,
 [data-theme="midnight-navy"] .hero-names--overlay {
-  font-size: var(--t-2xl);
+  font-size: clamp(34px, 10vw, 64px);
   font-weight: 500;
-}
-@media (min-width: 480px) {
-  [data-theme="luxury-gold"] .hero-names--overlay,
-  [data-theme="midnight-navy"] .hero-names--overlay { font-size: 56px; }
 }
 
 /* Hero overlay date — serif tabular nums */
