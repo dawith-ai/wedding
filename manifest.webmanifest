@@ -1,0 +1,60 @@
+{
+  "name": "모바일 청첩장 빌더",
+  "short_name": "청첩장",
+  "description": "12가지 테마로 5분 안에 만드는 모바일 청첩장. 링크 하나로 공유, 서버 비용 0원.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafafa",
+  "theme_color": "#b76e79",
+  "lang": "ko",
+  "dir": "ltr",
+  "categories": ["lifestyle", "social", "personalization"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "새 청첩장 만들기",
+      "short_name": "만들기",
+      "url": "./#/builder",
+      "description": "12가지 테마 중 하나로 청첩장 작성 시작"
+    }
+  ]
+}
