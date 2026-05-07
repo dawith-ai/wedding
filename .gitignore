@@ -22,7 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.github
 
 # Smoke-test artifacts
 scripts/.smoke-out/
