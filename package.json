@@ -14,7 +14,8 @@
     "verify": "node scripts/verify-features.mjs",
     "verify:themes": "node scripts/verify-themes.mjs",
     "verify:pwa": "node scripts/verify-pwa.mjs",
-    "verify:all": "node scripts/verify-features.mjs && node scripts/verify-themes.mjs && node scripts/verify-pwa.mjs",
+    "verify:legibility": "node scripts/verify-legibility.mjs",
+    "verify:all": "node scripts/verify-features.mjs && node scripts/verify-themes.mjs && node scripts/verify-pwa.mjs && node scripts/verify-legibility.mjs",
     "audit:overflow": "node scripts/debug-overflow.mjs",
     "audit:stress": "node scripts/audit-stress.mjs",
     "audit:pwa": "node scripts/audit-lighthouse.mjs"

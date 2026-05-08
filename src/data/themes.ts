@@ -59,7 +59,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'warm-tint',
     vars: {
       '--bg': '#f8f5f0', '--bg-alt': '#efe9e0', '--card': '#ffffff',
-      '--text': '#3a342c', '--text-muted': '#7d736a',
+      '--text': '#3a342c', '--text-muted': '#5e554c',
       '--accent': '#a87f5b', '--accent-soft': '#d8c4ac',
       '--divider': '#e3d9cc', '--shadow': '0 4px 24px rgba(120, 90, 60, 0.08)',
     },
@@ -82,7 +82,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'soft',
     vars: {
       '--bg': '#fbf7ee', '--bg-alt': '#f3ecdb', '--card': '#ffffff',
-      '--text': '#2f261b', '--text-muted': '#7d6f59',
+      '--text': '#2f261b', '--text-muted': '#5d4f3c',
       '--accent': '#bb9560', '--accent-soft': '#dcbe8a',
       '--divider': '#e6d9bc', '--shadow': '0 4px 28px rgba(120, 90, 50, 0.08)',
     },
@@ -103,7 +103,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'dim',
     vars: {
       '--bg': '#ffffff', '--bg-alt': '#f5f5f5', '--card': '#ffffff',
-      '--text': '#1a1a1a', '--text-muted': '#7a7a7a',
+      '--text': '#1a1a1a', '--text-muted': '#555049',
       '--accent': '#111111', '--accent-soft': '#dcdcdc',
       '--divider': '#e8e8e8', '--shadow': '0 2px 12px rgba(0, 0, 0, 0.05)',
     },
@@ -126,7 +126,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'warm-tint',
     vars: {
       '--bg': '#fbf2e2', '--bg-alt': '#f4e4c8', '--card': '#fff9ee',
-      '--text': '#3d2a1f', '--text-muted': '#8a6d54',
+      '--text': '#3d2a1f', '--text-muted': '#685040',
       '--accent': '#c46f5b', '--accent-soft': '#ecc6a8',
       '--divider': '#e6d3aa', '--shadow': '0 4px 22px rgba(140, 80, 50, 0.12)',
     },
@@ -148,7 +148,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'warm-tint',
     vars: {
       '--bg': '#f1ece0', '--bg-alt': '#e3dcc7', '--card': '#fdfaf0',
-      '--text': '#1d2a25', '--text-muted': '#6a7568',
+      '--text': '#1d2a25', '--text-muted': '#4d564a',
       '--accent': '#3d5a4a', '--accent-soft': '#b9c5b1',
       '--divider': '#cdc7b3', '--shadow': '0 4px 18px rgba(40, 60, 50, 0.1)',
     },
@@ -192,7 +192,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'none',
     vars: {
       '--bg': '#ffffff', '--bg-alt': '#f7f7f7', '--card': '#ffffff',
-      '--text': '#222222', '--text-muted': '#888888',
+      '--text': '#222222', '--text-muted': '#5e5e5e',
       '--accent': '#444444', '--accent-soft': '#dddddd',
       '--divider': '#eaeaea', '--shadow': 'none',
     },
@@ -214,7 +214,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'sepia',
     vars: {
       '--bg': '#f6ebd6', '--bg-alt': '#ecdfc4', '--card': '#fbf3e1',
-      '--text': '#2c241c', '--text-muted': '#7a6a52',
+      '--text': '#2c241c', '--text-muted': '#5e4f3c',
       '--accent': '#9c7855', '--accent-soft': '#d4b88f',
       '--divider': '#d8c8a8', '--shadow': '0 6px 18px rgba(60, 40, 20, 0.18)',
     },
@@ -237,7 +237,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'warm-tint',
     vars: {
       '--bg': '#fbf3e2', '--bg-alt': '#f0e3c4', '--card': '#fef7e6',
-      '--text': '#3a2e26', '--text-muted': '#7d6a5a',
+      '--text': '#3a2e26', '--text-muted': '#5d4d3e',
       '--accent': '#7a3f3f', '--accent-soft': '#c9aa8a',
       '--divider': '#d8c89e', '--shadow': '0 6px 22px rgba(80, 50, 30, 0.14)',
     },
@@ -283,7 +283,7 @@ export const THEMES: Theme[] = [
     photoTreatment: 'warm-tint',
     vars: {
       '--bg': '#fbf5e8', '--bg-alt': '#f3ebd6', '--card': '#fffaf1',
-      '--text': '#3a3030', '--text-muted': '#8a7a72',
+      '--text': '#3a3030', '--text-muted': '#6a5e54',
       '--accent': '#d97a86', '--accent-soft': '#f6c0c8',
       '--divider': '#e8dcc4', '--shadow': '0 4px 18px rgba(120, 80, 60, 0.12)',
     },

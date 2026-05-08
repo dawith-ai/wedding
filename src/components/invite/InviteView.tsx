@@ -209,17 +209,15 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         )}
 
         <footer className="invite-footer">
-          <span className="footer-line" aria-hidden />
-          <span>{data.groom.name} &amp; {data.bride.name}</span>
-          <span className="footer-dot">·</span>
-          <span>{data.wedding.date.replace(/-/g, '.')}</span>
-          <span className="footer-line" aria-hidden />
+          <div className="footer-row">
+            <span className="footer-line" aria-hidden />
+            <span>{data.groom.name}&nbsp;&amp;&nbsp;{data.bride.name}</span>
+            <span className="footer-dot">·</span>
+            <span>{data.wedding.date.replace(/-/g, '.')}</span>
+            <span className="footer-line" aria-hidden />
+          </div>
           {!isPreview && (
-            <a
-              href="#/privacy"
-              className="footer-link"
-              style={{ marginLeft: 12, fontSize: 11, opacity: 0.65 }}
-            >
+            <a href="#/privacy" className="footer-link">
               개인정보 처리방침
             </a>
           )}

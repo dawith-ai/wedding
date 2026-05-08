@@ -89,7 +89,7 @@
 .save-date-btn {
   background: transparent;
   border: 1px solid var(--accent);
-  color: var(--accent);
+  color: var(--text);
   padding: 11px 22px;
   border-radius: 999px;
   font-size: var(--t-sm);

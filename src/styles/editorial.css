@@ -88,7 +88,7 @@
   --bg-alt: #f5f3f0;
   --card: #ffffff;
   --text: #1f1d1a;
-  --text-muted: #82796f;
+  --text-muted: #5a5249;
   --accent: #2d2620;
   --divider: #ece7df;
 }
@@ -96,7 +96,7 @@
   --bg: #fafaf8;
   --bg-alt: #f0efeb;
   --text: #14130f;
-  --text-muted: #7a7670;
+  --text-muted: #4f4c46;
   --accent: #14130f;
 }
 .invite-root[data-theme="original-warm"] {
@@ -105,8 +105,8 @@
   --accent: #b86340;
   --accent-soft: #e8b89c;
   --text: #2c2620;
-  --text-muted: #847a6e;
-  --divider: #e3d8c4;
+  --text-muted: #5e544a;
+  --divider: #d8cbb4;
 }
 
 /* ═══ Top-biased hero overlay ═══ */
@@ -406,7 +406,8 @@
 /* Theme-specific upgrades */
 
 /* original-warm: terracotta accent */
-[data-theme="original-warm"] .section-label,
+/* Original-warm: keep section-label muted for contrast; only drop-cap
+   gets the terracotta accent (large + bold passes WCAG AA Large). */
 [data-theme="original-warm"] .greeting-body .drop-cap {
   color: var(--accent);
 }

@@ -48,6 +48,7 @@ jobs:
           BASE=http://127.0.0.1:4173 node scripts/verify-features.mjs
           BASE=http://127.0.0.1:4173 node scripts/verify-themes.mjs
           BASE=http://127.0.0.1:4173 node scripts/verify-pwa.mjs
+          BASE=http://127.0.0.1:4173 node scripts/verify-legibility.mjs
           kill $PREVIEW_PID 2>/dev/null || true
 
       - name: Upload smoke artifacts
