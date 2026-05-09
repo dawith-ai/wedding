@@ -1,0 +1,53 @@
+/* Cinematic Hero — Ken Burns slow zoom for photo motion without video cost.
+   Respects prefers-reduced-motion. Container overflow ensures safe scaling. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .invite-root .letterpress-photo,
+  .invite-root .minimal-frame,
+  .invite-root .gallery-tile,
+  .invite-root .poster-frame,
+  .invite-root .monogram-photo,
+  .invite-root .polaroid-stack,
+  .invite-root .arch-photo,
+  .invite-root .constellation-photo,
+  .invite-root .hanji-photo,
+  .invite-root .scrapbook-photo,
+  .invite-root .letter-photo,
+  .invite-root .boarding-photo,
+  .invite-root .storybook-photo {
+    overflow: hidden;
+  }
+
+  .invite-root .letterpress-photo img,
+  .invite-root .minimal-frame img,
+  .invite-root .gallery-tile img,
+  .invite-root .poster-frame img,
+  .invite-root .monogram-photo img,
+  .invite-root .polaroid-stack img,
+  .invite-root .arch-photo img,
+  .invite-root .constellation-photo img,
+  .invite-root .hanji-photo img,
+  .invite-root .scrapbook-photo img,
+  .invite-root .letter-photo img,
+  .invite-root .boarding-photo img,
+  .invite-root .storybook-photo img {
+    animation: weddingKenBurns 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+}
+
+@keyframes weddingKenBurns {
+  0% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* Pause when tab hidden (saves battery) */
+.invite-root[data-paused='true'] .letterpress-photo img,
+.invite-root[data-paused='true'] .minimal-frame img,
+.invite-root[data-paused='true'] .poster-frame img {
+  animation-play-state: paused;
+}

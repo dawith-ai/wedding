@@ -1,6 +1,7 @@
 import type { WeddingData } from '../../types';
 import { Countdown } from './Countdown';
 import { CalendarButtons } from './CalendarButtons';
+import { getEventLabels } from '../../data/events';
 import {
   TypographyPoster,
   WarmLetterpress,
@@ -49,6 +50,7 @@ function ParentLine({
 }
 
 function ParentBlock({ data }: Props) {
+  const labels = getEventLabels(data.eventType);
   return (
     <div className="hero-parents">
       <ParentLine
@@ -56,7 +58,7 @@ function ParentBlock({ data }: Props) {
         mother={data.groom.mother}
         fatherDeceased={data.groom.fatherDeceased}
         motherDeceased={data.groom.motherDeceased}
-        childRole="아들"
+        childRole={labels.partyAChild}
         child={data.groom.name}
       />
       <div className="parents-divider" aria-hidden />
@@ -65,7 +67,7 @@ function ParentBlock({ data }: Props) {
         mother={data.bride.mother}
         fatherDeceased={data.bride.fatherDeceased}
         motherDeceased={data.bride.motherDeceased}
-        childRole="딸"
+        childRole={labels.partyBChild}
         child={data.bride.name}
       />
     </div>
@@ -227,6 +229,20 @@ export function Hero({ data }: Props) {
       );
 
     case 'luxury-gold':
+      return (
+        <>
+          <CinematicLetterbox data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'editorial-mono':
       return (
         <>
           <CinematicLetterbox data={data} />

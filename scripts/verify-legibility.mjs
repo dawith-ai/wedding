@@ -23,6 +23,7 @@ const THEMES = [
   'original-warm', 'classic-elegant', 'modern-minimal', 'romantic-flower',
   'nature-green', 'luxury-gold', 'simple-clean', 'vintage-film',
   'watercolor-soft', 'midnight-navy', 'pastel-dream', 'korean-traditional',
+  'editorial-mono',
 ];
 
 const SCAN = `(() => {

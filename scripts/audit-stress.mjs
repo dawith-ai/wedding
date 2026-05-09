@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-const THEMES = ['original-warm','classic-elegant','modern-minimal','romantic-flower','nature-green','luxury-gold','simple-clean','vintage-film','watercolor-soft','midnight-navy','pastel-dream','korean-traditional'];
+const THEMES = ['original-warm','classic-elegant','modern-minimal','romantic-flower','nature-green','luxury-gold','simple-clean','vintage-film','watercolor-soft','midnight-navy','pastel-dream','korean-traditional','editorial-mono'];
 const BASE = process.env.BASE || 'http://127.0.0.1:4173';
 
 const SCAN = `(() => {

@@ -3,6 +3,48 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.0.0] - 2026-05-10 — AI 차별화 + 다이멘션 확장 메이저 릴리스
+
+기존 청첩장 시장(데어무드·디얼디어·바른손Mcard)이 디자인 템플릿 경쟁만 할 때 우리는 콘텐츠 생성 레이어로 진입. **"스튜디오 촬영 200~400만원을 0원으로 우회"**가 한 줄 차별화 카피.
+
+### Added
+
+- **AI 사진 스튜디오 (F1)** — Gemini 2.5 Flash Image 기반 BYOK. 셀카 1장 + 6가지 프리셋(한복 야외 / 턱시도 / 비치 / 스튜디오 / 한국 전통 혼례 / 시티 루프탑) 또는 자유 프롬프트로 웨딩 사진 합성. 결과는 Hero/갤러리에 1클릭 추가. Imgur 키 있으면 자동 업로드(URL 비대 방지).
+  - `src/lib/aiPhoto.ts` · `src/components/builder/AiPhotoStudio.tsx`
+- **AI 음성 인사말 (F2)** — OpenAI TTS BYOK. 6가지 한국어 보이스(nova/shimmer/alloy/echo/onyx/fable) + 속도 0.7~1.3x. 인사말 본문 → mp3 변환 → 다운로드 + 외부 호스트 안내.
+  - `src/lib/aiVoice.ts` · `src/components/builder/AiVoiceStudio.tsx`
+- **평생 가족 페이지 (F3)** — `lifeEvents[]` 데이터 모델. 결혼 이후의 1주년·신혼여행·집들이·돌·5주년·10주년 7개 빠른 추가 칩 + 자유 입력. 청첩장 하단 "결혼 그 후" 타임라인. **영구 URL이라 가능한 구조적 해자** — 데어무드/디얼디어처럼 만료되지 않음.
+  - `src/components/invite/LifeEvents.tsx` · `src/components/builder/LifeEventsEditor.tsx`
+- **시네마틱 Ken Burns 모션** — 모든 hero 사진에 22초 cycle slow-zoom 애니메이션. `prefers-reduced-motion` 존중. 영상 없이도 시네마 무드.
+  - `src/styles/cinematic.css`
+- **이벤트 타입 6종** — 결혼식 / 돌잔치 / 환갑·칠순 / 생일파티 / 회사 행사 / 일반 초대. 각 타입별 라벨·기본 카피·기본 메타 자동 매핑. Builder 1번 항목 + Home 진입 카드.
+  - `src/data/events.ts`
+- **awesome-claude-design 13테마 재구성** — Claude/Apple/Vercel/Airbnb/MongoDB/Lamborghini/Linear/WIRED/Clay/Stripe/Notion/Mastercard+단청/Bugatti 베이스. `editorial-mono` 신규 테마 추가 (12 → 13).
+- **AI 커스텀 테마 빌더** — 폼 기반(8색 컬러피커 + 레이아웃/장식/구분선/사진보정) + AI 프롬프트 복사 + JSON 붙여넣기 3가지 모드. localStorage v1 저장. ThemePicker가 기본 13개 + 내 테마 통합 노출.
+  - `src/lib/customThemes.ts` · `src/components/builder/CustomThemeEditor.tsx`
+- **Vercel 배포** — `vercel.json` (SPA rewrites, asset 1y immutable, sw.js no-cache, 보안 헤더). 라이브: https://wedding-rho-brown.vercel.app
+- **Imgur base64 업로드 지원** — `uploadDataUrl()` / `uploadBase64()` 헬퍼. AI 생성 이미지가 자동으로 외부 URL이 되어 공유 링크 비대화 방지.
+
+### Changed
+
+- **InviteView 한국 표준 IA 재구성** — Hero 직후 SaveTheDate(캘린더 추가 + Save the Date 이미지) 카드 신설. Greeting → Story(선택) → Gallery → CalendarWidget → Location 순으로 재배치. 데어무드/디얼디어/바른손Mcard 공통 패턴.
+- **Story·Timeline 기본값 OFF** — 한국 시장에서 비표준이라는 IA 리서치 결론 반영.
+- **Hero ParentBlock 라벨 동적화** — "아들/딸" 하드코딩 제거 → `getEventLabels(eventType).partyAChild` 등.
+- **Accounts 섹션 동적 라벨** — `accountsTitle`, `accountsIntro`, 신랑측/신부측 그룹명도 이벤트 타입별.
+- **Home 랜딩 재구성** — 헤로 카피 "AI로 만드는 모바일 청첩장 · 평생 보관". 6개 차별점 카드 (AI 사진 스튜디오 / 음성 인사말 / 평생 가족 페이지 / AI 무한 테마 / 평생 무료 / 모든 행사).
+- **BuilderForm 섹션 재번호** — 1.이벤트 → 2.테마 → 3.주인공 → ... → 14.평생 가족 페이지 → 15.공유 메타.
+- **README 차별점 섹션 추가** — 4개 핵심 차별화 포인트 명시.
+
+### Fixed
+
+- **빌드 검증** — TypeScript strict 통과 (`tsc -b && vite build` 그린). 번들 405KB / gzip 121KB.
+
+### Roadmap (구현 시도했으나 보류)
+
+- **동적 OG 카드 (@vercel/og)** — Vercel Edge 런타임에서 v0.11.1 번들 이슈로 보류. 카톡 공유 미리보기를 신랑·신부 사진+이름 카드로 자동 생성하는 기능. 향후 Cloudinary 등으로 우회 가능.
+
+---
+
 ## [2.0.0] - 2026-05-07 — 앱 스토어 출시 준비 릴리스
 
 PWA 인프라 도입, 안정성 강화, 신규 기능 추가. 코드베이스를 99% 완성도까지 끌어올린 메이저 릴리스.

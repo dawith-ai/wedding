@@ -30,6 +30,7 @@ const THEMES = [
   'midnight-navy',
   'pastel-dream',
   'korean-traditional',
+  'editorial-mono',
 ];
 
 const BASE = process.env.BASE || 'http://localhost:5173';

@@ -1,8 +1,13 @@
 import type { WeddingData, ThemeId } from '../../types';
 import { ThemePicker } from './ThemePicker';
+import { CustomThemeEditor } from './CustomThemeEditor';
+import { AiPhotoStudio } from './AiPhotoStudio';
+import { AiVoiceStudio } from './AiVoiceStudio';
+import { LifeEventsEditor } from './LifeEventsEditor';
 import { ImageUpload } from './ImageUpload';
 import { PhotoListEditor } from './PhotoListEditor';
 import { AccountEditor } from './AccountEditor';
+import { EVENT_LIST, EVENT_LABELS, applyEventTemplate } from '../../data/events';
 import { hasImgurClientId, setImgurClientId } from '../../lib/imgur';
 import {
   getFirebaseConfig,
@@ -42,10 +47,39 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         💡 입력하시는 모든 내용은 <b>이 브라우저에만</b> 저장됩니다. 공유 링크를 만들면 모든 정보가 URL에 인코딩되어 누구나 그 링크로 청첩장을 볼 수 있어요.
       </div>
 
-      <h2>1. 테마 선택</h2>
-      <ThemePicker value={data.theme} onChange={(id: ThemeId) => set('theme', id)} />
+      <h2>1. 어떤 행사인가요?</h2>
+      <div className="event-type-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 8, marginBottom: 24 }}>
+        {EVENT_LIST.map((ev) => {
+          const meta = EVENT_LABELS[ev];
+          const active = (data.eventType ?? 'wedding') === ev;
+          return (
+            <button
+              key={ev}
+              type="button"
+              onClick={() => onChange(applyEventTemplate(data, ev))}
+              style={{
+                background: active ? '#222' : '#fff',
+                color: active ? '#fff' : '#333',
+                border: `1px solid ${active ? '#222' : '#ddd'}`,
+                borderRadius: 10,
+                padding: '10px 6px',
+                fontSize: 12,
+                cursor: 'pointer',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: 22 }}>{meta.emoji}</div>
+              <div style={{ marginTop: 4 }}>{meta.name}</div>
+            </button>
+          );
+        })}
+      </div>
 
-      <h2>2. 신랑·신부</h2>
+      <h2>2. 테마 선택</h2>
+      <ThemePicker value={data.theme} onChange={(id: ThemeId) => set('theme', id)} />
+      <CustomThemeEditor onSelect={(id) => set('theme', id)} />
+
+      <h2>3. 주인공 (신랑·신부)</h2>
       <div className="row-2">
         <div className="field">
           <label>신랑 이름</label>
@@ -111,7 +145,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </div>
       </div>
 
-      <h2>3. 결혼식 일시·장소</h2>
+      <h2>4. 일시·장소</h2>
       <div className="row-2">
         <div className="field">
           <label>날짜</label>
@@ -151,11 +185,20 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <input value={data.wedding.mapTmap || ''} onChange={(e) => set('wedding', { ...data.wedding, mapTmap: e.target.value })} />
       </div>
 
-      <h2>4. 메인 사진 & 인사말</h2>
+      <h2>5. 메인 사진 & 인사말</h2>
       <div className="field">
         <label>대표 사진 (세로 비율 권장)</label>
         <ImageUpload value={data.hero} onChange={(url) => set('hero', url)} aspectHint="세로 3:4 비율 추천" />
       </div>
+      <AiPhotoStudio
+        onPhotoReady={(dataUrl, action) => {
+          if (action === 'hero') {
+            set('hero', dataUrl);
+          } else {
+            set('gallery', [...data.gallery, dataUrl]);
+          }
+        }}
+      />
       <div className="field">
         <label>대표 영상 URL (선택, mp4/webm 직링크)</label>
         <input
@@ -175,8 +218,12 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <label>인사말 본문</label>
         <textarea value={data.greeting.body} onChange={(e) => set('greeting', { ...data.greeting, body: e.target.value })} />
       </div>
+      <AiVoiceStudio
+        greetingText={data.greeting.body}
+        onAttachAsBgm={(url) => set('bgm', url)}
+      />
 
-      <h2>5. 우리의 이야기 (선택)</h2>
+      <h2>6. 우리의 이야기 (선택)</h2>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -206,13 +253,13 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </>
       )}
 
-      <h2>6. 갤러리</h2>
+      <h2>7. 갤러리</h2>
       <PhotoListEditor photos={data.gallery} onChange={(p) => set('gallery', p)} max={24} />
 
-      <h2>7. 약도 이미지 (선택)</h2>
+      <h2>8. 약도 이미지 (선택)</h2>
       <ImageUpload value={data.mapImage || ''} onChange={(url) => set('mapImage', url)} aspectHint="가로형 16:9 추천" />
 
-      <h2>8. 마음 전하실 곳 (계좌)</h2>
+      <h2>9. 마음 전하실 곳 (계좌)</h2>
       <div style={{ marginBottom: 18 }}>
         <p className="muted-text" style={{ marginBottom: 6 }}>신랑측</p>
         <AccountEditor list={data.accounts.groom} onChange={(groom) => set('accounts', { ...data.accounts, groom })} />
@@ -222,7 +269,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <AccountEditor list={data.accounts.bride} onChange={(bride) => set('accounts', { ...data.accounts, bride })} />
       </div>
 
-      <h2>9. 방명록 / RSVP</h2>
+      <h2>10. 방명록 / RSVP</h2>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -251,7 +298,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </p>
       )}
 
-      <h2>10. 배경음악 / 옵션</h2>
+      <h2>11. 배경음악 / 옵션</h2>
       <div className="field">
         <label>BGM URL (선택, mp3 직링크)</label>
         <input
@@ -272,7 +319,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         커튼 인트로 사용
       </label>
 
-      <h2>11. 식순 (예식 순서)</h2>
+      <h2>12. 식순 (예식 순서)</h2>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -360,7 +407,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </>
       )}
 
-      <h2>12. 셔틀버스 / 응원하기</h2>
+      <h2>13. 셔틀버스 / 응원하기</h2>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -388,7 +435,16 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         응원하기(♥ 카운터) 표시
       </label>
 
-      <h2>13. 공유 정보 (메타)</h2>
+      <h2>14. 평생 가족 페이지 (선택)</h2>
+      <LifeEventsEditor
+        enabled={data.lifeEvents?.enabled ?? false}
+        title={data.lifeEvents?.title ?? '결혼 그 후'}
+        intro={data.lifeEvents?.intro ?? ''}
+        items={data.lifeEvents?.items ?? []}
+        onChange={(next) => set('lifeEvents', next)}
+      />
+
+      <h2>15. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />

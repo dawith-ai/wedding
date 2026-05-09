@@ -1,5 +1,5 @@
 import type { ThemeId } from '../../types';
-import { THEMES } from '../../data/themes';
+import { THEMES, ALL_THEMES } from '../../data/themes';
 
 interface Props {
   value: ThemeId;
@@ -7,9 +7,11 @@ interface Props {
 }
 
 export function ThemePicker({ value, onChange }: Props) {
+  const all = ALL_THEMES();
+  const builtInIds = new Set(THEMES.map((t) => t.id));
   return (
     <div className="theme-grid">
-      {THEMES.map((t) => (
+      {all.map((t) => (
         <button
           key={t.id}
           type="button"
@@ -49,7 +51,12 @@ export function ThemePicker({ value, onChange }: Props) {
               }}
             />
           </div>
-          <div className="theme-name">{t.name}</div>
+          <div className="theme-name">
+            {t.name}
+            {!builtInIds.has(t.id as never) && (
+              <span style={{ marginLeft: 6, fontSize: 10, color: '#a17', background: '#fce7f3', padding: '1px 6px', borderRadius: 4 }}>내 테마</span>
+            )}
+          </div>
           <div className="theme-desc">{t.description}</div>
         </button>
       ))}

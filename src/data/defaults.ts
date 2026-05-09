@@ -2,6 +2,7 @@ import type { WeddingData } from '../types';
 
 export const DEFAULT_DATA: WeddingData = {
   theme: 'original-warm',
+  eventType: 'wedding',
   useCurtain: true,
   bgm: '',
 
@@ -36,7 +37,7 @@ export const DEFAULT_DATA: WeddingData = {
       '서로 마주보며 다져온 사랑을\n이제 함께 한 곳을 바라보며\n걸어갈 수 있는 큰 사랑으로 키우고자 합니다.\n\n저희 두 사람이 사랑의 이름으로 지켜나갈 수 있게\n앞날을 따뜻한 격려로 지켜봐 주십시오.',
   },
   story: {
-    enabled: true,
+    enabled: false,
     title: '우리의 이야기',
     body:
       '서로 다른 길을 걷던 두 사람이\n하나의 길을 함께 걷게 되었습니다.\n\n여러분을 소중한 자리에 초대합니다.',
@@ -71,7 +72,7 @@ export const DEFAULT_DATA: WeddingData = {
   rsvp: { enabled: true, deadline: '2026-10-01' },
   likes: { enabled: true },
   timeline: {
-    enabled: true,
+    enabled: false,
     title: '예식 순서',
     items: [
       { time: '12:30', label: '하객 입장' },
@@ -87,6 +88,12 @@ export const DEFAULT_DATA: WeddingData = {
   shuttle: {
     enabled: false,
     info: '',
+  },
+  lifeEvents: {
+    enabled: false,
+    title: '결혼 그 후',
+    intro: '청첩장은 이 결혼식 이후로도 평생 살아있는 페이지입니다. 1주년, 첫 아이, 가족 여행 — 시간이 쌓일 때마다 여기에 추가해주세요.',
+    items: [],
   },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',

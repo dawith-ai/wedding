@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import type { Account } from '../../types';
+import type { Account, EventType } from '../../types';
 import { showToast } from '../../lib/toast';
+import { getEventLabels } from '../../data/events';
 
 interface Props {
   groom: Account[];
   bride: Account[];
+  eventType?: EventType;
 }
 
 function copy(text: string) {
@@ -38,17 +40,18 @@ function Group({ title, list }: { title: string; list: Account[] }) {
   );
 }
 
-export function Accounts({ groom, bride }: Props) {
+export function Accounts({ groom, bride, eventType }: Props) {
   if (groom.length === 0 && bride.length === 0) return null;
+  const labels = getEventLabels(eventType);
   return (
     <section className="invite-section" style={{ background: 'var(--bg-alt)' }}>
       <p className="section-title">ACCOUNT</p>
-      <h2 className="section-heading">마음 전하실 곳</h2>
+      <h2 className="section-heading">{labels.accountsTitle}</h2>
       <p className="account-intro">
-        {`참석이 어려우신 분들을 위해\n비대면으로나마 마음을 전하실 수 있도록 안내드립니다.\n보내주신 정성 소중히 간직하겠습니다.`}
+        {`참석이 어려우신 분들을 위해\n비대면으로나마 마음을 전하실 수 있도록 안내드립니다.\n${labels.accountsIntro}`}
       </p>
-      <Group title="신랑측 계좌번호" list={groom} />
-      <Group title="신부측 계좌번호" list={bride} />
+      <Group title={`${labels.partyAParents} 계좌번호`} list={groom} />
+      <Group title={`${labels.partyBParents} 계좌번호`} list={bride} />
     </section>
   );
 }

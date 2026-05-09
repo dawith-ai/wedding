@@ -1,4 +1,4 @@
-export type ThemeId =
+export type BuiltInThemeId =
   | 'original-warm'
   | 'classic-elegant'
   | 'modern-minimal'
@@ -10,7 +10,18 @@ export type ThemeId =
   | 'watercolor-soft'
   | 'midnight-navy'
   | 'pastel-dream'
-  | 'korean-traditional';
+  | 'korean-traditional'
+  | 'editorial-mono';
+
+export type ThemeId = BuiltInThemeId | (string & {});
+
+export type EventType =
+  | 'wedding'
+  | 'dol'
+  | 'hwangap'
+  | 'birthday'
+  | 'corporate'
+  | 'general';
 
 export interface Person {
   name: string;
@@ -26,8 +37,17 @@ export interface Account {
   number: string;
 }
 
+export interface LifeEvent {
+  id: string;
+  date: string;
+  title: string;
+  note?: string;
+  photo?: string;
+}
+
 export interface WeddingData {
   theme: ThemeId;
+  eventType?: EventType;
   useCurtain: boolean;
   bgm?: string;
 
@@ -91,6 +111,13 @@ export interface WeddingData {
   shuttle: {
     enabled: boolean;
     info: string;
+  };
+
+  lifeEvents?: {
+    enabled: boolean;
+    title?: string;
+    intro?: string;
+    items: LifeEvent[];
   };
 
   meta: {

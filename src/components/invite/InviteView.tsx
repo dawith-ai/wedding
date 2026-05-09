@@ -16,9 +16,11 @@ import { ShareBar } from './ShareBar';
 import { OrnamentCanvas } from './Ornaments';
 import { Divider } from './Divider';
 import { CalendarWidget } from './CalendarWidget';
+import { CalendarButtons } from './CalendarButtons';
 import { Timeline } from './Timeline';
 import { ShuttleBus } from './ShuttleBus';
 import { LikeButton } from './LikeButton';
+import { LifeEvents } from './LifeEvents';
 import { SaveTheDate } from './SaveTheDate';
 import { useFadeUpObserver } from '../../lib/intersect';
 
@@ -60,9 +62,11 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     setMeta('meta[name="description"]', 'content', desc);
     setMeta('meta[property="og:title"]', 'content', document.title);
     setMeta('meta[property="og:description"]', 'content', desc);
-    if (data.ogImage || data.hero) {
-      setMeta('meta[property="og:image"]', 'content', data.ogImage || data.hero);
-      setMeta('meta[name="twitter:image"]', 'content', data.ogImage || data.hero);
+
+    const ogImageUrl = data.ogImage || data.hero;
+    if (ogImageUrl) {
+      setMeta('meta[property="og:image"]', 'content', ogImageUrl);
+      setMeta('meta[name="twitter:image"]', 'content', ogImageUrl);
     }
     setMeta('meta[name="twitter:title"]', 'content', document.title);
     setMeta('meta[name="twitter:description"]', 'content', desc);
@@ -76,8 +80,10 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     data.bride.name,
     data.wedding.date,
     data.wedding.venue,
+    data.eventType,
     data.ogImage,
     data.hero,
+    theme,
     isPreview,
   ]);
 
@@ -113,6 +119,17 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
 
         <Hero data={data} />
 
+        <section className="invite-section invite-section--tight section-savedate fade-up">
+          <p className="section-label">
+            {theme.fonts.script ? <em className="script-label">Save the date</em> : 'SAVE THE DATE'}
+          </p>
+          <Divider kind={theme.divider} />
+          <CalendarButtons data={data} />
+          <div style={{ textAlign: 'center', marginTop: 12 }}>
+            <SaveTheDate data={data} />
+          </div>
+        </section>
+
         {data.greeting.body.trim() && (
           <div className="fade-up">
             <Greeting
@@ -122,10 +139,6 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             />
           </div>
         )}
-
-        <section className="invite-section section-calendar fade-up">
-          <CalendarWidget date={data.wedding.date} theme={data.theme} />
-        </section>
 
         {showStory && (
           <div className="fade-up">
@@ -144,15 +157,13 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           </div>
         )}
 
+        <section className="invite-section section-calendar fade-up">
+          <CalendarWidget date={data.wedding.date} theme={data.theme} />
+        </section>
+
         <div className="fade-up">
           <Location data={data} />
         </div>
-
-        {data.shuttle.enabled && data.shuttle.info.trim() && (
-          <div className="fade-up">
-            <ShuttleBus info={data.shuttle.info} theme={data.theme} />
-          </div>
-        )}
 
         {data.timeline.enabled && data.timeline.items.length > 0 && (
           <div className="fade-up">
@@ -164,8 +175,18 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           </div>
         )}
 
+        {data.shuttle.enabled && data.shuttle.info.trim() && (
+          <div className="fade-up">
+            <ShuttleBus info={data.shuttle.info} theme={data.theme} />
+          </div>
+        )}
+
         <div className="fade-up">
-          <Accounts groom={data.accounts.groom} bride={data.accounts.bride} />
+          <Accounts
+            groom={data.accounts.groom}
+            bride={data.accounts.bride}
+            eventType={data.eventType}
+          />
         </div>
 
         {data.rsvp.enabled && (
@@ -173,18 +194,26 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             <Rsvp inviteId={inviteId} deadline={data.rsvp.deadline} />
           </div>
         )}
-        {data.guestbook.enabled && (
+
+        {(data.guestbook.enabled || data.likes.enabled) && (
           <div className="fade-up">
-            <Guestbook inviteId={inviteId} />
+            {data.guestbook.enabled && <Guestbook inviteId={inviteId} />}
+            {data.likes.enabled && (
+              <section className="invite-section invite-section--tight section-likes">
+                <LikeButton inviteId={inviteId} />
+                <p className="like-caption">신랑 신부에게 응원의 마음을 전해주세요</p>
+              </section>
+            )}
           </div>
         )}
 
-        {data.likes.enabled && (
+        {data.lifeEvents?.enabled && data.lifeEvents.items.length > 0 && (
           <div className="fade-up">
-            <section className="invite-section invite-section--tight section-likes">
-              <LikeButton inviteId={inviteId} />
-              <p className="like-caption">신랑 신부에게 응원의 마음을 전해주세요</p>
-            </section>
+            <LifeEvents
+              title={data.lifeEvents.title}
+              intro={data.lifeEvents.intro}
+              items={data.lifeEvents.items}
+            />
           </div>
         )}
 
@@ -202,9 +231,6 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
               url={shareUrl}
               imageUrl={data.ogImage || data.hero}
             />
-            <div style={{ textAlign: 'center', marginTop: 14 }}>
-              <SaveTheDate data={data} />
-            </div>
           </section>
         )}
 
