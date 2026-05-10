@@ -3,6 +3,32 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.1.0] - 2026-05-10 — AI 영상 + 음성 클로닝 + OG 카드
+
+기존 AI 사진/음성 위에 동영상·실제 음성 클로닝·카톡 미리보기 카드 자동 생성을 추가. 한국 모바일 청첩장 시장에서 누구도 안 한 영역.
+
+### Added
+
+- **AI 영상 생성 (F4)** — fal.ai Stable Video Diffusion. 사진 1장 → 4초 mp4 영상. 3가지 모션 프리셋(잔잔/시네마/강한). queue API 폴링으로 60~90초 내 완성. videoHero에 자동 설정.
+  - `src/lib/aiVideo.ts` · AiPhotoStudio 결과 섹션 통합
+- **4스타일 동시 AI 사진 (F5)** — `Promise.allSettled`로 4개 프리셋 병렬 호출. 2x2 결과 그리드. 각 결과 카드에 Hero/갤러리 버튼.
+  - AiPhotoStudio bulkResults state
+- **ElevenLabs 음성 클로닝 (F6)** — 본인 음성 샘플 30초~3분 → voice_id 발급 → 인사말을 본인 목소리로 변환. 한국어 multilingual_v2 모델. localStorage에 voice_id 캐시.
+  - `src/lib/elevenlabs.ts` · AiVoiceStudio 모드 토글 (OpenAI ↔ ElevenLabs)
+- **OG 카드 캔버스 생성기 (F7)** — Canvas API로 1200×630 OG 이미지 클라이언트 생성. 좌측 hero, 우측 이름·날짜·식장 + 테마 액센트. Imgur 자동 업로드 → ogImage 자동 적용. **카톡/페북/트위터 공유 미리보기 자동 해결** (서버 함수 없이).
+  - `src/components/builder/OgCardGenerator.tsx`
+
+### Changed
+
+- **AiPhotoStudio 확장** — 4 스타일 병렬 / 영상 생성 / fal.ai 키 관리 / 모션 프리셋. 이전 1장 생성 + Hero/갤러리 첨부 그대로 유지.
+- **AiVoiceStudio 모드 토글** — OpenAI TTS(6 보이스) ↔ ElevenLabs 클로닝(본인 목소리) 두 모드 전환. 클로닝 완료 시 voice_id 카드로 표시.
+
+### Fixed
+
+- **AI 사진 외부 URL 변환** — `ensureExternalUrl()` 헬퍼로 base64 → Imgur 자동 업로드. 영상 생성 시 외부 URL 필수 검증 추가.
+
+---
+
 ## [3.0.0] - 2026-05-10 — AI 차별화 + 다이멘션 확장 메이저 릴리스
 
 기존 청첩장 시장(데어무드·디얼디어·바른손Mcard)이 디자인 템플릿 경쟁만 할 때 우리는 콘텐츠 생성 레이어로 진입. **"스튜디오 촬영 200~400만원을 0원으로 우회"**가 한 줄 차별화 카피.

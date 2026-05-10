@@ -4,6 +4,7 @@ import { CustomThemeEditor } from './CustomThemeEditor';
 import { AiPhotoStudio } from './AiPhotoStudio';
 import { AiVoiceStudio } from './AiVoiceStudio';
 import { LifeEventsEditor } from './LifeEventsEditor';
+import { OgCardGenerator } from './OgCardGenerator';
 import { ImageUpload } from './ImageUpload';
 import { PhotoListEditor } from './PhotoListEditor';
 import { AccountEditor } from './AccountEditor';
@@ -198,6 +199,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
             set('gallery', [...data.gallery, dataUrl]);
           }
         }}
+        onVideoReady={(videoUrl) => set('videoHero', videoUrl)}
       />
       <div className="field">
         <label>대표 영상 URL (선택, mp4/webm 직링크)</label>
@@ -453,6 +455,14 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <label>공유 시 설명</label>
         <input value={data.meta.description} onChange={(e) => set('meta', { ...data.meta, description: e.target.value })} />
       </div>
+      <div className="field">
+        <label>공유 시 미리보기 이미지 URL (선택)</label>
+        <input value={data.ogImage || ''} onChange={(e) => set('ogImage', e.target.value)} placeholder="https://..." />
+        <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+          비워두면 대표 사진을 그대로 사용. 아래 OG 카드 생성기로 자동 만들 수 있어요.
+        </div>
+      </div>
+      <OgCardGenerator data={data} onChange={(url) => set('ogImage', url)} />
 
       {showSettings && (
         <div className="modal-overlay" onClick={() => setShowSettings(false)}>
