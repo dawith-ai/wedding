@@ -1,6 +1,9 @@
 const KEY_STORAGE = 'wedding_gemini_api_key_v1';
-const MODEL = 'gemini-2.5-flash-image';
-const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+const MODELS = [
+  'gemini-3.1-flash-image-preview',
+  'gemini-3-pro-image-preview',
+  'gemini-2.5-flash-image',
+];
 
 export interface AiPhotoStyle {
   id: string;
@@ -101,14 +104,14 @@ export interface GenerateResult {
   mimeType: string;
 }
 
-export async function generateWeddingPhoto(
+async function tryModel(
+  model: string,
+  key: string,
   inputBase64: string,
   inputMime: string,
   prompt: string
 ): Promise<GenerateResult> {
-  const key = getGeminiKey();
-  if (!key) throw new Error('Gemini API 키가 설정되어 있지 않아요. 설정에서 키를 입력해주세요.');
-
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
   const body = {
     contents: [
       {
@@ -123,7 +126,7 @@ export async function generateWeddingPhoto(
     },
   };
 
-  const res = await fetch(`${ENDPOINT}?key=${encodeURIComponent(key)}`, {
+  const res = await fetch(`${endpoint}?key=${encodeURIComponent(key)}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -131,7 +134,9 @@ export async function generateWeddingPhoto(
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`Gemini API 오류 (${res.status}): ${text.slice(0, 240)}`);
+    const err = new Error(`${model} (${res.status}): ${text.slice(0, 240)}`) as Error & { status?: number };
+    err.status = res.status;
+    throw err;
   }
 
   const json = (await res.json()) as {
@@ -140,7 +145,7 @@ export async function generateWeddingPhoto(
     }>;
     error?: { message?: string };
   };
-  if (json.error) throw new Error(`Gemini: ${json.error.message || 'unknown error'}`);
+  if (json.error) throw new Error(`${model}: ${json.error.message || 'unknown error'}`);
 
   const parts = json.candidates?.[0]?.content?.parts || [];
   for (const p of parts) {
@@ -151,5 +156,28 @@ export async function generateWeddingPhoto(
     }
   }
   const textParts = parts.map((p) => p.text).filter(Boolean).join('\n');
-  throw new Error(textParts ? `이미지가 반환되지 않았어요: ${textParts.slice(0, 160)}` : '이미지가 반환되지 않았어요.');
+  throw new Error(textParts ? `${model}: 이미지가 반환되지 않았어요 — ${textParts.slice(0, 160)}` : `${model}: 이미지가 반환되지 않았어요`);
+}
+
+export async function generateWeddingPhoto(
+  inputBase64: string,
+  inputMime: string,
+  prompt: string
+): Promise<GenerateResult> {
+  const key = getGeminiKey();
+  if (!key) throw new Error('Gemini API 키가 설정되어 있지 않아요. 설정에서 키를 입력해주세요.');
+
+  let lastError: Error | undefined;
+  for (const model of MODELS) {
+    try {
+      return await tryModel(model, key, inputBase64, inputMime, prompt);
+    } catch (e) {
+      const err = e as Error & { status?: number };
+      lastError = err;
+      // Retry next model on quota/forbidden; abort on other errors
+      if (err.status === 429 || err.status === 403) continue;
+      throw err;
+    }
+  }
+  throw lastError || new Error('모든 모델 호출 실패');
 }

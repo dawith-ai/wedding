@@ -3,6 +3,23 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.1.1] - 2026-05-10 — 데모 사진 고화질 + Gemini 모델 폴백
+
+### Added
+
+- **Gemini 모델 폴백 체인** — `aiPhoto.ts`가 `gemini-3.1-flash-image-preview` → `gemini-3-pro-image-preview` → `gemini-2.5-flash-image` 순서로 자동 시도. 429/403 발생 시 다음 모델로 폴백. 사용자 spending cap 또는 모델별 권한 차이에 자동 대응.
+- **샘플 생성 스크립트** — `scripts/generate-samples.mjs`. 로컬 ~/.openclaw/openclaw.json의 Google 키를 자동으로 읽어 6개 스타일 웨딩 사진을 `public/samples/`에 일괄 생성. AI Studio cap 회복 시 즉시 실행 가능.
+
+### Changed
+
+- **DEFAULT_DATA 사진 고화질 업그레이드** — `?w=900&q=80` → `?w=1200&h=1500&fit=crop&crop=faces,center&q=88&auto=format`. Hero는 1600×2000 portrait 4:5, 갤러리는 1200×1500 4:5. Unsplash CDN 자동 포맷·얼굴 중심 크롭.
+
+### Notes
+
+- 직접 AI 사진 생성 시도했으나 사용자 Google AI Studio 프로젝트가 월 spending cap 초과 (429). 프로덕션 데모는 검증된 Unsplash 사진 그대로 사용. 사용자가 ai.studio/spend에서 cap 조정 후 `node scripts/generate-samples.mjs` 1회 실행으로 진짜 AI 생성 사진으로 교체 가능.
+
+---
+
 ## [3.1.0] - 2026-05-10 — AI 영상 + 음성 클로닝 + OG 카드
 
 기존 AI 사진/음성 위에 동영상·실제 음성 클로닝·카톡 미리보기 카드 자동 생성을 추가. 한국 모바일 청첩장 시장에서 누구도 안 한 영역.
