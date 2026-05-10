@@ -3,6 +3,29 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.2.0] - 2026-05-10 — 진짜 움직이는 청첩장 (영상 Hero + 무료 AI + 컨페티)
+
+기존 정적 사진 청첩장에서 진짜 영상이 자동 재생되는 청첩장으로. 모든 공개 데모가 첫 화면부터 영상 모션. 데어무드/디얼디어 차별 못한 영역.
+
+### Added
+
+- **F8 영상 Hero 기본값** — Pexels 무료 라이선스 웨딩 영상 2개를 ffmpeg로 모바일 최적화(720p, 24fps, 12초 무한 루프, 무음, faststart). `public/videos/hero-couple.mp4` (419KB), `hero-rings.mp4` (322KB) 번들. DEFAULT_DATA.videoHero 자동 적용 — 첫 진입부터 영상 자동 재생.
+- **F9 무료 AI 사진 (Pollinations.ai)** — API 키 필요 없는 무료 FLUX 모델 통합. 6 스타일 (한복 야외 / 턱시도 / 비치 / 루프탑 야경 / 숲속 / 꽃 아치) + 자유 추가 묘사. URL이 결정론적(seed 고정)이라 청첩장 재방문 시 같은 사진. **API 키 입력 부담 0** — 가장 큰 진입장벽 제거.
+  - `src/lib/freeAiPhoto.ts` · `src/components/builder/FreeAiPhoto.tsx`
+- **F10 셀러브레이션 컨페티** — RSVP 참석 응답 시 화면 양 옆에서 1.8초 컨페티 폭죽, Like 버튼 클릭 시 하트 버스트(버튼 위치 기준), 공유 링크 복사 시 위에서 스파클 드리즐. `prefers-reduced-motion` 존중. canvas-confetti 라이브러리 + 자체 rate-limit (250ms).
+  - `src/lib/celebrate.ts` · LikeButton/Rsvp/ShareBar 트리거
+
+### Changed
+
+- **DEFAULT_DATA.videoHero** — 빈 문자열 → `videos/hero-couple.mp4`. 빌더에 진입한 모든 사용자가 즉시 영상 데모 확인 가능.
+
+### Roadmap
+
+- 갤러리 사진 라이트박스 진입 시 sparkle, 카운트다운 0 도달 시 폭죽 (다음 릴리스)
+- 게스트가 청첩장에서 본인 셀카로 즉석 AI 사진 만들기 (현재는 빌더에서만)
+
+---
+
 ## [3.1.1] - 2026-05-10 — 데모 사진 고화질 + Gemini 모델 폴백
 
 ### Added

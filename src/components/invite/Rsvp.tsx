@@ -3,6 +3,7 @@ import type { RsvpEntry } from '../../types';
 import { addRsvp as lsAdd } from '../../lib/storage';
 import { fbAddRsvp, isFirebaseEnabled } from '../../lib/firebase';
 import { showToast } from '../../lib/toast';
+import { celebrateRsvp } from '../../lib/celebrate';
 
 interface Props {
   inviteId: string;
@@ -64,6 +65,7 @@ export function Rsvp({ inviteId, deadline }: Props) {
         lsAdd(inviteId, entry);
       }
       setDone(true);
+      if (attending === 'yes') celebrateRsvp();
       showToast('참석 의사 전달이 완료되었어요');
     } catch (err) {
       showToast((err as Error).message);

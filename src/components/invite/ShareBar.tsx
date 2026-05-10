@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { showToast } from '../../lib/toast';
 import { hasKakaoKey, shareToKakao } from '../../lib/kakao';
+import { celebrateSparkle } from '../../lib/celebrate';
 
 interface Props {
   title: string;
@@ -22,14 +23,14 @@ export function ShareBar({ title, description, url, imageUrl = '' }: Props) {
 
   function copyLink() {
     navigator.clipboard?.writeText(url).then(
-      () => showToast('링크가 복사되었습니다'),
+      () => { showToast('링크가 복사되었습니다'); celebrateSparkle(); },
       () => showToast('복사에 실패했어요')
     );
   }
 
   function nativeShare() {
     if (navigator.share) {
-      navigator.share({ title, text: description, url }).catch(() => {});
+      navigator.share({ title, text: description, url }).then(() => celebrateSparkle()).catch(() => {});
     } else {
       copyLink();
     }

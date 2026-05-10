@@ -45,7 +45,7 @@ export const DEFAULT_DATA: WeddingData = {
   },
   hero:
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=2000&fit=crop&crop=faces,center&q=90&auto=format',
-  videoHero: '',
+  videoHero: 'videos/hero-couple.mp4',
   gallery: [
     'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&h=1500&fit=crop&crop=faces,center&q=88&auto=format',
     'https://images.unsplash.com/photo-1525258946800-98cfd641d0de?w=1200&h=1500&fit=crop&crop=faces,center&q=88&auto=format',

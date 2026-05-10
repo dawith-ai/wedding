@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isFirebaseEnabled, getFirebaseConfig } from '../../lib/firebase';
+import { celebrateHeart } from '../../lib/celebrate';
 
 interface Props {
   inviteId: string;
@@ -42,6 +43,7 @@ export function LikeButton({ inviteId }: Props) {
     return localStorage.getItem(LS_LIKED(inviteId)) === '1';
   });
   const [popping, setPopping] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isFirebaseEnabled()) {
@@ -63,6 +65,7 @@ export function LikeButton({ inviteId }: Props) {
     setLiked(!liked);
     localStorage.setItem(LS_COUNT(inviteId), String(next));
     localStorage.setItem(LS_LIKED(inviteId), liked ? '0' : '1');
+    if (!liked) celebrateHeart(btnRef.current);
     if (isFirebaseEnabled()) {
       fbWriteLikes(inviteId, next);
     }
@@ -71,6 +74,7 @@ export function LikeButton({ inviteId }: Props) {
   return (
     <div className="like-wrap">
       <button
+        ref={btnRef}
         className={`like-btn${liked ? ' liked' : ''}${popping ? ' pop' : ''}`}
         onClick={toggle}
         aria-pressed={liked}

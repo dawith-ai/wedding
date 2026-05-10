@@ -1,6 +1,7 @@
 import type { WeddingData, ThemeId } from '../../types';
 import { ThemePicker } from './ThemePicker';
 import { CustomThemeEditor } from './CustomThemeEditor';
+import { FreeAiPhoto } from './FreeAiPhoto';
 import { AiPhotoStudio } from './AiPhotoStudio';
 import { AiVoiceStudio } from './AiVoiceStudio';
 import { LifeEventsEditor } from './LifeEventsEditor';
@@ -191,6 +192,17 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <label>대표 사진 (세로 비율 권장)</label>
         <ImageUpload value={data.hero} onChange={(url) => set('hero', url)} aspectHint="세로 3:4 비율 추천" />
       </div>
+      <FreeAiPhoto
+        groomName={data.groom.name}
+        brideName={data.bride.name}
+        onPhotoReady={(url, action) => {
+          if (action === 'hero') {
+            set('hero', url);
+          } else {
+            set('gallery', [...data.gallery, url]);
+          }
+        }}
+      />
       <AiPhotoStudio
         onPhotoReady={(dataUrl, action) => {
           if (action === 'hero') {
