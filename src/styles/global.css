@@ -10,8 +10,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 img { max-width: 100%; display: block; }
-button { font-family: inherit; cursor: pointer; }
-a { text-decoration: none; color: inherit; }
+button {
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Prevent iOS double-tap zoom on interactive elements; we still let
+   pinch-zoom and panning work normally. */
+input, textarea, select { -webkit-tap-highlight-color: transparent; }
 input, textarea, select {
   font-family: inherit;
   font-size: inherit;
