@@ -3,6 +3,54 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.4.0] - 2026-05-12 — 자율 디벨롭 루프 (Ornaments · Hero · Divider · Mobile · Perf)
+
+`/loop` 자율 페이싱 모드에서 5 사이클 연속 디벨롭. 한 사이클 = 한 commit + build/curtain-smoke 검증.
+
+### Cycle 1 — Ornaments (hearts/dancheong)
+
+- **Hearts 파티클**: 단색 → 핑크 라디얼 그라데이션 + 8px 글로우 + 1.2Hz 스케일 펄스. 회전 + 알파 리스폰. 18개로 살짝 늘림.
+- **Dancheong**: `OrnamentCanvas`가 null을 반환하던 가지를 `DancheongCorners`로 연결(이전엔 dead code였음). 빨강/파랑/금 단청 그라데이션 + 인너 글로우 + 드롭섀도우. 모바일 폭에서 54px로 다운스케일.
+  - `src/components/invite/Ornaments.tsx` · `src/styles/invite.css`
+
+### Cycle 2 — Hero layouts (boardingpass/letter/scrapbook)
+
+- **BoardingPass** (nature-green): 헤더에 대각선 줄무늬 + 하이라이트 라인 추가, 스탬프가 더블 보더 디스트레스 룩, 바코드 44px + nth-child opacity 변주로 진짜 바코드 느낌.
+- **HandwrittenLetter** (watercolor-soft): 왁스씰 78px로 확대 + 빨강 글로우 + 0.2s 딜레이 settle 애니메이션(`reduced-motion` 존중). 접힘 코너 48px + 접힘선 그라데이션 강조.
+- **ScrapbookDiary** (pastel-dream): 페이지 살짝 -0.6deg 회전 + 수직 페이퍼 라인. 워시 테이프에 하이라이트/섀도우 그라데이션. 날짜 스탬프 더블 보더 디스트레스 + 인너 글로우.
+  - `src/styles/signatures.css`
+
+### Cycle 3 — Section Divider 8종 정련
+
+- **gold-line**: 8각 별 라디얼 그라데이션(크림 → accent) + 중심 글로우 점.
+- **double-dot**: 중앙 작은 점 opacity 0.65로 강약 대비.
+- **tilde**: strokeWidth 1.1 + 양 끝 종지점 도트.
+- **leaf-sprig**: 잎마다 잎맥(보조 스트로크 0.5) 추가.
+- **floral-branch**: 꽃 중심에 화이트→accent 라디얼 글로우, 양옆 추가 줄기 곡선.
+- **hanji-line**: 사각형 두 개 → 동양식 십자(十) 한붓 도장 + 중앙 bg 점.
+  - `src/components/invite/Divider.tsx`
+
+### Cycle 4 — Mobile 안정성
+
+- **iOS Safari 스크롤 락**: `overflow:hidden`을 무시하는 문제 해결. `position:fixed` + `top` 보존 + `scrollTo` 복원 패턴. 비-iOS는 기존 동작 유지(불필요한 reflow 없음).
+- **BgmToggle 터치 타겟**: 40px → 44px (Apple HIG 최소). `touch-action: manipulation`으로 더블탭 줌 지연 제거.
+- **global**: `button`/`a`에 `touch-action: manipulation` + `-webkit-tap-highlight-color: transparent`. iOS 회색 탭 하이라이트 + 300ms 지연 제거.
+  - `src/lib/scrollLock.ts` · `src/styles/global.css` · `src/styles/invite.css`
+
+### Cycle 5 — Lighthouse / Perf
+
+- **CDN preconnect**: Unsplash preconnect, Pollinations/Daum CDN dns-prefetch. LCP 개선.
+- **Gallery `<img>`**: `decoding="async"` + `fetchPriority`(첫 2장 `high`, 나머지 `low`). 초기 로드 우선순위 명확화.
+- **Story `<img>`**: `decoding="async"`.
+  - `index.html` · `src/components/invite/Gallery.tsx` · `src/components/invite/Story.tsx`
+
+### Verified
+
+- 5 사이클 모두 `npm run build` + `npm run verify:curtain` 8/8 통과.
+- 최종 `npm run verify:all`: features 36/36 · themes 195/195 · PWA 18/18 · legibility 0 · curtain 8/8.
+
+---
+
 ## [3.3.0] - 2026-05-12 — 입장 연출 디벨롭 + 13 테마 가독성 통과
 
 dongdong39/wedding_templates 레퍼런스에서 가져온 영감으로 청첩장 진입 순간을 영화처럼. 13 테마 전부 WCAG 4.5:1 통과.
