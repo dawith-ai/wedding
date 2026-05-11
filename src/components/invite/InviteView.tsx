@@ -107,6 +107,9 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             groomName={data.groom.name}
             brideName={data.bride.name}
             date={data.wedding.date}
+            heroImage={data.hero}
+            ornament={theme.ornament}
+            layout={theme.layout}
           />
         )}
         {data.bgm && !isPreview && <BgmToggle src={data.bgm} />}

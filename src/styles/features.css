@@ -58,7 +58,7 @@
 .like-caption {
   margin-top: 14px;
   font-size: var(--t-xs);
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--text-muted) 55%, var(--text) 45%);
   letter-spacing: var(--tracking-wide);
 }
 

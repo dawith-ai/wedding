@@ -3,6 +3,32 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.3.0] - 2026-05-12 — 입장 연출 디벨롭 + 13 테마 가독성 통과
+
+dongdong39/wedding_templates 레퍼런스에서 가져온 영감으로 청첩장 진입 순간을 영화처럼. 13 테마 전부 WCAG 4.5:1 통과.
+
+### Added
+
+- **Curtain 레이어드 입장 연출** — Hero 사진 블러 백드롭 + 그라데이션 틴트 + 테마 ornament(꽃잎/별/스파클/잎/하트) 파티클 + 좌우 패널 슬라이드. 라벨/날짜+요일 칩/이름/디바이더/버튼/힌트 화살표가 0.15s 간격으로 stagger reveal.
+  - 어두운 테마(luxury-gold, midnight-navy, editorial-mono)는 추가 글로우 + 인셋 섀도우로 카타르시스 강화.
+  - `Escape`/`Enter`/`Space` 키로 즉시 입장 가능, 버튼 자동 포커스.
+  - `prefers-reduced-motion` 존중: 슬라이드/스태거/힌트 애니메이션 비활성, 0.2s 페이드만.
+  - 요일 칩(MON/TUE…), `&` 스크립트 폰트, 어센트 컬러 pill 버튼, 화살표 아이콘 + 바운싱 힌트.
+  - `src/components/invite/Curtain.tsx` · `src/styles/invite.css`
+- **테마별 가독성 풀패스** — 13/13 테마가 WCAG 4.5:1 (AA Body Text) 통과. `section-label` / `share-intro` / `like-caption` / `account-intro` / `countdown-message` / `gallery-subtitle`가 `color-mix(in srgb, var(--text-muted) 55%, var(--text) 45%)`로 강화되어 디자인 톤은 유지하되 대비 회복.
+- **청첩장 시네마 스테이지 v-clip 수정** — `editorial-mono`의 `cinema-stage`가 모바일 폭에서 텍스트를 25px 잘라먹던 버그 해결(`min-height: 320px`).
+- **smoke-curtain 스크립트** — 8개 핵심 테마에서 Curtain 마운트 → 스태거 reveal → 버튼 클릭 → 언마운트까지 검증. `npm run verify:curtain`.
+
+### Changed
+
+- **Curtain props 확장** — `heroImage` / `ornament` / `layout`을 InviteView에서 주입. 테마와 100% 동기화된 입장 연출.
+
+### Verified
+
+- `npm run verify:all`: features 36/36 · themes 195/195 · PWA 18/18 · legibility 0 issues · curtain 8/8 = **클린**.
+
+---
+
 ## [3.2.0] - 2026-05-10 — 진짜 움직이는 청첩장 (영상 Hero + 무료 AI + 컨페티)
 
 기존 정적 사진 청첩장에서 진짜 영상이 자동 재생되는 청첩장으로. 모든 공개 데모가 첫 화면부터 영상 모션. 데어무드/디얼디어 차별 못한 영역.
