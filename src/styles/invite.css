@@ -70,21 +70,28 @@
 
 /* Dancheong corners (Korean traditional) */
 .dancheong-corners {
-  position: absolute;
-  inset: 14px;
+  position: fixed;
+  inset: 12px;
   pointer-events: none;
   z-index: 3;
+  opacity: 0.85;
 }
 .dancheong-corners .dc {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
   display: flex;
+  filter: drop-shadow(0 1px 1px rgba(80, 30, 30, 0.18));
 }
 .dancheong-corners .dc.tl { top: 0; left: 0; }
 .dancheong-corners .dc.tr { top: 0; right: 0; transform: scaleX(-1); }
 .dancheong-corners .dc.bl { bottom: 0; left: 0; transform: scaleY(-1); }
 .dancheong-corners .dc.br { bottom: 0; right: 0; transform: scale(-1, -1); }
+@media (max-width: 480px) {
+  .dancheong-corners { inset: 8px; }
+  .dancheong-corners .dc { width: 54px; height: 54px; }
+  .dancheong-corners .dc svg { width: 54px; height: 54px; }
+}
 
 /* Make sections sit above ornament layer */
 .invite-frame > section,

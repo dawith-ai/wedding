@@ -158,24 +158,32 @@ function starSpec(): Spec {
 
 function heartSpec(): Spec {
   return {
-    count: 16,
+    count: 18,
     spawn: (w, h, fromTop) => ({
       x: rand(0, w),
       y: fromTop ? rand(-40, h) : h + rand(0, 40),
-      size: rand(8, 16),
-      vx: rand(-6, 6),
-      vy: rand(-30, -12),
-      rot: 0,
-      vrot: 0,
-      alpha: rand(0.5, 0.9),
+      size: rand(7, 15),
+      vx: rand(-5, 5),
+      vy: rand(-24, -10),
+      rot: rand(-0.15, 0.15),
+      vrot: rand(-0.2, 0.2),
+      alpha: rand(0.45, 0.92),
       phase: rand(0, Math.PI * 2),
     }),
     draw: (ctx, p) => {
+      const pulse = 1 + Math.sin((p.phase || 0) * 1.2) * 0.06;
       ctx.save();
       ctx.translate(p.x, p.y);
-      ctx.scale(p.size / 16, p.size / 16);
+      ctx.rotate(p.rot);
+      ctx.scale((p.size / 16) * pulse, (p.size / 16) * pulse);
       ctx.globalAlpha = p.alpha;
-      ctx.fillStyle = 'rgba(255, 159, 177, 0.85)';
+      const grad = ctx.createRadialGradient(-3, -3, 1, 0, 0, 14);
+      grad.addColorStop(0, 'rgba(255, 235, 240, 0.95)');
+      grad.addColorStop(0.55, 'rgba(255, 145, 165, 0.92)');
+      grad.addColorStop(1, 'rgba(224, 105, 130, 0.78)');
+      ctx.fillStyle = grad;
+      ctx.shadowColor = 'rgba(224, 105, 130, 0.45)';
+      ctx.shadowBlur = 8;
       ctx.beginPath();
       ctx.moveTo(0, 5);
       ctx.bezierCurveTo(-9, -5, -9, -14, 0, -7);
@@ -184,12 +192,14 @@ function heartSpec(): Spec {
       ctx.restore();
     },
     update: (p, dt, w, h) => {
-      p.phase = (p.phase || 0) + dt * 2;
-      p.x += p.vx * dt + Math.sin(p.phase) * 0.6;
+      p.phase = (p.phase || 0) + dt * 1.8;
+      p.x += p.vx * dt + Math.sin(p.phase) * 0.55;
       p.y += p.vy * dt;
+      p.rot += p.vrot * dt;
       if (p.y < -30) {
         p.y = h + 30;
         p.x = rand(0, w);
+        p.alpha = rand(0.45, 0.92);
       }
       return true;
     },
@@ -382,28 +392,46 @@ export function OrnamentCanvas({ kind, className }: OrnamentProps) {
     );
   }
   if (kind === 'dancheong') {
-    return null;
+    return <DancheongCorners className={className} />;
   }
   if (kind === 'none') return null;
 
   return <canvas ref={ref} className={`ornament-canvas ${className || ''}`} aria-hidden />;
 }
 
-export function DancheongCorners() {
+export function DancheongCorners({ className }: { className?: string }) {
   const corner = (
-    <svg viewBox="0 0 60 60" width="60" height="60" aria-hidden>
-      <g fill="none" strokeWidth="1.4">
-        <path d="M2 18 Q2 2 18 2" stroke="#8b2434" />
-        <path d="M6 22 Q6 6 22 6" stroke="#1b3a5c" />
-        <path d="M10 26 Q10 10 26 10" stroke="#c9a96e" />
-        <circle cx="14" cy="14" r="2.5" fill="#8b2434" stroke="none" />
-        <circle cx="22" cy="14" r="1.5" fill="#1b3a5c" stroke="none" />
-        <circle cx="14" cy="22" r="1.5" fill="#1b3a5c" stroke="none" />
+    <svg viewBox="0 0 60 60" width="72" height="72" aria-hidden>
+      <defs>
+        <linearGradient id="dc-red" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#a83242" />
+          <stop offset="100%" stopColor="#6f1d28" />
+        </linearGradient>
+        <linearGradient id="dc-blue" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#264c79" />
+          <stop offset="100%" stopColor="#0f2849" />
+        </linearGradient>
+        <linearGradient id="dc-gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#e5c47e" />
+          <stop offset="100%" stopColor="#a07a3a" />
+        </linearGradient>
+      </defs>
+      <g fill="none" strokeWidth="1.6" strokeLinecap="round">
+        <path d="M2 22 Q2 2 22 2" stroke="url(#dc-red)" />
+        <path d="M7 25 Q7 7 25 7" stroke="url(#dc-blue)" />
+        <path d="M12 28 Q12 12 28 12" stroke="url(#dc-gold)" />
+        <path d="M2 22 Q2 2 22 2" stroke="rgba(168, 50, 66, 0.25)" strokeWidth="3" />
+      </g>
+      <g stroke="none">
+        <circle cx="15" cy="15" r="2.8" fill="url(#dc-red)" />
+        <circle cx="23" cy="14" r="1.5" fill="url(#dc-blue)" />
+        <circle cx="14" cy="23" r="1.5" fill="url(#dc-blue)" />
+        <circle cx="20" cy="20" r="1" fill="#c9a96e" />
       </g>
     </svg>
   );
   return (
-    <div className="dancheong-corners" aria-hidden>
+    <div className={`dancheong-corners ${className || ''}`} aria-hidden>
       <div className="dc tl">{corner}</div>
       <div className="dc tr">{corner}</div>
       <div className="dc bl">{corner}</div>
