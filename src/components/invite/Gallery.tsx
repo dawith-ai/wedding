@@ -17,7 +17,13 @@ export function Gallery({ photos }: Props) {
       <div className="gallery-grid">
         {photos.map((src, i) => (
           <button key={i} onClick={() => setIndex(i)} aria-label={`사진 ${i + 1}`}>
-            <img src={src} alt={`gallery-${i}`} loading="lazy" />
+            <img
+              src={src}
+              alt={`gallery-${i}`}
+              loading="lazy"
+              decoding="async"
+              fetchPriority={i < 2 ? 'high' : 'low'}
+            />
           </button>
         ))}
       </div>
