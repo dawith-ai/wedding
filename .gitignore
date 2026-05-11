@@ -27,3 +27,6 @@ dist-ssr
 scripts/.smoke-out/
 scripts/.audit-out/
 .vercel
+
+# Claude harness lock/state
+.claude/
