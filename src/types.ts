@@ -144,6 +144,27 @@ export interface WeddingData {
     bride: string;
   };
 
+  pin?: {
+    enabled: boolean;
+    /** 4-digit PIN, stored as plain text inside the URL fragment
+     * (the URL is already private; this only stops casual link-leakage). */
+    code: string;
+    hint?: string;
+  };
+
+  meal?: {
+    enabled: boolean;
+    title?: string;
+    style?: 'course' | 'buffet' | 'hanjeongsik' | 'tea' | 'custom';
+    note?: string;
+    menu: string[];
+  };
+
+  gallery_opts?: {
+    slideshow: boolean;
+    intervalSec?: number;
+  };
+
   meta: {
     title: string;
     description: string;

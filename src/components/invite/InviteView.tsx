@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { WeddingData } from '../../types';
 import { THEME_MAP, loadThemeFonts } from '../../data/themes';
 import { Toast } from './Toast';
@@ -25,6 +25,9 @@ import { SaveTheDate } from './SaveTheDate';
 import { Interview } from './Interview';
 import { DressCode } from './DressCode';
 import { BrideGroomNotes } from './BrideGroomNotes';
+import { MealInfo } from './MealInfo';
+import { InviteStats } from './InviteStats';
+import { PinGate } from './PinGate';
 import { useFadeUpObserver } from '../../lib/intersect';
 
 interface Props {
@@ -36,6 +39,22 @@ interface Props {
 
 export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Props) {
   const theme = THEME_MAP[data.theme] || THEME_MAP['original-warm'];
+
+  // PIN gate — gated on first visit until the user enters the code.
+  const pinKey = `wedding_pin_unlocked_${inviteId}`;
+  const pinNeeded =
+    !isPreview &&
+    !!data.pin?.enabled &&
+    !!data.pin?.code &&
+    data.pin.code.trim().length >= 4;
+  const [pinUnlocked, setPinUnlocked] = useState<boolean>(() => {
+    if (!pinNeeded) return true;
+    try {
+      return localStorage.getItem(pinKey) === '1';
+    } catch {
+      return false;
+    }
+  });
 
   useFadeUpObserver([
     data.theme,
@@ -107,8 +126,16 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
 
   return (
     <div className="invite-root" data-theme={data.theme} data-layout={theme.layout} style={styleVars}>
+      {pinNeeded && !pinUnlocked && (
+        <PinGate
+          code={data.pin!.code}
+          hint={data.pin!.hint}
+          storageKey={pinKey}
+          onUnlock={() => setPinUnlocked(true)}
+        />
+      )}
       <div className="invite-frame">
-        {!isPreview && data.useCurtain && (
+        {!isPreview && data.useCurtain && pinUnlocked && (
           <Curtain
             groomName={data.groom.name}
             brideName={data.bride.name}
@@ -162,7 +189,12 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
 
         {data.gallery.length > 0 && (
           <div className="fade-up">
-            <Gallery photos={data.gallery} />
+            <Gallery
+              photos={data.gallery}
+              slideshowSec={
+                data.gallery_opts?.slideshow ? data.gallery_opts.intervalSec ?? 4 : undefined
+              }
+            />
           </div>
         )}
 
@@ -208,6 +240,12 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           </div>
         )}
 
+        {data.meal?.enabled && (
+          <div className="fade-up">
+            <MealInfo data={data} />
+          </div>
+        )}
+
         <div className="fade-up">
           <Accounts
             groom={data.accounts.groom}
@@ -231,6 +269,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
                 <p className="like-caption">신랑 신부에게 응원의 마음을 전해주세요</p>
               </section>
             )}
+            {!isPreview && <InviteStats inviteId={inviteId} />}
           </div>
         )}
 

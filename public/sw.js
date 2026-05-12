@@ -9,7 +9,7 @@
  * each release so old caches drop automatically.
  */
 
-const VERSION = 'wedding-v3.6.0';
+const VERSION = 'wedding-v3.7.0';
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 

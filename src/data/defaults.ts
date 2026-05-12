@@ -130,6 +130,26 @@ export const DEFAULT_DATA: WeddingData = {
     groom: '결혼식까지 매일이 설레요. 그날 와주실 모든 분들께 미리 감사드려요.',
     bride: '오시는 길이 멀고 번거로우실 텐데, 그래도 함께해 주셔서 정말 감사해요.',
   },
+  pin: {
+    enabled: false,
+    code: '',
+    hint: '',
+  },
+  meal: {
+    enabled: false,
+    title: '식사 안내',
+    style: 'course',
+    note: '예식 후 같은 층 연회홀에서 식사가 준비되어 있습니다. 부담 없이 식사하고 가세요.',
+    menu: [
+      '전채 — 계절 샐러드 / 카프레제',
+      '메인 — 한우 안심 스테이크 / 광어 스테이크 (택일)',
+      '디저트 — 시즌 케이크 / 커피·홍차',
+    ],
+  },
+  gallery_opts: {
+    slideshow: false,
+    intervalSec: 4,
+  },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',
     description: '2026년 10월 10일 토요일, 소중한 분들을 초대합니다.',

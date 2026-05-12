@@ -6,6 +6,8 @@ interface Props {
   index: number;
   onClose: () => void;
   onIndex: (i: number) => void;
+  /** Auto-advance with this delay in seconds. Off (undefined / 0) by default. */
+  slideshowSec?: number;
 }
 
 interface TouchState {
@@ -19,12 +21,19 @@ interface TouchState {
 const MAX_SCALE = 4;
 const MIN_SCALE = 1;
 
-export function PhotoViewer({ photos, index, onClose, onIndex }: Props) {
+export function PhotoViewer({
+  photos,
+  index,
+  onClose,
+  onIndex,
+  slideshowSec,
+}: Props) {
   const [loaded, setLoaded] = useState(false);
   const [scale, setScale] = useState(1);
   const [tx, setTx] = useState(0);
   const [ty, setTy] = useState(0);
   const [interacting, setInteracting] = useState(false);
+  const [playing, setPlaying] = useState<boolean>(!!slideshowSec && slideshowSec > 0);
   const touch = useRef<TouchState>({
     type: null,
     startX: 0,
@@ -47,10 +56,26 @@ export function PhotoViewer({ photos, index, onClose, onIndex }: Props) {
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowLeft') onIndex(Math.max(0, index - 1));
       if (e.key === 'ArrowRight') onIndex(Math.min(photos.length - 1, index + 1));
+      if (e.key === ' ' || e.key === 'k') {
+        e.preventDefault();
+        setPlaying((v) => !v);
+      }
     }
     window.addEventListener('keydown', key);
     return () => window.removeEventListener('keydown', key);
   }, [index, photos.length, onClose, onIndex]);
+
+  // Slideshow auto-advance — pause when zoomed or actively interacting.
+  useEffect(() => {
+    if (!playing) return;
+    if (scale > 1 || interacting) return;
+    const delay = Math.max(2, slideshowSec ?? 4) * 1000;
+    const id = window.setTimeout(() => {
+      const next = (index + 1) % photos.length;
+      onIndex(next);
+    }, delay);
+    return () => window.clearTimeout(id);
+  }, [playing, slideshowSec, index, photos.length, scale, interacting, onIndex]);
 
   function distance(touches: React.TouchList): number {
     const dx = touches[0].clientX - touches[1].clientX;
@@ -182,6 +207,21 @@ export function PhotoViewer({ photos, index, onClose, onIndex }: Props) {
         {index + 1} / {photos.length}
         {scale > 1 && <span style={{ marginLeft: 8, opacity: 0.7 }}>×{scale.toFixed(1)}</span>}
       </div>
+
+      {photos.length > 1 && (
+        <button
+          type="button"
+          className="viewer-btn viewer-play"
+          onClick={(e) => {
+            e.stopPropagation();
+            setPlaying((v) => !v);
+          }}
+          aria-label={playing ? '슬라이드쇼 일시정지' : '슬라이드쇼 재생'}
+          aria-pressed={playing}
+        >
+          {playing ? '❚❚' : '▶'}
+        </button>
+      )}
     </div>
   );
 }

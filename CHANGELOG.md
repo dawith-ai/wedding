@@ -3,6 +3,46 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.7.0] - 2026-05-12 — 인기 사이트 기능 4종 추가 (PIN/식사/슬라이드쇼/통계)
+
+보자기카드 등에서 자주 보이는 추가 기능 4종을 한 turn에 병렬 추가. 모두 옵셔널.
+
+### Added
+
+- **🔒 비공개 청첩장 (PIN 보호)** — 4자리 숫자 PIN으로 청첩장 진입 잠금. 잠금 화면은
+  자물쇠 아이콘 + 숫자 입력 + 힌트 + 흔들림 에러 피드백. 풀린 상태는 localStorage에
+  invite id별로 저장돼 재방문 시 다시 묻지 않음. URL fragment에 PIN이 인코딩되므로
+  진짜 보안용이 아닌 "한 단계의 사적 안내"용임을 명시.
+  - `src/components/invite/PinGate.tsx` · InviteView wrapper
+
+- **🍽️ 식사 안내** — 결혼식 식사 형태 (코스/뷔페/한정식/다과/기타) + 메뉴 리스트 +
+  안내 문구. 형태별 이모지 + 액센트 색 라벨 + 메뉴는 짧은 대시 마커로 정렬.
+  - `src/components/invite/MealInfo.tsx` · `BuilderForm` 섹션 18
+
+- **🎞️ 갤러리 자동 슬라이드쇼** — PhotoViewer에 재생/정지 버튼 (우하단). 핀치줌
+  중이거나 인터랙션 중에는 자동 일시정지. 키보드 `Space`/`K`로 토글. 간격은
+  2~20초 사이 조정 가능 (기본 4초).
+  - `src/components/invite/PhotoViewer.tsx` · `BuilderForm` 섹션 19
+
+- **📊 청첩장 통계 위젯** — Firebase 연결돼 있으면 ♥ 응원수 / 방명록 수 / 참석 회신
+  수를 자동 집계해 응원하기 섹션 아래에 표시. Firebase 미설정 시 로컬 좋아요만
+  표시. 0이면 위젯 자체가 안 나타나서 빈 청첩장에서 어수선해 보이지 않음.
+  - `src/components/invite/InviteStats.tsx` · InviteView wire
+
+### Changed
+
+- **WeddingData** — `pin?` / `meal?` / `gallery_opts?` 옵셔널 필드 추가.
+- **BuilderForm 섹션** — 17~19 신설, 18→20 (평생 가족), 18→21 (공유 정보)로 밀림.
+- **SW VERSION** — v3.6.0 → v3.7.0 (캐시 자동 무효화).
+
+### Verified
+
+- `npm run build`: 102 modules, JS 472kB / CSS 92kB.
+- `npm run verify:curtain`: 8/8 통과.
+- `npm run verify:features`: 36/36 통과.
+
+---
+
 ## [3.6.0] - 2026-05-12 — 인기 사이트 기능 클론 (포인트/Q&A/드레스코드/한마디/D-day 폭죽)
 
 보자기카드, 땡큐모바일, 마음모바일 등 인기 청첩장 사이트의 핵심 차별 기능 5종을

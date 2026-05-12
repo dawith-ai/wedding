@@ -683,7 +683,154 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </>
       )}
 
-      <h2>17. 평생 가족 페이지 (선택)</h2>
+      <h2>17. 비공개 청첩장 (PIN 보호 · 선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.pin?.enabled ?? false}
+          onChange={(e) =>
+            set('pin', {
+              enabled: e.target.checked,
+              code: data.pin?.code ?? '',
+              hint: data.pin?.hint ?? '',
+            })
+          }
+        />
+        4자리 PIN으로 청첩장 진입 잠금
+      </label>
+      {data.pin?.enabled && (
+        <>
+          <div className="field">
+            <label>PIN (숫자 4자리)</label>
+            <input
+              inputMode="numeric"
+              maxLength={6}
+              value={data.pin.code}
+              onChange={(e) =>
+                set('pin', {
+                  ...data.pin!,
+                  code: e.target.value.replace(/[^0-9]/g, ''),
+                })
+              }
+              placeholder="예: 1010 (결혼식 날짜)"
+            />
+            <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+              PIN은 URL에 포함되므로 보안용이 아닌 "한 단계의 사적 안내"용이에요.
+            </div>
+          </div>
+          <div className="field">
+            <label>힌트 (선택)</label>
+            <input
+              value={data.pin.hint ?? ''}
+              onChange={(e) => set('pin', { ...data.pin!, hint: e.target.value })}
+              placeholder="예: 결혼식 날짜"
+            />
+          </div>
+        </>
+      )}
+
+      <h2>18. 식사 안내 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.meal?.enabled ?? false}
+          onChange={(e) =>
+            set('meal', {
+              enabled: e.target.checked,
+              title: data.meal?.title ?? '식사 안내',
+              style: data.meal?.style ?? 'course',
+              note: data.meal?.note ?? '',
+              menu: data.meal?.menu ?? [],
+            })
+          }
+        />
+        식사 안내 섹션 표시
+      </label>
+      {data.meal?.enabled && (
+        <>
+          <div className="field">
+            <label>섹션 제목</label>
+            <input
+              value={data.meal.title ?? ''}
+              onChange={(e) => set('meal', { ...data.meal!, title: e.target.value })}
+            />
+          </div>
+          <div className="field">
+            <label>식사 형태</label>
+            <select
+              value={data.meal.style ?? 'course'}
+              onChange={(e) =>
+                set('meal', {
+                  ...data.meal!,
+                  style: e.target.value as NonNullable<WeddingData['meal']>['style'],
+                })
+              }
+            >
+              <option value="course">코스 요리</option>
+              <option value="buffet">뷔페</option>
+              <option value="hanjeongsik">한정식</option>
+              <option value="tea">다과</option>
+              <option value="custom">기타</option>
+            </select>
+          </div>
+          <div className="field">
+            <label>메뉴 (한 줄에 하나)</label>
+            <textarea
+              rows={Math.max(3, data.meal.menu.length + 1)}
+              value={data.meal.menu.join('\n')}
+              onChange={(e) =>
+                set('meal', {
+                  ...data.meal!,
+                  menu: e.target.value.split('\n').filter((l) => l !== ''),
+                })
+              }
+              placeholder="전채 — 계절 샐러드 / 카프레제&#10;메인 — 한우 안심 스테이크"
+            />
+          </div>
+          <div className="field">
+            <label>안내 문구</label>
+            <textarea
+              rows={2}
+              value={data.meal.note ?? ''}
+              onChange={(e) => set('meal', { ...data.meal!, note: e.target.value })}
+            />
+          </div>
+        </>
+      )}
+
+      <h2>19. 갤러리 슬라이드쇼 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.gallery_opts?.slideshow ?? false}
+          onChange={(e) =>
+            set('gallery_opts', {
+              slideshow: e.target.checked,
+              intervalSec: data.gallery_opts?.intervalSec ?? 4,
+            })
+          }
+        />
+        갤러리 사진 클릭 시 자동 슬라이드쇼
+      </label>
+      {data.gallery_opts?.slideshow && (
+        <div className="field">
+          <label>슬라이드 간격 (초)</label>
+          <input
+            type="number"
+            min={2}
+            max={20}
+            value={data.gallery_opts.intervalSec ?? 4}
+            onChange={(e) =>
+              set('gallery_opts', {
+                slideshow: true,
+                intervalSec: Math.max(2, Math.min(20, Number(e.target.value) || 4)),
+              })
+            }
+          />
+        </div>
+      )}
+
+      <h2>20. 평생 가족 페이지 (선택)</h2>
       <LifeEventsEditor
         enabled={data.lifeEvents?.enabled ?? false}
         title={data.lifeEvents?.title ?? '결혼 그 후'}
@@ -692,7 +839,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         onChange={(next) => set('lifeEvents', next)}
       />
 
-      <h2>18. 공유 정보 (메타)</h2>
+      <h2>21. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />

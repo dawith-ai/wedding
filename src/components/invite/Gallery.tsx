@@ -3,9 +3,10 @@ import { PhotoViewer } from './PhotoViewer';
 
 interface Props {
   photos: string[];
+  slideshowSec?: number;
 }
 
-export function Gallery({ photos }: Props) {
+export function Gallery({ photos, slideshowSec }: Props) {
   const [index, setIndex] = useState<number | null>(null);
   if (photos.length === 0) return null;
 
@@ -33,6 +34,7 @@ export function Gallery({ photos }: Props) {
           index={index}
           onClose={() => setIndex(null)}
           onIndex={setIndex}
+          slideshowSec={slideshowSec}
         />
       )}
     </section>
