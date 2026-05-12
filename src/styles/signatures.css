@@ -1085,7 +1085,7 @@
 .cinema-names {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: var(--t-2xl);
+  font-size: clamp(26px, 8vw, 42px);
   letter-spacing: var(--tracking-tight);
   margin: 0 0 var(--space-sm);
   background: linear-gradient(135deg, #f0d59e 0%, #fff3d0 50%, #d4a86b 100%);
@@ -1093,8 +1093,12 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: none;
+  max-width: 100%;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
-@media (min-width: 480px) { .cinema-names { font-size: 56px; } }
+@media (min-width: 480px) { .cinema-names { font-size: 52px; } }
 .cinema-names em {
   font-style: italic;
   font-weight: 300;
@@ -1632,6 +1636,10 @@
 .letter-couple {
   text-align: right;
   margin: var(--space-lg) 0 var(--space-md);
+  padding-left: 110px;
+}
+@media (max-width: 380px) {
+  .letter-couple { padding-left: 96px; }
 }
 .letter-amp {
   display: block;
@@ -1644,11 +1652,12 @@
 .letter-names {
   font-family: var(--font-script);
   font-weight: 500;
-  font-size: clamp(28px, 8.4vw, 44px);
+  font-size: clamp(24px, 7.2vw, 40px);
   color: var(--accent);
   margin: 0 0 8px;
-  line-height: 1.05;
-  white-space: nowrap;
+  line-height: 1.1;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .letter-names em {
   font-family: var(--font-script);

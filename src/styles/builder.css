@@ -218,8 +218,55 @@
   background: #f5f5f5; padding: 10px 12px;
   border-radius: 6px; font-size: 12px;
   word-break: break-all; user-select: all;
-  margin-bottom: 14px; font-family: monospace;
+  margin-bottom: 8px; font-family: monospace;
+  max-height: 96px; overflow-y: auto;
+  line-height: 1.5;
 }
+.url-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #888;
+}
+.url-len { font-variant-numeric: tabular-nums; }
+.url-toggle {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #555;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.url-toggle:hover { border-color: #999; color: #222; }
+.url-badge {
+  background: #e6f5ea;
+  color: #1d6e3a;
+  border: 1px solid #b8e0c7;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.url-shorten {
+  width: 100%;
+  background: #1d6e3a;
+  color: #fff;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+.url-shorten:hover { background: #18582f; }
+.url-shorten:disabled { opacity: 0.6; cursor: wait; }
 .modal-card .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 .modal-card .actions button {
   padding: 9px 16px; border-radius: 999px;

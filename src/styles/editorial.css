@@ -218,15 +218,27 @@
   line-height: 2.05;
   max-width: 380px;
   margin: var(--space-md) auto 0;
+  padding: 0 24px;
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 .greeting-body .drop-cap {
   font-family: var(--font-display);
-  font-size: 3.4em;
-  line-height: 0.85;
+  font-size: 2.6em;
+  line-height: 1;
   float: left;
-  padding: 0.08em 0.18em 0 0;
+  padding: 0 0.14em 0 0;
+  margin: 0.05em 0.06em 0 0;
   color: var(--accent);
   font-weight: 500;
+  shape-outside: margin-box;
+}
+/* On the narrowest phones, shrink the drop-cap so it stays inside the
+   text column instead of floating out to the gutter. */
+@media (max-width: 380px) {
+  .greeting-body { padding: 0 18px; }
+  .greeting-body .drop-cap { font-size: 2.2em; padding-right: 0.18em; }
 }
 [data-theme="luxury-gold"] .greeting-body .drop-cap,
 [data-theme="midnight-navy"] .greeting-body .drop-cap {

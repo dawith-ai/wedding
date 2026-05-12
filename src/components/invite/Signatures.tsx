@@ -217,9 +217,9 @@ export function Monogram({ data }: { data: WeddingData }) {
           <svg viewBox="0 0 200 200">
             <circle cx="100" cy="100" r="85" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.5" />
             <circle cx="100" cy="100" r="76" fill="none" stroke="currentColor" strokeWidth="1.4" />
-            <text x="78" y="118" textAnchor="middle" fontFamily="var(--font-display)" fontSize="84" fontWeight="400">{g}</text>
-            <text x="100" y="118" textAnchor="middle" fontFamily="var(--font-script, var(--font-display))" fontSize="56" fontStyle="italic" opacity="0.7">&amp;</text>
-            <text x="122" y="118" textAnchor="middle" fontFamily="var(--font-display)" fontSize="84" fontWeight="400">{b}</text>
+            <text x="62" y="120" textAnchor="middle" fontFamily="var(--font-display)" fontSize="58" fontWeight="400">{g}</text>
+            <text x="100" y="116" textAnchor="middle" fontFamily="var(--font-script, var(--font-display))" fontSize="40" fontStyle="italic" opacity="0.65">&amp;</text>
+            <text x="138" y="120" textAnchor="middle" fontFamily="var(--font-display)" fontSize="58" fontWeight="400">{b}</text>
           </svg>
         </div>
         <h1 className="monogram-names">

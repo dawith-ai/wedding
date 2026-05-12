@@ -54,25 +54,25 @@ export function Builder() {
     }
   }
 
-  function copyUrl() {
-    navigator.clipboard?.writeText(shareUrl).then(
+  function copyUrl(url: string) {
+    navigator.clipboard?.writeText(url).then(
       () => showToast('링크가 복사되었습니다'),
       () => showToast('복사에 실패했어요')
     );
   }
 
-  function nativeShare() {
+  function nativeShare(url: string) {
     if (navigator.share) {
       navigator
-        .share({ title: data.meta.title, text: data.meta.description, url: shareUrl })
+        .share({ title: data.meta.title, text: data.meta.description, url })
         .catch(() => {});
     } else {
-      copyUrl();
+      copyUrl(url);
     }
   }
 
-  function downloadQr() {
-    const qrUrl = qrImageUrl(shareUrl, 600);
+  function downloadQr(url: string) {
+    const qrUrl = qrImageUrl(url, 600);
     if (!qrUrl) {
       showToast('QR을 만들 수 없는 길이입니다. 갤러리 사진을 줄여보세요.');
       return;
