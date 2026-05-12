@@ -293,10 +293,46 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <input
           type="checkbox"
           checked={data.guestbook.enabled}
-          onChange={(e) => set('guestbook', { enabled: e.target.checked })}
+          onChange={(e) =>
+            set('guestbook', { ...data.guestbook, enabled: e.target.checked })
+          }
         />
         방명록 표시
       </label>
+      {data.guestbook.enabled && (
+        <>
+          <div className="field">
+            <label>호스트 비밀번호 (선택) — 모든 글을 삭제할 수 있는 마스터 PW</label>
+            <input
+              type="password"
+              value={data.guestbook.hostPassword ?? ''}
+              onChange={(e) =>
+                set('guestbook', { ...data.guestbook, hostPassword: e.target.value })
+              }
+              placeholder="예: 1234 (비워두면 호스트 모더레이션 비활성)"
+            />
+          </div>
+          <div className="field">
+            <label>금지어 (쉼표로 구분)</label>
+            <input
+              value={(data.guestbook.blockedWords ?? []).join(', ')}
+              onChange={(e) =>
+                set('guestbook', {
+                  ...data.guestbook,
+                  blockedWords: e.target.value
+                    .split(',')
+                    .map((w) => w.trim())
+                    .filter(Boolean),
+                })
+              }
+              placeholder="예: 욕설1, 욕설2, 스팸URL"
+            />
+            <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+              메시지/이름에 포함되면 등록이 차단됩니다 (대소문자 무시).
+            </div>
+          </div>
+        </>
+      )}
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -798,7 +834,30 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </>
       )}
 
-      <h2>19. 갤러리 슬라이드쇼 (선택)</h2>
+      <h2>19. 갤러리 옵션</h2>
+      <div className="field">
+        <label>레이아웃</label>
+        <div className="layout-radio">
+          {(['grid', 'masonry', 'mosaic'] as const).map((kind) => (
+            <label key={kind} className={`layout-radio-item${(data.gallery_opts?.layout ?? 'grid') === kind ? ' selected' : ''}`}>
+              <input
+                type="radio"
+                name="gallery-layout"
+                value={kind}
+                checked={(data.gallery_opts?.layout ?? 'grid') === kind}
+                onChange={() =>
+                  set('gallery_opts', {
+                    slideshow: data.gallery_opts?.slideshow ?? false,
+                    intervalSec: data.gallery_opts?.intervalSec ?? 4,
+                    layout: kind,
+                  })
+                }
+              />
+              <span>{kind === 'grid' ? '균등 그리드' : kind === 'masonry' ? '매저너리' : '모자이크'}</span>
+            </label>
+          ))}
+        </div>
+      </div>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -807,6 +866,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
             set('gallery_opts', {
               slideshow: e.target.checked,
               intervalSec: data.gallery_opts?.intervalSec ?? 4,
+              layout: data.gallery_opts?.layout ?? 'grid',
             })
           }
         />
@@ -824,6 +884,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
               set('gallery_opts', {
                 slideshow: true,
                 intervalSec: Math.max(2, Math.min(20, Number(e.target.value) || 4)),
+                layout: data.gallery_opts?.layout ?? 'grid',
               })
             }
           />

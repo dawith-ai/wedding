@@ -194,6 +194,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
               slideshowSec={
                 data.gallery_opts?.slideshow ? data.gallery_opts.intervalSec ?? 4 : undefined
               }
+              layout={data.gallery_opts?.layout ?? 'grid'}
             />
           </div>
         )}
@@ -262,7 +263,13 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
 
         {(data.guestbook.enabled || data.likes.enabled) && (
           <div className="fade-up">
-            {data.guestbook.enabled && <Guestbook inviteId={inviteId} />}
+            {data.guestbook.enabled && (
+              <Guestbook
+                inviteId={inviteId}
+                hostPassword={data.guestbook.hostPassword}
+                blockedWords={data.guestbook.blockedWords}
+              />
+            )}
             {data.likes.enabled && (
               <section className="invite-section invite-section--tight section-likes">
                 <LikeButton inviteId={inviteId} />

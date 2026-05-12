@@ -67,21 +67,44 @@ input, textarea, select {
 
 /* Print stylesheet — paper backup of the digital invitation */
 @media print {
+  @page { margin: 12mm; size: A4 portrait; }
   body { background: #fff; }
   .bgm-toggle,
   .curtain-overlay,
+  .pin-overlay,
   .share-bar,
   .save-date-btn,
   .toast,
   .modal-overlay,
   .ornament-layer,
+  .ornament-canvas,
   .builder-form,
   .builder-toolbar,
-  .preview-pane > div:first-child {
+  .preview-pane > div:first-child,
+  .viewer,
+  .viewer-btn,
+  .countdown,
+  .countdown-message,
+  .like-btn,
+  .invite-stats,
+  .footer-link {
     display: none !important;
   }
-  .invite-root { background: #fff !important; }
-  .invite-section { break-inside: avoid; page-break-inside: avoid; }
+  .invite-root { background: #fff !important; color: #000 !important; }
+  .invite-section { break-inside: avoid; page-break-inside: avoid; padding: 18px 12px !important; }
+  .invite-section--tight { padding: 12px 12px !important; }
+  /* Limit hero height so the first page captures more content. */
+  .hero, .hero--overlay, .hero--framed, .hero--stacked,
+  .hero--boardingpass, .hero--letter, .hero--scrapbook,
+  .hero--storybook, .hero--monogram {
+    max-height: 50vh !important;
+    overflow: hidden;
+  }
   a { color: inherit !important; text-decoration: none !important; }
   a[href]::after { content: ''; }
+  img, video {
+    max-width: 100% !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }

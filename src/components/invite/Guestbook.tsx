@@ -15,13 +15,26 @@ import { showToast } from '../../lib/toast';
 
 interface Props {
   inviteId: string;
+  hostPassword?: string;
+  blockedWords?: string[];
 }
 
 function newId(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
-export function Guestbook({ inviteId }: Props) {
+function containsBlocked(text: string, words?: string[]): string | null {
+  if (!words || words.length === 0) return null;
+  const lower = text.toLowerCase();
+  for (const w of words) {
+    const term = w.trim().toLowerCase();
+    if (!term) continue;
+    if (lower.includes(term)) return w;
+  }
+  return null;
+}
+
+export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -48,6 +61,12 @@ export function Guestbook({ inviteId }: Props) {
     e.preventDefault();
     if (!name.trim() || !message.trim() || !password.trim()) {
       showToast('이름, 비밀번호, 메시지를 입력해주세요');
+      return;
+    }
+    const blocked =
+      containsBlocked(message, blockedWords) || containsBlocked(name, blockedWords);
+    if (blocked) {
+      showToast(`사용할 수 없는 단어가 포함되어 있습니다: "${blocked}"`);
       return;
     }
     setBusy(true);
@@ -77,9 +96,14 @@ export function Guestbook({ inviteId }: Props) {
   }
 
   async function del(entry: GuestbookEntry) {
-    const pw = prompt('비밀번호를 입력하세요');
+    const hasHost = !!hostPassword && hostPassword.trim().length > 0;
+    const promptLabel = hasHost
+      ? '본인 비밀번호 또는 호스트 비밀번호'
+      : '비밀번호를 입력하세요';
+    const pw = prompt(promptLabel);
     if (!pw) return;
-    if (pw !== entry.password) {
+    const isHost = hasHost && pw === hostPassword;
+    if (!isHost && pw !== entry.password) {
       showToast('비밀번호가 일치하지 않습니다');
       return;
     }
@@ -87,9 +111,12 @@ export function Guestbook({ inviteId }: Props) {
       if (isFirebaseEnabled()) {
         await fbDeleteGuestbook(inviteId, entry.id);
       } else {
-        lsRemove(inviteId, entry.id, pw);
+        // For local storage, removeGuestbook validates against entry pw;
+        // pass entry.password when the host is overriding so the call
+        // succeeds.
+        lsRemove(inviteId, entry.id, isHost ? entry.password : pw);
       }
-      showToast('삭제되었습니다');
+      showToast(isHost ? '호스트 권한으로 삭제했습니다' : '삭제되었습니다');
       refresh();
     } catch {
       showToast('삭제에 실패했어요');

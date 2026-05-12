@@ -68,7 +68,7 @@ export const DEFAULT_DATA: WeddingData = {
       { role: '어머니', bank: '신한은행', number: '110-123-456789' },
     ],
   },
-  guestbook: { enabled: true },
+  guestbook: { enabled: true, hostPassword: '', blockedWords: [] },
   rsvp: { enabled: true, deadline: '2026-10-01' },
   likes: { enabled: true },
   timeline: {
@@ -149,6 +149,7 @@ export const DEFAULT_DATA: WeddingData = {
   gallery_opts: {
     slideshow: false,
     intervalSec: 4,
+    layout: 'grid',
   },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',

@@ -447,3 +447,56 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* Gallery layout radio */
+.layout-radio {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.layout-radio-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.layout-radio-item.selected {
+  border-color: #222;
+  background: #f7f7f7;
+  font-weight: 600;
+}
+.layout-radio-item input { display: none; }
+
+/* Share modal — extra tools row */
+.extra-tools {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+.extra-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 999px;
+  color: #333;
+  font-size: 12.5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.extra-btn:hover {
+  background: #f0f0f0;
+  border-color: #aaa;
+}

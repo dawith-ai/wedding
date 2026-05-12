@@ -91,6 +91,10 @@ export interface WeddingData {
 
   guestbook: {
     enabled: boolean;
+    /** Host master password — can delete any entry without per-entry pw. */
+    hostPassword?: string;
+    /** Words/phrases that block submission (case-insensitive substring). */
+    blockedWords?: string[];
   };
 
   rsvp: {
@@ -163,6 +167,7 @@ export interface WeddingData {
   gallery_opts?: {
     slideshow: boolean;
     intervalSec?: number;
+    layout?: 'grid' | 'masonry' | 'mosaic';
   };
 
   meta: {

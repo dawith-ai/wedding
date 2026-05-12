@@ -12,6 +12,7 @@ import { showToast } from '../lib/toast';
 import { inviteIdFromEncoded } from '../lib/storage';
 import { qrImageUrl } from '../lib/qrcode';
 import { ShareModal } from '../components/builder/ShareModal';
+import { THEME_MAP } from '../data/themes';
 
 export function Builder() {
   const [params] = useSearchParams();
@@ -128,6 +129,12 @@ export function Builder() {
         <ShareModal
           shareUrl={shareUrl}
           warning={shareWarning}
+          card={{
+            groomName: data.groom.name,
+            brideName: data.bride.name,
+            date: data.wedding.date,
+            accent: THEME_MAP[data.theme]?.vars['--accent'] ?? '#cc785c',
+          }}
           onClose={() => setShowShare(false)}
           onCopy={copyUrl}
           onShare={nativeShare}

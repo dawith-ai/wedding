@@ -3,6 +3,48 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.8.0] - 2026-05-12 — 시각/편의/운영 4종 (갤러리 레이아웃/PDF/명함/모더레이션)
+
+사용자 요청으로 시각·편의·운영 카테고리에서 4개 기능 병렬 추가.
+
+### Added
+
+- **🖼️ 갤러리 레이아웃 변형 3종** — `grid` (균등) / `masonry` (자연 높이 멀티컬럼) /
+  `mosaic` (5의 배수 타일이 2×2로 확장되는 패턴 그리드). 빌더 19번에서 라디오로
+  선택. CSS data-attribute 기반이라 런타임 비용 0.
+  - `src/components/invite/Gallery.tsx` · `src/styles/invite.css`
+
+- **🪪 명함 QR 카드 다운로드** — 신랑신부 이름 + 날짜 + QR 코드를 1200×720 PNG로
+  생성해 다운로드. 좌측 액센트 바, 큰 세리프 이름, accent 컬러의 `&`, 우측 420px
+  QR. ShareModal에서 "🪪 명함 QR 저장" 버튼으로 호출.
+  - `src/lib/businessCard.ts` · `src/components/builder/ShareModal.tsx`
+
+- **🖨️ 인쇄용 미리보기 / PDF 저장** — ShareModal "🖨️ 인쇄용 미리보기" 링크가
+  청첩장을 새 탭에 열어, 브라우저 인쇄 → "PDF로 저장"으로 종이 백업 생성. 인쇄
+  스타일시트가 BGM/Curtain/PIN/Viewer/이모티콘/푸터 등 인터랙티브 요소를 모두
+  숨기고, A4 세로 12mm 마진으로 정리. 컬러 이미지는 `print-color-adjust: exact`로
+  보존.
+  - `src/styles/global.css` (확장된 `@media print` 블록)
+
+- **🛡️ 방명록 모더레이션** — 호스트 마스터 비밀번호로 모든 글 삭제 가능 (개인 PW와
+  병행). 금지어 리스트(쉼표 구분, 대소문자 무시)에 걸린 메시지·이름은 submit 차단.
+  빌더 10번에서 설정.
+  - `src/components/invite/Guestbook.tsx` · `BuilderForm` 10번
+
+### Changed
+
+- **WeddingData** — `guestbook.hostPassword?` + `guestbook.blockedWords?` 추가,
+  `gallery_opts.layout?` 추가.
+- **SW VERSION** — v3.7.0 → v3.8.0 (캐시 자동 무효화).
+
+### Verified
+
+- `npm run build`: 103 modules, JS 477kB / CSS 94kB.
+- `npm run verify:curtain`: 8/8 통과.
+- `npm run verify:features`: 36/36 통과.
+
+---
+
 ## [3.7.0] - 2026-05-12 — 인기 사이트 기능 4종 추가 (PIN/식사/슬라이드쇼/통계)
 
 보자기카드 등에서 자주 보이는 추가 기능 4종을 한 turn에 병렬 추가. 모두 옵셔널.

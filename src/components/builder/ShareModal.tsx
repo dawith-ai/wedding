@@ -3,10 +3,18 @@ import { qrImageUrl } from '../../lib/qrcode';
 import { lockBodyScroll, unlockBodyScroll } from '../../lib/scrollLock';
 import { shortenUrl } from '../../lib/shortener';
 import { showToast } from '../../lib/toast';
+import { downloadBusinessCard } from '../../lib/businessCard';
 
 interface Props {
   shareUrl: string;
   warning: string | null;
+  /** Couple info — used to build the printable business card. */
+  card?: {
+    groomName: string;
+    brideName: string;
+    date: string;
+    accent?: string;
+  };
   onClose: () => void;
   onCopy: (url: string) => void;
   onShare: (url: string) => void;
@@ -16,6 +24,7 @@ interface Props {
 export function ShareModal({
   shareUrl,
   warning,
+  card,
   onClose,
   onCopy,
   onShare,
@@ -125,6 +134,39 @@ export function ShareModal({
                 : '모든 정보가 URL에 인코딩되므로 서버 비용이 들지 않으며, 링크는 영구적으로 작동합니다.'}
             </p>
           </div>
+        </div>
+
+        <div className="extra-tools">
+          {card && (
+            <button
+              type="button"
+              className="extra-btn"
+              onClick={async () => {
+                try {
+                  await downloadBusinessCard({ ...card, url: displayUrl });
+                  showToast('명함 QR을 저장했어요');
+                } catch (e) {
+                  showToast((e as Error).message);
+                }
+              }}
+            >
+              🪪 명함 QR 저장
+            </button>
+          )}
+          <a
+            href={displayUrl}
+            target="_blank"
+            rel="noopener"
+            className="extra-btn"
+            onClick={() => {
+              // Auto-trigger print on the opened preview tab after a short
+              // delay. Browsers vary on auto-print; we add a hint instead
+              // of relying on it. The link itself opens the invite, where
+              // users can use the browser's "Print → Save as PDF".
+            }}
+          >
+            🖨️ 인쇄용 미리보기
+          </a>
         </div>
 
         <div className="actions actions-share">
