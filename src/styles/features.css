@@ -206,3 +206,207 @@
   display: block;
   pointer-events: auto;
 }
+
+/* ═══════════════════════════════════════════
+   Interview (Q&A) section
+   ═══════════════════════════════════════════ */
+.section-interview { background: var(--bg-alt); }
+.interview-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-md) auto 0;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.interview-item {
+  background: var(--card);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 22px 22px 18px;
+  box-shadow: var(--shadow);
+}
+.interview-q {
+  margin: 0 0 14px;
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.interview-q-mark {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  line-height: 1.4;
+}
+.interview-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.interview-who {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+}
+.interview-row--groom .interview-who {
+  background: color-mix(in srgb, var(--accent) 18%, var(--card));
+  color: var(--accent);
+}
+.interview-row--bride .interview-who {
+  background: color-mix(in srgb, var(--accent-soft, var(--accent)) 35%, var(--card));
+  color: var(--text);
+}
+.interview-a {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.7;
+  color: var(--text);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  flex: 1 1 auto;
+}
+
+/* ═══════════════════════════════════════════
+   Dress code section
+   ═══════════════════════════════════════════ */
+.section-dresscode .dresscode-swatches {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-md) auto var(--space-sm);
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 420px;
+}
+.dresscode-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.dresscode-swatch-chip {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.08);
+  display: block;
+}
+.dresscode-swatch-hex {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.dresscode-note {
+  text-align: center;
+  font-size: var(--t-sm);
+  color: var(--text);
+  line-height: 1.7;
+  max-width: 360px;
+  margin: var(--space-sm) auto 0;
+  white-space: pre-line;
+}
+
+/* ═══════════════════════════════════════════
+   Bride / Groom notes
+   ═══════════════════════════════════════════ */
+.section-notes { background: var(--bg-alt); }
+.notes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 480px;
+  margin: var(--space-md) auto 0;
+}
+@media (min-width: 560px) {
+  .notes-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+.note-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--divider);
+  border-radius: 12px;
+  padding: 22px 20px 20px;
+  box-shadow: var(--shadow);
+}
+.note-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.note-side {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.note-name {
+  font-family: var(--font-display);
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+.note-body {
+  position: relative;
+  margin: 0;
+  padding-left: 18px;
+  font-size: var(--t-sm);
+  line-height: 1.85;
+  color: var(--text);
+  white-space: pre-line;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.note-quote {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════
+   Countdown "today" highlight
+   ═══════════════════════════════════════════ */
+.countdown--today .countdown-num {
+  color: var(--accent);
+  animation: countdown-pulse 1.4s ease-in-out infinite;
+}
+@keyframes countdown-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .countdown--today .countdown-num { animation: none; }
+}

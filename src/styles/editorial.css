@@ -255,6 +255,30 @@
   font-weight: 800;
 }
 
+/* Emphasis (text point) — `**text**` in greeting body */
+.greeting-body .greeting-accent {
+  color: var(--accent);
+  font-weight: 500;
+  font-style: normal;
+  background: linear-gradient(transparent 60%, color-mix(in srgb, var(--accent) 25%, transparent) 60%);
+  padding: 0 0.05em;
+  border-radius: 1px;
+}
+[data-theme="luxury-gold"] .greeting-body .greeting-accent,
+[data-theme="midnight-navy"] .greeting-body .greeting-accent {
+  background: linear-gradient(transparent 60%, color-mix(in srgb, var(--accent) 35%, transparent) 60%);
+}
+/* Themes with a script font get a more elegant cursive emphasis. */
+.invite-root[data-theme="watercolor-soft"] .greeting-body .greeting-accent,
+.invite-root[data-theme="romantic-flower"] .greeting-body .greeting-accent,
+.invite-root[data-theme="pastel-dream"] .greeting-body .greeting-accent {
+  font-family: var(--font-script, var(--font-display));
+  font-size: 1.06em;
+  font-weight: 600;
+  background: none;
+  letter-spacing: 0.02em;
+}
+
 /* ═══ Countdown — serif tabular numerals ═══ */
 .countdown-num {
   font-family: var(--font-display);

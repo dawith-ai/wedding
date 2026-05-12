@@ -6,6 +6,7 @@ import { AiPhotoStudio } from './AiPhotoStudio';
 import { AiVoiceStudio } from './AiVoiceStudio';
 import { LifeEventsEditor } from './LifeEventsEditor';
 import { OgCardGenerator } from './OgCardGenerator';
+import { EmphasisTextarea } from './EmphasisTextarea';
 import { ImageUpload } from './ImageUpload';
 import { PhotoListEditor } from './PhotoListEditor';
 import { AccountEditor } from './AccountEditor';
@@ -230,7 +231,11 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
       </div>
       <div className="field">
         <label>인사말 본문</label>
-        <textarea value={data.greeting.body} onChange={(e) => set('greeting', { ...data.greeting, body: e.target.value })} />
+        <EmphasisTextarea
+          value={data.greeting.body}
+          onChange={(body) => set('greeting', { ...data.greeting, body })}
+          rows={7}
+        />
       </div>
       <AiVoiceStudio
         greetingText={data.greeting.body}
@@ -449,7 +454,236 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         응원하기(♥ 카운터) 표시
       </label>
 
-      <h2>14. 평생 가족 페이지 (선택)</h2>
+      <h2>14. 신랑신부 Q&A (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.interview?.enabled ?? false}
+          onChange={(e) =>
+            set('interview', {
+              enabled: e.target.checked,
+              title: data.interview?.title ?? '우리 둘의 이야기',
+              items: data.interview?.items ?? [],
+            })
+          }
+        />
+        Q&A 인터뷰 섹션 표시
+      </label>
+      {data.interview?.enabled && (
+        <>
+          <div className="field">
+            <label>섹션 제목</label>
+            <input
+              value={data.interview.title ?? ''}
+              onChange={(e) =>
+                set('interview', { ...data.interview!, title: e.target.value })
+              }
+            />
+          </div>
+          {data.interview.items.map((item, idx) => (
+            <div key={item.id || idx} className="qa-row">
+              <div className="field">
+                <label>Q{idx + 1}</label>
+                <input
+                  value={item.question}
+                  onChange={(e) => {
+                    const items = [...data.interview!.items];
+                    items[idx] = { ...item, question: e.target.value };
+                    set('interview', { ...data.interview!, items });
+                  }}
+                  placeholder="질문"
+                />
+              </div>
+              <div className="field">
+                <label>신랑 답변</label>
+                <textarea
+                  rows={2}
+                  value={item.answerGroom}
+                  onChange={(e) => {
+                    const items = [...data.interview!.items];
+                    items[idx] = { ...item, answerGroom: e.target.value };
+                    set('interview', { ...data.interview!, items });
+                  }}
+                />
+              </div>
+              <div className="field">
+                <label>신부 답변</label>
+                <textarea
+                  rows={2}
+                  value={item.answerBride}
+                  onChange={(e) => {
+                    const items = [...data.interview!.items];
+                    items[idx] = { ...item, answerBride: e.target.value };
+                    set('interview', { ...data.interview!, items });
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                className="qa-remove"
+                onClick={() => {
+                  const items = data.interview!.items.filter((_, i) => i !== idx);
+                  set('interview', { ...data.interview!, items });
+                }}
+              >
+                질문 삭제
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="qa-add"
+            onClick={() => {
+              const items = [
+                ...(data.interview?.items ?? []),
+                {
+                  id: 'q' + Date.now(),
+                  question: '',
+                  answerGroom: '',
+                  answerBride: '',
+                },
+              ];
+              set('interview', {
+                enabled: true,
+                title: data.interview?.title ?? '우리 둘의 이야기',
+                items,
+              });
+            }}
+          >
+            + 질문 추가
+          </button>
+        </>
+      )}
+
+      <h2>15. 드레스 코드 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.dressCode?.enabled ?? false}
+          onChange={(e) =>
+            set('dressCode', {
+              enabled: e.target.checked,
+              title: data.dressCode?.title ?? '드레스 코드',
+              note: data.dressCode?.note ?? '',
+              colors: data.dressCode?.colors ?? [],
+            })
+          }
+        />
+        드레스 코드 안내 표시
+      </label>
+      {data.dressCode?.enabled && (
+        <>
+          <div className="field">
+            <label>섹션 제목</label>
+            <input
+              value={data.dressCode.title ?? ''}
+              onChange={(e) =>
+                set('dressCode', { ...data.dressCode!, title: e.target.value })
+              }
+            />
+          </div>
+          <div className="field">
+            <label>추천 색상 (HEX, 최대 6개)</label>
+            <div className="dc-swatch-list">
+              {(data.dressCode.colors ?? []).map((c, i) => (
+                <div key={i} className="dc-swatch-row">
+                  <input
+                    type="color"
+                    value={c}
+                    onChange={(e) => {
+                      const colors = [...(data.dressCode!.colors ?? [])];
+                      colors[i] = e.target.value;
+                      set('dressCode', { ...data.dressCode!, colors });
+                    }}
+                  />
+                  <input
+                    className="dc-hex"
+                    value={c}
+                    onChange={(e) => {
+                      const colors = [...(data.dressCode!.colors ?? [])];
+                      colors[i] = e.target.value;
+                      set('dressCode', { ...data.dressCode!, colors });
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const colors = (data.dressCode!.colors ?? []).filter(
+                        (_, idx) => idx !== i
+                      );
+                      set('dressCode', { ...data.dressCode!, colors });
+                    }}
+                  >
+                    삭제
+                  </button>
+                </div>
+              ))}
+              {(data.dressCode.colors ?? []).length < 6 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const colors = [...(data.dressCode!.colors ?? []), '#cccccc'];
+                    set('dressCode', { ...data.dressCode!, colors });
+                  }}
+                >
+                  + 색상 추가
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="field">
+            <label>안내 문구 (선택)</label>
+            <textarea
+              rows={2}
+              value={data.dressCode.note ?? ''}
+              onChange={(e) =>
+                set('dressCode', { ...data.dressCode!, note: e.target.value })
+              }
+              placeholder="예: 봄빛 파스텔 톤이면 더 좋아요. (의무 사항은 아니에요)"
+            />
+          </div>
+        </>
+      )}
+
+      <h2>16. 신랑신부 한마디 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.notes?.enabled ?? false}
+          onChange={(e) =>
+            set('notes', {
+              enabled: e.target.checked,
+              groom: data.notes?.groom ?? '',
+              bride: data.notes?.bride ?? '',
+            })
+          }
+        />
+        하객분들께 드리는 한마디 표시
+      </label>
+      {data.notes?.enabled && (
+        <>
+          <div className="field">
+            <label>신랑 메시지</label>
+            <textarea
+              rows={3}
+              value={data.notes.groom}
+              onChange={(e) => set('notes', { ...data.notes!, groom: e.target.value })}
+              placeholder="짧고 따뜻한 한마디를 적어주세요"
+            />
+          </div>
+          <div className="field">
+            <label>신부 메시지</label>
+            <textarea
+              rows={3}
+              value={data.notes.bride}
+              onChange={(e) => set('notes', { ...data.notes!, bride: e.target.value })}
+              placeholder="짧고 따뜻한 한마디를 적어주세요"
+            />
+          </div>
+        </>
+      )}
+
+      <h2>17. 평생 가족 페이지 (선택)</h2>
       <LifeEventsEditor
         enabled={data.lifeEvents?.enabled ?? false}
         title={data.lifeEvents?.title ?? '결혼 그 후'}
@@ -458,7 +692,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         onChange={(next) => set('lifeEvents', next)}
       />
 
-      <h2>15. 공유 정보 (메타)</h2>
+      <h2>18. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />

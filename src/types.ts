@@ -120,6 +120,30 @@ export interface WeddingData {
     items: LifeEvent[];
   };
 
+  interview?: {
+    enabled: boolean;
+    title?: string;
+    items: Array<{
+      id: string;
+      question: string;
+      answerGroom: string;
+      answerBride: string;
+    }>;
+  };
+
+  dressCode?: {
+    enabled: boolean;
+    title?: string;
+    note?: string;
+    colors: string[];
+  };
+
+  notes?: {
+    enabled: boolean;
+    groom: string;
+    bride: string;
+  };
+
   meta: {
     title: string;
     description: string;

@@ -3,6 +3,66 @@
 이 문서는 모바일 청첩장 빌더의 주요 변경 이력을 기록합니다.
 포맷은 [Keep a Changelog](https://keepachangelog.com/), 버전은 [SemVer](https://semver.org/) 기반.
 
+## [3.6.0] - 2026-05-12 — 인기 사이트 기능 클론 (포인트/Q&A/드레스코드/한마디/D-day 폭죽)
+
+보자기카드, 땡큐모바일, 마음모바일 등 인기 청첩장 사이트의 핵심 차별 기능 5종을
+체리픽해서 클론. 모두 옵트인(기본 비활성)이고 켜면 그 위치에 자연스럽게 합류.
+
+### Added
+
+- **텍스트 포인트(강조) 마크다운** — 인사말 본문의 `**문구**`가 테마 액센트 컬러
+  하이라이트로 렌더링. 빌더의 인사말 텍스트에어리어에 "✦ 포인트" 토글 버튼 추가
+  (드래그 → 클릭하면 자동 wrap, 다시 누르면 unwrap). 워터컬러/로맨틱/파스텔
+  테마는 스크립트 폰트로 렌더링되어 더 우아.
+  - `src/components/invite/Greeting.tsx` · `src/components/builder/EmphasisTextarea.tsx` · `src/styles/editorial.css`
+
+- **Q&A 인터뷰 섹션** — "우리 둘의 이야기" 카드. 질문마다 신랑/신부 답변을
+  분리해서 표시 (이름 첫글자 배지 + 액센트 컬러 차이). 디폴트 3가지 질문 제공.
+  빌더에서 질문 추가/삭제, 각 질문 수정 가능.
+  - `src/components/invite/Interview.tsx` · `src/styles/features.css` · `BuilderForm` 섹션 14
+
+- **드레스 코드 안내** — 추천 색상 스와치(HEX 6개까지) + 안내 문구. 빌더에
+  컬러 피커 + HEX 입력 + 추가/삭제. 4가지 톤 디폴트로 제공.
+  - `src/components/invite/DressCode.tsx` · `BuilderForm` 섹션 15
+
+- **신랑신부 한마디** — 각자 하객분들께 짧은 메시지. 인용 부호 + 측면 라벨로
+  편지 톤. 모바일은 세로, 560px↑는 2열 그리드.
+  - `src/components/invite/BrideGroomNotes.tsx` · `BuilderForm` 섹션 16
+
+- **D-day 도착 폭죽 + 메시지** — 카운트다운이 결혼식 4시간 이내가 되면
+  "🎉 오늘은 결혼식 날입니다 🎉" 메시지 + 숫자 펄스 애니메이션, 0초 도달
+  시점에 컨페티 폭죽 한 번 (rate-limit). `prefers-reduced-motion` 존중.
+  - `src/components/invite/Countdown.tsx` · `src/styles/features.css`
+
+### Changed
+
+- **WeddingData 타입 확장** — `interview?` / `dressCode?` / `notes?` 옵셔널 필드.
+  기존 청첩장은 변경 없이 동작 (디폴트 비활성).
+- **BuilderForm 섹션 번호** — 14~17이 신규, 18(공유 정보)로 밀림.
+- **SW VERSION** — v3.5.0 → v3.6.0 (옛 캐시 자동 무효화).
+
+### Verified
+
+- `npm run build`: 99 modules transformed, JS 463kB / CSS 89kB.
+- `npm run verify:curtain`: 8/8 통과.
+- `npm run verify:features`: 36/36 통과.
+
+---
+
+## [3.5.0] - 2026-05-12 — UI 버그 5종 픽스 + 공유 URL 단축
+
+5개의 가시적 버그 픽스 (사용자 스크린샷 기반):
+
+- **Monogram 원형 한글 겹침**: classic-elegant의 원 안 "김+박"이 겹쳐 "갬박"으로 보이던 문제. SVG x좌표 78/100/122 → 62/100/138, 글자 크기 84→58.
+- **Cinema 이름 오버플로우** (luxury-gold/editorial-mono): "박서연" 끝 잘림. `clamp(26px, 8vw, 42px)` + `word-break: keep-all`.
+- **HandwrittenLetter 폴라로이드** (watercolor-soft): 좌하단 사진이 신랑 이름을 덮음. `letter-couple { padding-left: 110px }`.
+- **Greeting drop-cap "서" 튀어나옴**: text-align center + float left가 한글에서 부자연스러움. text-align: left + 좌우 padding으로 컬럼 안 정렬.
+- **공유 URL 너무 김**: `lib/shortener.ts` 신설 — cleanuri.com → is.gd 무인증/CORS-안전 단축. ShareModal에 "짧은 링크로 변환" 버튼 + 글자수 표시 + 단축 배지.
+
+SW v3.4.0 → v3.5.0 bump.
+
+---
+
 ## [3.4.0] - 2026-05-12 — 자율 디벨롭 루프 (Ornaments · Hero · Divider · Mobile · Perf)
 
 `/loop` 자율 페이싱 모드에서 5 사이클 연속 디벨롭. 한 사이클 = 한 commit + build/curtain-smoke 검증.

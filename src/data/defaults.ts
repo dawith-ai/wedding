@@ -95,6 +95,41 @@ export const DEFAULT_DATA: WeddingData = {
     intro: '청첩장은 이 결혼식 이후로도 평생 살아있는 페이지입니다. 1주년, 첫 아이, 가족 여행 — 시간이 쌓일 때마다 여기에 추가해주세요.',
     items: [],
   },
+  interview: {
+    enabled: false,
+    title: '우리 둘의 이야기',
+    items: [
+      {
+        id: 'q1',
+        question: '서로의 첫인상은 어땠나요?',
+        answerGroom: '눈빛이 맑고 따뜻해서, 처음 보는데도 오래 알던 사람 같았어요.',
+        answerBride: '말이 많지 않은데 챙겨주는 게 자연스러워서 신기했어요.',
+      },
+      {
+        id: 'q2',
+        question: '서로의 가장 좋아하는 점은?',
+        answerGroom: '사소한 일도 끝까지 들어주고, 같이 웃어주는 마음이요.',
+        answerBride: '약속을 가볍게 하지 않는 점. 한 번 말한 건 꼭 지키는 사람이에요.',
+      },
+      {
+        id: 'q3',
+        question: '결혼 후 가장 기대하는 일은?',
+        answerGroom: '평일에도 같이 저녁 먹고, 같이 잠드는 일상이요.',
+        answerBride: '아무 일정 없는 주말에 같이 빈둥거리는 거요.',
+      },
+    ],
+  },
+  dressCode: {
+    enabled: false,
+    title: '드레스 코드',
+    note: '봄빛 파스텔 톤이면 더 좋아요. (의무 사항은 아니에요)',
+    colors: ['#F4DCD6', '#D9CDB9', '#A3B5A2', '#CFC8B9', '#F2EFE7'],
+  },
+  notes: {
+    enabled: false,
+    groom: '결혼식까지 매일이 설레요. 그날 와주실 모든 분들께 미리 감사드려요.',
+    bride: '오시는 길이 멀고 번거로우실 텐데, 그래도 함께해 주셔서 정말 감사해요.',
+  },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',
     description: '2026년 10월 10일 토요일, 소중한 분들을 초대합니다.',

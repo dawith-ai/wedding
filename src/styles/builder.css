@@ -347,3 +347,103 @@
   background: #fff;
 }
 .actions-share .btn-link:hover { background: #f6f6f6; }
+
+/* Emphasis textarea + toolbar */
+.emphasis-textarea { display: flex; flex-direction: column; gap: 6px; }
+.emphasis-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.emphasis-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fff7ec;
+  border: 1px solid #f0d9aa;
+  color: #8b5e1c;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+.emphasis-btn:hover { background: #ffe8c4; transform: translateY(-1px); }
+.emphasis-btn:active { transform: translateY(0); }
+.emphasis-hint { font-size: 11px; color: #999; line-height: 1.5; }
+
+/* Q&A editor */
+.qa-row {
+  padding: 14px 14px 8px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.qa-remove {
+  background: transparent;
+  color: #b66;
+  border: 0;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0 0;
+}
+.qa-remove:hover { color: #d44; }
+.qa-add {
+  display: inline-block;
+  background: #f5f5f5;
+  border: 1px dashed #bbb;
+  color: #555;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.qa-add:hover { background: #ececec; border-color: #888; }
+
+/* Dress-code editor */
+.dc-swatch-list { display: flex; flex-direction: column; gap: 8px; }
+.dc-swatch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dc-swatch-row input[type="color"] {
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+}
+.dc-swatch-row .dc-hex {
+  flex: 1;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+.dc-swatch-row button {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  color: #888;
+  cursor: pointer;
+}
+.dc-swatch-row button:hover { color: #b44; border-color: #b44; }
+.dc-swatch-list > button:last-child {
+  align-self: flex-start;
+  font-size: 12px;
+  background: #f5f5f5;
+  border: 1px dashed #bbb;
+  color: #555;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}

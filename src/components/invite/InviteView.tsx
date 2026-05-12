@@ -22,6 +22,9 @@ import { ShuttleBus } from './ShuttleBus';
 import { LikeButton } from './LikeButton';
 import { LifeEvents } from './LifeEvents';
 import { SaveTheDate } from './SaveTheDate';
+import { Interview } from './Interview';
+import { DressCode } from './DressCode';
+import { BrideGroomNotes } from './BrideGroomNotes';
 import { useFadeUpObserver } from '../../lib/intersect';
 
 interface Props {
@@ -44,6 +47,9 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     data.rsvp.enabled,
     data.guestbook.enabled,
     data.likes.enabled,
+    data.interview?.enabled,
+    data.dressCode?.enabled,
+    data.notes?.enabled,
   ]);
 
   useEffect(() => {
@@ -160,6 +166,18 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           </div>
         )}
 
+        {data.interview?.enabled && data.interview.items.length > 0 && (
+          <div className="fade-up">
+            <Interview data={data} />
+          </div>
+        )}
+
+        {data.notes?.enabled && (data.notes.groom.trim() || data.notes.bride.trim()) && (
+          <div className="fade-up">
+            <BrideGroomNotes data={data} />
+          </div>
+        )}
+
         <section className="invite-section section-calendar fade-up">
           <CalendarWidget date={data.wedding.date} theme={data.theme} />
         </section>
@@ -181,6 +199,12 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         {data.shuttle.enabled && data.shuttle.info.trim() && (
           <div className="fade-up">
             <ShuttleBus info={data.shuttle.info} theme={data.theme} />
+          </div>
+        )}
+
+        {data.dressCode?.enabled && (
+          <div className="fade-up">
+            <DressCode data={data} />
           </div>
         )}
 
