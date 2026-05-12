@@ -471,7 +471,20 @@
   background: #f7f7f7;
   font-weight: 600;
 }
-.layout-radio-item input { display: none; }
+/* Visually hide the input but keep it focusable / clickable for a11y
+ * and for Playwright `check()`. */
+.layout-radio-item input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.layout-radio-item input:focus-visible + span {
+  outline: 2px solid #555;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 /* Share modal — extra tools row */
 .extra-tools {

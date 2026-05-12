@@ -16,7 +16,8 @@
     "verify:pwa": "node scripts/verify-pwa.mjs",
     "verify:legibility": "node scripts/verify-legibility.mjs",
     "verify:curtain": "node scripts/smoke-curtain.mjs",
-    "verify:all": "node scripts/verify-features.mjs && node scripts/verify-themes.mjs && node scripts/verify-pwa.mjs && node scripts/verify-legibility.mjs && node scripts/smoke-curtain.mjs",
+    "verify:new": "node scripts/smoke-new-features.mjs",
+    "verify:all": "node scripts/verify-features.mjs && node scripts/verify-themes.mjs && node scripts/verify-pwa.mjs && node scripts/verify-legibility.mjs && node scripts/smoke-curtain.mjs && node scripts/smoke-new-features.mjs",
     "audit:overflow": "node scripts/debug-overflow.mjs",
     "audit:stress": "node scripts/audit-stress.mjs",
     "audit:pwa": "node scripts/audit-lighthouse.mjs"

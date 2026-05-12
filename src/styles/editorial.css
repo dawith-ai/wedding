@@ -360,14 +360,17 @@
 
 /* ═══ Buttons — editorial flat-fill ═══ */
 .guestbook-submit,
+.rsvp-submit,
 .rsvp-radios button.active {
   border-radius: var(--radius-sm);
   letter-spacing: var(--tracking-wide);
   transition: opacity var(--motion-default) var(--easing-standard),
               transform var(--motion-default) var(--easing-standard);
 }
-.guestbook-submit:hover { opacity: 0.86; }
-.guestbook-submit:active { transform: translateY(1px); }
+.guestbook-submit:hover,
+.rsvp-submit:hover { opacity: 0.86; }
+.guestbook-submit:active,
+.rsvp-submit:active { transform: translateY(1px); }
 
 .cal-btn,
 .location-buttons button,

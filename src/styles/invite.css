@@ -1123,7 +1123,8 @@
 [data-theme="modern-minimal"] .guestbook-form textarea { border-radius: 0; }
 .guestbook-form textarea { min-height: 80px; resize: vertical; }
 .guestbook-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.guestbook-submit {
+.guestbook-submit,
+.rsvp-submit {
   background: var(--accent);
   color: #fff;
   border: 0;
@@ -1133,7 +1134,8 @@
   letter-spacing: 0.05em;
   cursor: pointer;
 }
-[data-theme="modern-minimal"] .guestbook-submit { border-radius: 0; }
+[data-theme="modern-minimal"] .guestbook-submit,
+[data-theme="modern-minimal"] .rsvp-submit { border-radius: 0; }
 .guestbook-list { display: grid; gap: 8px; margin-top: 8px; }
 .guestbook-entry {
   background: var(--card);
