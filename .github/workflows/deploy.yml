@@ -34,6 +34,9 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Install Korean/CJK fonts (rendering parity with target devices)
+        run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-noto-cjk-extra
+
       - name: Smoke + audit + feature verification
         run: |
           # Boot vite preview in background and wait for it
