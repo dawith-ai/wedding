@@ -8,6 +8,9 @@ const SCAN = `(() => {
   for (const el of all) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+    // Skip SVG-internal nodes: their scrollWidth/clientWidth reflect the SVG's
+    // own coordinate system, not real HTML page overflow (false positives).
+    if (el.ownerSVGElement) continue;
     const cw = el.clientWidth, ch = el.clientHeight;
     if (cw === 0 || ch === 0) continue;
     // 8px tolerance: ignore sub-pixel rounding and decorative rotated/scaled
