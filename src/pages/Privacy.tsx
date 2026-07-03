@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export function Privacy() {
   return (
-    <div
+    <main
       style={{
         background: '#fafaf8',
         minHeight: '100vh',
@@ -87,7 +87,7 @@ export function Privacy() {
           의 Issues로 문의해주세요.
         </p>
       </article>
-    </div>
+    </main>
   );
 }
 

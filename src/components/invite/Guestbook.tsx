@@ -132,6 +132,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
         <div className="row">
           <input
             placeholder="성함"
+            aria-label="성함"
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={20}
@@ -139,6 +140,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
           <input
             type="password"
             placeholder="비밀번호 (삭제용)"
+            aria-label="비밀번호 (삭제용)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             maxLength={20}
@@ -146,6 +148,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
         </div>
         <textarea
           placeholder="축하 메시지를 남겨주세요"
+          aria-label="축하 메시지"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           maxLength={500}

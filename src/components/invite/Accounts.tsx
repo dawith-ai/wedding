@@ -21,9 +21,9 @@ function Group({ title, list }: { title: string; list: Account[] }) {
   if (list.length === 0) return null;
   return (
     <div className={`account-group${open ? ' open' : ''}`}>
-      <button className="account-toggle" onClick={() => setOpen((o) => !o)}>
+      <button className="account-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <span>{title}</span>
-        <span className="icon">+</span>
+        <span className="icon" aria-hidden>+</span>
       </button>
       <div className="account-list">
         {list.map((a, i) => (
@@ -32,7 +32,7 @@ function Group({ title, list }: { title: string; list: Account[] }) {
               <span className="role">{a.role}</span>
               <span className="num">{a.bank} {a.number}</span>
             </div>
-            <button onClick={() => copy(`${a.bank} ${a.number}`)}>복사</button>
+            <button onClick={() => copy(`${a.bank} ${a.number}`)} aria-label={`${a.role} ${a.bank} 계좌번호 복사`}>복사</button>
           </div>
         ))}
       </div>

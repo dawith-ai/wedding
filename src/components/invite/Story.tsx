@@ -24,7 +24,7 @@ export function Story({ title, body, photos, theme }: Props) {
         <div className={`story-photos count-${Math.min(photos.length, 4)}`} data-treatment={treatment}>
           {photos.slice(0, 4).map((src, i) => (
             <div className="story-photo" key={i}>
-              <img src={src} alt={`story-${i}`} loading="lazy" decoding="async" />
+              <img src={src} alt={`${title} 사진 ${i + 1}`} loading="lazy" decoding="async" />
             </div>
           ))}
         </div>

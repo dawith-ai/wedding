@@ -134,7 +134,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
           onUnlock={() => setPinUnlocked(true)}
         />
       )}
-      <div className="invite-frame">
+      <main className="invite-frame">
         {!isPreview && data.useCurtain && pinUnlocked && (
           <Curtain
             groomName={data.groom.name}
@@ -321,7 +321,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
             </a>
           )}
         </footer>
-      </div>
+      </main>
       {!isPreview && <Toast />}
     </div>
   );

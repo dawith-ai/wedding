@@ -18,10 +18,10 @@ export function Gallery({ photos, slideshowSec, layout = 'grid' }: Props) {
       <p className="gallery-subtitle">사진을 누르면 크게 볼 수 있어요</p>
       <div className="gallery-grid" data-layout={layout}>
         {photos.map((src, i) => (
-          <button key={i} onClick={() => setIndex(i)} aria-label={`사진 ${i + 1}`}>
+          <button key={i} onClick={() => setIndex(i)} aria-label={`갤러리 사진 ${i + 1} 크게 보기`}>
             <img
               src={src}
-              alt={`gallery-${i}`}
+              alt=""
               loading="lazy"
               decoding="async"
               fetchPriority={i < 2 ? 'high' : 'low'}

@@ -119,13 +119,14 @@ export function Rsvp({ inviteId, deadline }: Props) {
 
       <form className="rsvp-form" onSubmit={submit}>
         <div>
-          <label>구분</label>
-          <div className="rsvp-radios">
+          <label id="rsvp-side-label">구분</label>
+          <div className="rsvp-radios" role="group" aria-labelledby="rsvp-side-label">
             {SIDE.map((c) => (
               <button
                 type="button"
                 key={c.value}
                 className={side === c.value ? 'active' : ''}
+                aria-pressed={side === c.value}
                 onClick={() => setSide(c.value)}
               >
                 {c.label}
@@ -134,13 +135,14 @@ export function Rsvp({ inviteId, deadline }: Props) {
           </div>
         </div>
         <div>
-          <label>참석 여부</label>
-          <div className="rsvp-radios">
+          <label id="rsvp-attending-label">참석 여부</label>
+          <div className="rsvp-radios" role="group" aria-labelledby="rsvp-attending-label">
             {ATTENDING.map((c) => (
               <button
                 type="button"
                 key={c.value}
                 className={attending === c.value ? 'active' : ''}
+                aria-pressed={attending === c.value}
                 onClick={() => setAttending(c.value)}
               >
                 {c.label}
@@ -151,12 +153,13 @@ export function Rsvp({ inviteId, deadline }: Props) {
 
         <div className="rsvp-row">
           <div>
-            <label>성함</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} maxLength={20} placeholder="홍길동" />
+            <label htmlFor="rsvp-name">성함</label>
+            <input id="rsvp-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} placeholder="홍길동" />
           </div>
           <div>
-            <label>인원수</label>
+            <label htmlFor="rsvp-count">인원수</label>
             <input
+              id="rsvp-count"
               type="number"
               min={1}
               max={10}
@@ -167,13 +170,14 @@ export function Rsvp({ inviteId, deadline }: Props) {
         </div>
 
         <div>
-          <label>식사 여부</label>
-          <div className="rsvp-radios">
+          <label id="rsvp-meal-label">식사 여부</label>
+          <div className="rsvp-radios" role="group" aria-labelledby="rsvp-meal-label">
             {MEAL.map((c) => (
               <button
                 type="button"
                 key={c.value}
                 className={meal === c.value ? 'active' : ''}
+                aria-pressed={meal === c.value}
                 onClick={() => setMeal(c.value)}
               >
                 {c.label}
@@ -183,8 +187,9 @@ export function Rsvp({ inviteId, deadline }: Props) {
         </div>
 
         <div>
-          <label>연락처 (선택)</label>
+          <label htmlFor="rsvp-phone">연락처 (선택)</label>
           <input
+            id="rsvp-phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="010-0000-0000"
@@ -192,8 +197,8 @@ export function Rsvp({ inviteId, deadline }: Props) {
           />
         </div>
         <div>
-          <label>전하실 말씀 (선택)</label>
-          <textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
+          <label htmlFor="rsvp-message">전하실 말씀 (선택)</label>
+          <textarea id="rsvp-message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
         </div>
 
         <button className="guestbook-submit" type="submit" disabled={busy}>
