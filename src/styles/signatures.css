@@ -1045,6 +1045,8 @@
 }
 .cinema-stage {
   position: relative;
+  width: 100%;
+  max-width: 100%;
   aspect-ratio: 16 / 11;
   min-height: 320px;
   overflow: hidden;

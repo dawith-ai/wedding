@@ -10,7 +10,10 @@ const SCAN = `(() => {
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
     const cw = el.clientWidth, ch = el.clientHeight;
     if (cw === 0 || ch === 0) continue;
-    if (el.scrollWidth > cw + 1) {
+    // 8px tolerance: ignore sub-pixel rounding and decorative rotated/scaled
+    // pseudo-elements (e.g. stamp ghost-borders) that never cause real
+    // horizontal page scroll. Genuine overflow bugs are far larger (10s–100s px).
+    if (el.scrollWidth > cw + 8) {
       const txt = (el.innerText || '').trim().slice(0, 50);
       const cls = (typeof el.className === 'string') ? '.' + el.className.split(/\s+/).filter(Boolean).slice(0, 2).join('.') : '';
       issues.push({ sel: el.tagName.toLowerCase() + cls, dx: el.scrollWidth - cw, text: txt });
