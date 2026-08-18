@@ -41,6 +41,7 @@ export function AiPhotoStudio({ onPhotoReady, onVideoReady }: Props) {
   const [bulkBusy, setBulkBusy] = useState(false);
   const [bulkResults, setBulkResults] = useState<BulkResult[]>([]);
   const [resultUrl, setResultUrl] = useState<string>('');
+  const [downloadName, setDownloadName] = useState('ai-wedding.png');
   const [videoBusy, setVideoBusy] = useState(false);
   const [videoStatus, setVideoStatus] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -77,12 +78,14 @@ export function AiPhotoStudio({ onPhotoReady, onVideoReady }: Props) {
     }
     setBusy(true);
     setResultUrl('');
+    setDownloadName('ai-wedding.png');
     try {
       const { data, mimeType } = await fileToBase64(selectedFile);
       const style = PHOTO_STYLES.find((s) => s.id === styleId);
       const prompt = customPrompt.trim() || (style ? style.prompt : PHOTO_STYLES[0].prompt);
       const out = await generateWeddingPhoto(data, mimeType, prompt);
       setResultUrl(out.dataUrl);
+      setDownloadName(`ai-wedding-${Date.now()}.png`);
       showToast('생성 완료. 갤러리/Hero에 추가할 수 있어요');
     } catch (e) {
       showToast((e as Error).message);
@@ -350,7 +353,7 @@ export function AiPhotoStudio({ onPhotoReady, onVideoReady }: Props) {
             <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
               <button type="button" onClick={() => attach('hero')} style={primaryBtn()}>Hero 사진으로</button>
               <button type="button" onClick={() => attach('gallery')} style={secondaryBtn()}>갤러리에 추가</button>
-              <a href={resultUrl} download={`ai-wedding-${Date.now()}.png`} style={{ ...secondaryBtn(), textDecoration: 'none', display: 'inline-block' }}>
+              <a href={resultUrl} download={downloadName} style={{ ...secondaryBtn(), textDecoration: 'none', display: 'inline-block' }}>
                 다운로드
               </a>
               <button type="button" onClick={generate} style={secondaryBtn()}>다시 생성</button>
