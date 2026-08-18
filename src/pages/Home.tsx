@@ -42,7 +42,7 @@ export function Home() {
         navigate(url.slice(hashIndex + 2));
         return;
       }
-      window.location.href = url;
+      window.location.assign(url);
       return;
     }
     fallback();
