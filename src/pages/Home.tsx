@@ -41,7 +41,7 @@ const FEATURES = [
 const STEPS = [
   { icon: Ticket, title: '샘플을 고르고', body: '그림책, 영화, 한옥, 미니멀 중 마음에 닿는 장면을 골라요.' },
   { icon: Layers3, title: '두 사람을 채우고', body: '이름·사진·예식 정보만 넣으면 문장과 섹션이 자연스럽게 이어져요.' },
-  { icon: Share2, title: '링크를 건네요', body: '완성된 초대장을 카톡, 문자, QR로 보내고 오래 간직해요.' },
+  { icon: Share2, title: '링크를 보내요', body: '완성된 초대장을 카톡, 문자, QR로 보내고 오래 간직해요.' },
 ];
 
 export function Home() {
@@ -131,11 +131,12 @@ export function Home() {
       <section className="home-hero">
         <div className="hero-copy">
           <p className="hero-kicker"><span>01</span> MOMENT / DIGITAL INVITATION</p>
-          <h1>결혼 소식보다,<br /><em>당신들의 장면</em>을<br />먼저 보여주세요.</h1>
-          <p className="hero-lede">
-            사진 한 장, 이름 두 개, 그리고 마음을 담을 시간.<br />
-            오늘의 초대장을 고르는 가장 좋은 방법은<br className="desktop-only" /> 두 사람다운 장면에서 시작하는 거예요.
-          </p>
+          <h1>
+            <span className="hero-title-line">결혼 소식보다,</span>
+            <span className="hero-title-line"><em>당신들의 장면</em>을</span>
+            <span className="hero-title-line">먼저 보여주세요.</span>
+          </h1>
+          <p className="hero-lede">사진 한 장, 이름 두 개, 그리고 마음을 담을 시간. 오늘의 초대장을 고르는 가장 좋은 방법은 두 사람다운 장면에서 시작하는 거예요.</p>
           <div className="hero-actions">
             <Button asChild size="lg" className="button button-primary"><Link to="/builder">내 초대장 만들기 <ArrowRight size={17} /></Link></Button>
             <button type="button" className="button button-play" onClick={openCurrentDemo}><span><Play size={12} fill="currentColor" /></span> 완성본 먼저 보기</button>
@@ -163,7 +164,7 @@ export function Home() {
                 <div className="hero-card-names">민수 <i>&</i> 서연</div>
                 <div className="hero-card-location"><MapPin size={11} /> 아펠가모 광화문</div>
               </div>
-              <div className="hero-card-footer"><span>우리의 오늘에<br />당신을 초대합니다.</span><Heart size={14} fill="currentColor" /></div>
+          <div className="hero-card-footer"><span>우리의 오늘에<br />당신을 초대합니다.</span><Heart size={14} fill="currentColor" /></div>
             </motion.div>
             <div className="hero-card-slip slip-one"><span>01</span><strong>OUR<br />DAY</strong><small>save the date</small></div>
             <div className="hero-card-slip slip-two"><CalendarDays size={15} /><span>13:00<br />SAT</span></div>
@@ -177,14 +178,14 @@ export function Home() {
         <div className="proof-stat"><strong>{String(THEMES.length).padStart(2, '0')}</strong><span>visual languages</span></div>
         <div className="proof-stat"><strong>05</strong><span>min to first draft</span></div>
         <div className="proof-stat"><strong>∞</strong><span>your own moments</span></div>
-        <p>청첩장은 한 번 보고 지나가는 링크가 아니라<br /><b>두 사람을 기억하게 하는 첫 장면</b>이어야 하니까요.</p>
+        <p>청첩장은 한 번 보고 지나가는 링크가 아니라 <b>두 사람을 기억하게 하는 첫 장면</b>이어야 하니까요.</p>
       </section>
 
       <section id="samples" className="sample-panel section-shell">
         <div className="section-heading-row sample-heading-row">
           <div>
             <p className="eyebrow eyebrow-coral">02 · browse the collection</p>
-            <h2>샘플에서<br /><em>마음에 닿는 결</em>을 찾으세요.</h2>
+            <h2>샘플에서 <em>마음에 닿는 결</em>을 찾으세요.</h2>
           </div>
           <div className="heading-aside"><span>세 장면을 먼저 골라봤어요.</span><Link to="/builder">전체 테마 보기 <ArrowUpRight size={14} /></Link></div>
         </div>
@@ -234,8 +235,8 @@ export function Home() {
         <div className="section-shell workflow-inner">
           <div className="workflow-intro">
             <p className="eyebrow eyebrow-light"><WandSparkles size={14} /> no blank canvas</p>
-            <h2>빈 화면 앞에서<br /><em>막막하지 않게.</em></h2>
-            <p>샘플 문구와 실시간 미리보기를 보면서<br />두 사람의 이야기를 한 장면씩 채워요.</p>
+            <h2>빈 화면 앞에서 <em>막막하지 않게.</em></h2>
+            <p>샘플 문구와 실시간 미리보기를 보면서 두 사람의 이야기를 한 장면씩 채워요.</p>
           </div>
           <div className="workflow-steps">
             {STEPS.map(({ icon: Icon, title, body }, index) => (
@@ -253,9 +254,9 @@ export function Home() {
         <div className="section-heading-row">
           <div>
             <p className="eyebrow eyebrow-coral">03 · more than weddings</p>
-            <h2>결혼식이 아니어도,<br /><em>초대할 이유</em>는 충분해요.</h2>
+            <h2>결혼식이 아니어도, <em>초대할 이유</em>는 충분해요.</h2>
           </div>
-          <p>생일·돌잔치·집들이까지<br />같은 편집 방식으로 시작하세요.</p>
+          <p>생일·돌잔치·집들이까지 같은 편집 방식으로 시작하세요.</p>
         </div>
         <div className="event-grid">
           {EVENT_LIST.map((eventType, index) => {
@@ -284,9 +285,9 @@ export function Home() {
         <div className="section-heading-row feature-heading-row">
           <div>
             <p className="eyebrow eyebrow-coral">04 · the details matter</p>
-            <h2>예쁜 첫 화면 뒤에<br /><em>필요한 것까지</em> 담았어요.</h2>
+            <h2>예쁜 첫 화면 뒤에 <em>필요한 것까지</em> 담았어요.</h2>
           </div>
-          <p>받는 사람은 한 번만 눌러도<br />정보를 찾을 수 있어야 하니까요.</p>
+          <p>받는 사람은 한 번만 눌러도 정보를 찾을 수 있어야 하니까요.</p>
         </div>
         <div className="feature-grid">
           {FEATURES.map(({ icon: Icon, label, body }, index) => (
@@ -304,9 +305,9 @@ export function Home() {
         <div className="section-heading-row theme-heading-row">
           <div>
             <p className="eyebrow eyebrow-coral">05 · find your visual language</p>
-            <h2>테마를 고르는 일은<br /><em>우리의 말투</em>를 고르는 일.</h2>
+            <h2>테마를 고르는 일은 <em>우리의 말투</em>를 고르는 일.</h2>
           </div>
-          <p>마음에 닿는 결을 누르면<br />실제 샘플을 바로 볼 수 있어요.</p>
+          <p>마음에 닿는 결을 누르면 실제 샘플을 바로 볼 수 있어요.</p>
         </div>
         <div className="mood-tabs" role="tablist" aria-label="테마 무드 필터">
           {THEME_FILTERS.map((item) => (
@@ -339,7 +340,7 @@ export function Home() {
       </section>
 
       <section className="closing-panel section-shell">
-        <div className="closing-card"><div><p className="eyebrow eyebrow-light">your day, your page</p><h2>당신들의 장면을<br /><em>첫 페이지로.</em></h2></div><Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button></div>
+        <div className="closing-card"><div><p className="eyebrow eyebrow-light">your day, your page</p><h2>당신들의 장면을 <em>첫 페이지로.</em></h2></div><Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button></div>
         <footer className="home-footer"><span>moment. invitation atelier</span><span>가입 없음 · 평생 무료 · 내 데이터는 내 것</span><Link to="/privacy">개인정보 처리방침</Link></footer>
       </section>
       <Toast />

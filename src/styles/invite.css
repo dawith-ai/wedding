@@ -858,6 +858,8 @@
   max-width: 380px;
   margin: 12px auto 0;
 }
+.greeting-paragraph { display: block; }
+.greeting-paragraph + .greeting-paragraph { margin-top: 1.35em; }
 [data-theme="modern-minimal"] .greeting-body {
   line-height: 2;
   font-size: 14px;

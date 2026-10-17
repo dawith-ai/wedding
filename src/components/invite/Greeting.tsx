@@ -34,34 +34,42 @@ function renderBody(body: string) {
   const trimmed = body.trimStart();
   if (!trimmed) return body;
 
-  const parts = parseEmphasis(trimmed);
-  // Drop-cap applies to the first character of the first plain part.
+  const paragraphs = trimmed.split(/\n\s*\n/);
   let dropApplied = false;
+
   return (
     <>
-      {parts.map((p, i) => {
-        if (p.kind === 'em') {
-          return (
-            <em key={i} className="greeting-accent">
-              {p.value}
-            </em>
-          );
-        }
-        if (!dropApplied && p.value.length > 0) {
-          dropApplied = true;
-          const first = p.value.charAt(0);
-          const rest = p.value.slice(1);
-          return (
-            <Fragment key={i}>
-              <span className="drop-cap">{first}</span>
-              {rest}
-            </Fragment>
-          );
-        }
-        return <Fragment key={i}>{p.value}</Fragment>;
+      {paragraphs.map((paragraph, paragraphIndex) => {
+        const parts = parseEmphasis(paragraph.trim());
+        return (
+          <span className="greeting-paragraph" key={paragraphIndex}>
+            {parts.map((p, i) => {
+              if (p.kind === 'em') {
+                return (
+                  <em key={i} className="greeting-accent">
+                    {p.value}
+                  </em>
+                );
+              }
+              if (!dropApplied && p.value.length > 0) {
+                dropApplied = true;
+                const first = p.value.charAt(0);
+                const rest = p.value.slice(1);
+                return (
+                  <Fragment key={i}>
+                    <span className="drop-cap">{first}</span>
+                    {rest}
+                  </Fragment>
+                );
+              }
+              return <Fragment key={i}>{p.value}</Fragment>;
+            })}
+          </span>
+        );
       })}
     </>
   );
+
 }
 
 export function Greeting({ title, body, theme }: Props) {
