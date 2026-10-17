@@ -1269,6 +1269,117 @@
 }
 
 /* ═══════════════════════════════════════════
+   Child-drawn picturebook
+   ═══════════════════════════════════════════ */
+.hero--doodle-book {
+  position: relative;
+  padding: 28px 16px 58px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 15% 18%, rgba(243, 162, 79, 0.16) 0 8%, transparent 8.5%),
+    radial-gradient(circle at 86% 76%, rgba(228, 95, 75, 0.12) 0 10%, transparent 10.5%),
+    var(--bg);
+}
+.doodle-book-page {
+  position: relative;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 28px 22px 34px;
+  overflow: hidden;
+  border: 2px solid rgba(45, 70, 60, 0.36);
+  border-radius: 7px 18px 10px 21px / 16px 8px 19px 7px;
+  background: var(--card);
+  box-shadow: 7px 8px 0 rgba(228, 95, 75, 0.14), 0 18px 32px rgba(92, 87, 45, 0.1);
+  transform: rotate(-0.7deg);
+}
+.doodle-book-page::before,
+.doodle-book-page::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.52;
+}
+.doodle-book-page::before { top: 14px; right: 18px; }
+.doodle-book-page::after { bottom: 18px; left: 16px; border-color: #8fb9ae; }
+.doodle-book-kicker {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+}
+.doodle-book-art {
+  position: relative;
+  max-width: 350px;
+  margin: 0 auto 8px;
+  transform: rotate(0.9deg);
+}
+.doodle-book-art svg { display: block; width: 100%; height: auto; }
+.doodle-book-art path,
+.sample-doodle-scene path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+.doodle-sun { fill: #f3a24f !important; stroke: #e45f4b; }
+.doodle-cloud { fill: #d7e7de !important; stroke: #71917b; }
+.doodle-hill { fill: #b8cf9b !important; stroke: #6f8d67; }
+.doodle-house { fill: #f8d3a9 !important; stroke: #e45f4b; }
+.doodle-roof { stroke: #e45f4b; }
+.doodle-door { stroke: #2d463c; }
+.doodle-person { stroke: #2d463c; }
+.doodle-heart { stroke: #e45f4b; stroke-width: 5; }
+.doodle-flower { stroke: #8b6c9f; }
+.doodle-book-note {
+  position: relative;
+  margin: 3px 0 8px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  letter-spacing: -0.08em;
+}
+.doodle-book-names {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 9px;
+  margin: 0 0 10px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 9vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.1em;
+  white-space: nowrap;
+}
+.doodle-book-names em { color: var(--accent); font-size: 0.7em; font-style: normal; }
+.doodle-book-date, .doodle-book-venue {
+  position: relative;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.doodle-book-date { font-weight: 700; }
+.doodle-book-venue { margin-top: 3px; }
+
+[data-theme="kids-doodle"] .invite-section {
+  background-image: radial-gradient(rgba(228, 95, 75, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+[data-theme="paper-collage"] .hero--scrapbook { background-image: linear-gradient(135deg, rgba(231, 134, 99, 0.12), transparent 42%), linear-gradient(315deg, rgba(143, 185, 174, 0.12), transparent 38%); }
+[data-theme="paper-collage"] .sb-page { border-radius: 3px 14px 5px 10px; box-shadow: 6px 8px 0 rgba(231, 134, 99, 0.16), 0 12px 25px rgba(105, 75, 48, 0.12); }
+[data-theme="record-shop"] .hero--scrapbook { background: #172a3b; color: #f7f0df; }
+[data-theme="record-shop"] .sb-page { background: #f7f0df; border-radius: 10px; box-shadow: 0 0 0 14px #d96f55, 0 16px 34px rgba(0, 0, 0, 0.38); }
+[data-theme="record-shop"] .sb-polaroid { border-radius: 50%; background: #f7f0df; box-shadow: 0 0 0 8px #172a3b; }
+[data-theme="modern-hanok"] .hero--framed { background-image: linear-gradient(rgba(49, 91, 89, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(49, 91, 89, 0.04) 1px, transparent 1px); background-size: 24px 24px; }
+[data-theme="seasonal-garden"] .storybook-page { border-radius: 48% 5px 43% 8px / 8px 48% 7px 42%; box-shadow: 0 16px 38px rgba(79, 93, 60, 0.14); }
+[data-theme="seasonal-garden"] .storybook-wreath { color: var(--accent); }
+
+/* ═══════════════════════════════════════════
    Boarding Pass (nature-green → 여행)
    ═══════════════════════════════════════════ */
 .hero--boardingpass {

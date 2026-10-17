@@ -15,6 +15,7 @@ const THEMES = [
   'nature-green', 'luxury-gold', 'simple-clean', 'vintage-film',
   'watercolor-soft', 'midnight-navy', 'pastel-dream', 'korean-traditional',
   'editorial-mono', 'storybook-gouache', 'cinema-noir', 'travel-postcard',
+  'kids-doodle', 'paper-collage', 'record-shop', 'modern-hanok', 'seasonal-garden',
 ];
 
 async function getInviteUrl(browser, theme) {
@@ -68,7 +69,8 @@ async function verifyTheme(browser, theme) {
     r('data-theme matches', themeAttr === theme, `got=${themeAttr}`);
 
     const heroMedia = await page.$('section.hero img, section.hero video, section.hero iframe');
-    r('hero media renders', !!heroMedia);
+    const heroIllustration = await page.$('section.hero .doodle-book-art');
+    r('hero media or illustration renders', !!heroMedia || !!heroIllustration);
 
     const heroText = (await page.$eval('section.hero', (s) => (s.innerText || '').trim()).catch(() => '')) || '';
     // Korean-traditional spaces names (김 민 수). Allow whitespace between syllables.
@@ -196,7 +198,10 @@ async function verifyTheme(browser, theme) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true,
+    executablePath: process.env.PW_EXECUTABLE_PATH || undefined,
+  });
   let total = 0, passed = 0;
   const failed = [];
   for (const theme of THEMES) {

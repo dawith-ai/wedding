@@ -11,7 +11,15 @@ export type BuiltInThemeId =
   | 'midnight-navy'
   | 'pastel-dream'
   | 'korean-traditional'
-  | 'editorial-mono';
+  | 'editorial-mono'
+  | 'storybook-gouache'
+  | 'cinema-noir'
+  | 'travel-postcard'
+  | 'kids-doodle'
+  | 'paper-collage'
+  | 'record-shop'
+  | 'modern-hanok'
+  | 'seasonal-garden';
 
 export type ThemeId = BuiltInThemeId | (string & {});
 

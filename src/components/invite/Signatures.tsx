@@ -478,6 +478,40 @@ export function StorybookSpread({ data }: { data: WeddingData }) {
   );
 }
 
+/* Child-drawn picturebook (kids-doodle)
+ * A deliberately imperfect crayon scene: the couple's invitation starts
+ * like a page a child drew for the people they love.
+ */
+export function ChildDoodleBook({ data }: { data: WeddingData }) {
+  return (
+    <section className="hero hero--doodle-book">
+      <div className="doodle-book-page">
+        <p className="doodle-book-kicker">우리 둘의 작은 그림책</p>
+        <div className="doodle-book-art" aria-hidden>
+          <svg viewBox="0 0 360 410" role="presentation">
+            <path className="doodle-sun" d="M62 76c20-19 49-13 55 10 21-2 32 13 22 29-11 16-40 13-57 8-20 8-42-7-35-25 3-9 8-16 15-22Z" />
+            <path className="doodle-cloud" d="M245 91c9-19 38-17 45 4 19-8 37 8 32 25-4 14-21 19-43 15-18 8-42 3-44-17-1-11 3-21 10-27Z" />
+            <path className="doodle-hill" d="M-8 331c62-62 111-70 164-27 40 33 67 32 105 0 41-35 72-22 108 21v112H-8Z" />
+            <path className="doodle-house" d="M124 267 181 218l59 49v94h-116Z" />
+            <path className="doodle-roof" d="m113 270 68-59 70 59" />
+            <path className="doodle-door" d="M170 361v-50h25v50" />
+            <path className="doodle-person person-one" d="M89 327c-5-29 5-48 23-49 18 1 25 20 18 49m-19-49c-2-12 3-22 13-22 11 0 16 10 13 22m-24 7 18 0" />
+            <path className="doodle-person person-two" d="M253 326c-4-28 5-47 22-48 18 1 26 20 19 48m-18-48c-2-12 3-22 13-22 10 0 15 10 12 22m-24 8 18 0" />
+            <path className="doodle-heart" d="M181 172c-13-18-38 1 0 30 38-29 13-48 0-30Z" />
+            <path className="doodle-flower" d="M54 373c3-35 2-55 18-80m-17 31c-20-13-24-30-10-36 17-6 22 18 10 36Zm1-8c22-12 36-5 35 10-1 16-25 18-35-10Z" />
+          </svg>
+        </div>
+        <p className="doodle-book-note">우리가 만난 날부터<br />오늘까지, 그리고 오래오래</p>
+        <h1 className="doodle-book-names">
+          <span>{data.groom.name}</span><em>&amp;</em><span>{data.bride.name}</span>
+        </h1>
+        <p className="doodle-book-date">{formatKoreanDate(data.wedding.date, data.wedding.time)}</p>
+        <p className="doodle-book-venue">{data.wedding.venue}</p>
+      </div>
+    </section>
+  );
+}
+
 /* ═══════════════════════════════════════════
    Boarding Pass (nature-green → 여행 항공권)
    Mono type, perforation, vintage stamps,

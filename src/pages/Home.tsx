@@ -29,7 +29,7 @@ import { showToast } from '../lib/toast';
 import type { BuiltInThemeId, EventType, ThemeId } from '../types';
 import { Button } from '../components/ui/Button';
 
-const FEATURED_THEME_IDS: BuiltInThemeId[] = ['original-warm', 'vintage-film', 'korean-traditional'];
+const FEATURED_THEME_IDS: BuiltInThemeId[] = ['kids-doodle', 'vintage-film', 'modern-hanok'];
 
 const FEATURES = [
   { icon: Palette, label: '고르는 건 무드 하나', body: '사진과 문장을 넣기 전에, 두 사람에게 맞는 결부터 고르세요.' },
@@ -143,7 +143,7 @@ export function Home() {
           <div className="hero-trust">
             <span><Check size={13} /> 가입 없이 시작</span>
             <span><Check size={13} /> 평생 무료</span>
-            <span><Check size={13} /> 16개 테마</span>
+            <span><Check size={13} /> {THEMES.length}개 테마</span>
           </div>
         </div>
 
@@ -174,7 +174,7 @@ export function Home() {
       </section>
 
       <section className="proof-strip">
-        <div className="proof-stat"><strong>16</strong><span>visual languages</span></div>
+        <div className="proof-stat"><strong>{String(THEMES.length).padStart(2, '0')}</strong><span>visual languages</span></div>
         <div className="proof-stat"><strong>05</strong><span>min to first draft</span></div>
         <div className="proof-stat"><strong>∞</strong><span>your own moments</span></div>
         <p>청첩장은 한 번 보고 지나가는 링크가 아니라<br /><b>두 사람을 기억하게 하는 첫 장면</b>이어야 하니까요.</p>
@@ -199,14 +199,30 @@ export function Home() {
               <span className="sample-card-index">0{index + 1}</span>
               <div className="sample-card-art" style={{ background: theme.preview.bg, color: theme.preview.text }}>
                 <div className="sample-card-frame" />
-                {index === 0 && <div className="sample-card-photo" style={{ backgroundImage: `url(${DEFAULT_DATA.gallery[1]})` }} />}
+                {index === 0 && (
+                  <div className="sample-doodle-scene" aria-hidden>
+                    <svg viewBox="0 0 360 420" role="presentation">
+                      <path className="doodle-sun" d="M62 76c20-19 49-13 55 10 21-2 32 13 22 29-11 16-40 13-57 8-20 8-42-7-35-25 3-9 8-16 15-22Z" />
+                      <path className="doodle-cloud" d="M245 91c9-19 38-17 45 4 19-8 37 8 32 25-4 14-21 19-43 15-18 8-42 3-44-17-1-11 3-21 10-27Z" />
+                      <path className="doodle-hill" d="M-8 331c62-62 111-70 164-27 40 33 67 32 105 0 41-35 72-22 108 21v112H-8Z" />
+                      <path className="doodle-house" d="M124 267 181 218l59 49v94h-116Z" />
+                      <path className="doodle-roof" d="m113 270 68-59 70 59" />
+                      <path className="doodle-door" d="M170 361v-50h25v50" />
+                      <path className="doodle-person person-one" d="M89 327c-5-29 5-48 23-49 18 1 25 20 18 49m-19-49c-2-12 3-22 13-22 11 0 16 10 13 22m-24 7 18 0" />
+                      <path className="doodle-person person-two" d="M253 326c-4-28 5-47 22-48 18 1 26 20 19 48m-18-48c-2-12 3-22 13-22 10 0 15 10 12 22m-24 8 18 0" />
+                      <path className="doodle-heart" d="M181 172c-13-18-38 1 0 30 38-29 13-48 0-30Z" />
+                      <path className="doodle-flower" d="M54 373c3-35 2-55 18-80m-17 31c-20-13-24-30-10-36 17-6 22 18 10 36Zm1-8c22-12 36-5 35 10-1 16-25 18-35-10Z" />
+                    </svg>
+                    <span className="doodle-caption">우리 둘의<br />작은 그림책</span>
+                  </div>
+                )}
                 {index === 1 && <div className="sample-film-grid"><span>LOVE<br />STORY</span><i>FRAME 04 / 24</i></div>}
                 {index === 2 && <div className="sample-hanji-mark">민수<br /><span>그리고</span><br />서연</div>}
                 <span className="sample-card-arrow"><ArrowUpRight size={15} /></span>
               </div>
               <div className="sample-card-meta">
                 <span>{theme.name}</span>
-                <strong>{index === 0 ? '사진 한 장으로 시작하는 따뜻한 초대' : index === 1 ? '한 편의 영화처럼 흐르는 하루' : '한지 위에 남기는 오래된 약속'}</strong>
+                <strong>{index === 0 ? '아이의 크레용처럼 서툴고 다정한 우리' : index === 1 ? '한 편의 영화처럼 흐르는 하루' : '한옥의 선 위에 남기는 오래된 약속'}</strong>
                 <small>샘플 보기 <ArrowRight size={13} /></small>
               </div>
             </button>
@@ -303,8 +319,8 @@ export function Home() {
           {visibleThemes.map((theme, index) => (
             <motion.article
               key={theme.id}
-              className={`theme-tile theme-tile-${index + 1}`}
-              style={{ background: theme.preview.bg, color: theme.preview.text }}
+              className={`theme-tile theme-tile-${index + 1} theme-tile--${theme.id}`}
+              style={{ backgroundColor: theme.preview.bg, color: theme.preview.text }}
               whileHover={{ y: -6 }}
               onClick={() => openDemo(theme.id)}
               role="button"

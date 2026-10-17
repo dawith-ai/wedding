@@ -34,6 +34,11 @@ const THEMES = [
   'storybook-gouache',
   'cinema-noir',
   'travel-postcard',
+  'kids-doodle',
+  'paper-collage',
+  'record-shop',
+  'modern-hanok',
+  'seasonal-garden',
 ];
 
 const BASE = process.env.BASE || 'http://localhost:5173';

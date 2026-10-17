@@ -9,6 +9,7 @@ import {
   PolaroidScatter,
   Monogram,
   StorybookSpread,
+  ChildDoodleBook,
   BoardingPass,
   HandwrittenLetter,
   ScrapbookDiary,
@@ -257,6 +258,60 @@ export function Hero({ data }: Props) {
       );
 
     case 'storybook-gouache':
+      return (
+        <>
+          <StorybookSpread data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'kids-doodle':
+      return (
+        <>
+          <ChildDoodleBook data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'paper-collage':
+    case 'record-shop':
+      return (
+        <>
+          <ScrapbookDiary data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'modern-hanok':
+      return (
+        <>
+          <HanjiEnvelope data={data} />
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'seasonal-garden':
       return (
         <>
           <StorybookSpread data={data} />
