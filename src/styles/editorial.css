@@ -398,7 +398,7 @@
 }
 .rsvp-kicker {
   margin-bottom: 14px;
-  color: var(--accent);
+  color: var(--text);
   font-size: 10px;
   letter-spacing: 0.25em;
 }
