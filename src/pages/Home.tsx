@@ -1,17 +1,20 @@
 import { motion } from 'motion/react';
 import {
-  ArrowDownRight,
+  ArrowRight,
   ArrowUpRight,
   CalendarDays,
   Camera,
   Check,
   Heart,
+  Layers3,
   MapPin,
   MessageCircleHeart,
-  Music2,
   Palette,
-  Sparkles,
+  Play,
+  Share2,
   Smartphone,
+  Sparkles,
+  Ticket,
   WandSparkles,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
@@ -26,11 +29,19 @@ import { showToast } from '../lib/toast';
 import type { BuiltInThemeId, EventType, ThemeId } from '../types';
 import { Button } from '../components/ui/Button';
 
+const FEATURED_THEME_IDS: BuiltInThemeId[] = ['original-warm', 'vintage-film', 'korean-traditional'];
+
 const FEATURES = [
-  { icon: Palette, label: '취향을 먼저 고르는 흐름', body: '행사와 무드를 고르면 어울리는 시작점을 바로 제안해요.' },
-  { icon: Camera, label: '사진이 주인공이 되는 화면', body: '세로 사진 한 장만으로도 첫 화면이 완성되도록 설계했어요.' },
-  { icon: MessageCircleHeart, label: '초대 뒤의 장면까지', body: 'RSVP, 방명록, 식순, 가족의 기록이 한 링크에 이어집니다.' },
-  { icon: Smartphone, label: '링크 하나로 오래', body: '가입 없이 만들고, 카톡·QR·홈 화면으로 자연스럽게 공유해요.' },
+  { icon: Palette, label: '고르는 건 무드 하나', body: '사진과 문장을 넣기 전에, 두 사람에게 맞는 결부터 고르세요.' },
+  { icon: Camera, label: '사진은 크게, 정보는 또렷하게', body: '첫 화면은 장면답게. 날짜·장소·길찾기는 한 번에 읽히게.' },
+  { icon: MessageCircleHeart, label: '초대 뒤의 마음까지', body: 'RSVP, 방명록, 식순, 가족의 이야기가 하나의 흐름으로 이어져요.' },
+  { icon: Smartphone, label: '링크 하나로 오래', body: '가입 없이 시작하고 카카오톡과 QR로 가볍게 건네요.' },
+];
+
+const STEPS = [
+  { icon: Ticket, title: '샘플을 고르고', body: '그림책, 영화, 한옥, 미니멀 중 마음에 닿는 장면을 골라요.' },
+  { icon: Layers3, title: '두 사람을 채우고', body: '이름·사진·예식 정보만 넣으면 문장과 섹션이 자연스럽게 이어져요.' },
+  { icon: Share2, title: '링크를 건네요', body: '완성된 초대장을 카톡, 문자, QR로 보내고 오래 간직해요.' },
 ];
 
 export function Home() {
@@ -67,6 +78,11 @@ export function Home() {
     return THEMES.filter((theme) => getThemeGenres(theme).includes(mood));
   }, [mood]);
 
+  const featuredThemes = useMemo(
+    () => FEATURED_THEME_IDS.map((id) => THEMES.find((theme) => theme.id === id)).filter(Boolean),
+    [],
+  );
+
   function openDemo(themeId: ThemeId) {
     const url = demoUrls[themeId];
     if (url) {
@@ -101,76 +117,129 @@ export function Home() {
     <main className="home-shell">
       <header className="home-nav">
         <Link to="/" className="home-brand" aria-label="Moment home">
-          <span className="brand-mark"><Heart size={14} fill="currentColor" /></span>
+          <span className="brand-mark"><Heart size={13} fill="currentColor" /></span>
           <span>moment<span className="brand-dot">.</span></span>
         </Link>
-        <div className="home-nav-meta">
-          <span className="nav-status"><span className="status-dot" /> 가입 없이 시작</span>
-          <Link to="/manage" className="nav-create">내 초대장</Link>
-          <Link to="/builder" className="nav-create">만들기 <ArrowUpRight size={15} /></Link>
-        </div>
+        <span className="home-nav-note">A digital invitation atelier</span>
+        <nav className="home-nav-meta" aria-label="주요 메뉴">
+          <a href="#samples">샘플</a>
+          <Link to="/manage">내 초대장</Link>
+          <Link to="/builder" className="nav-create">새 초대장 <ArrowUpRight size={15} /></Link>
+        </nav>
       </header>
 
       <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow"><Sparkles size={14} /> private invitation studio · 2026</p>
-          <h1>두 사람의 이야기를<br /><em>한 장면씩,</em><br />초대합니다.</h1>
+          <p className="hero-kicker"><span>01</span> MOMENT / DIGITAL INVITATION</p>
+          <h1>결혼 소식보다,<br /><em>당신들의 장면</em>을<br />먼저 보여주세요.</h1>
           <p className="hero-lede">
-            사진 한 장과 두 사람의 이름에서 시작해<br />
-            오래 남을 한 페이지를 함께 만듭니다.
+            사진 한 장, 이름 두 개, 그리고 마음을 담을 시간.<br />
+            오늘의 초대장을 고르는 가장 좋은 방법은<br className="desktop-only" /> 두 사람다운 장면에서 시작하는 거예요.
           </p>
           <div className="hero-actions">
-            <Button asChild size="lg" className="button button-dark"><Link to="/builder">내 초대장 만들기 <ArrowUpRight size={17} /></Link></Button>
-            <button type="button" className="button button-quiet" onClick={openCurrentDemo}>완성본 먼저 보기 <ArrowDownRight size={16} /></button>
+            <Button asChild size="lg" className="button button-primary"><Link to="/builder">내 초대장 만들기 <ArrowRight size={17} /></Link></Button>
+            <button type="button" className="button button-play" onClick={openCurrentDemo}><span><Play size={12} fill="currentColor" /></span> 완성본 먼저 보기</button>
           </div>
-          <div className="hero-proof">
+          <div className="hero-trust">
+            <span><Check size={13} /> 가입 없이 시작</span>
             <span><Check size={13} /> 평생 무료</span>
-            <span><Check size={13} /> 링크 하나</span>
-            <span><Check size={13} /> 서버비 0원</span>
+            <span><Check size={13} /> 16개 테마</span>
           </div>
         </div>
 
-        <div className="hero-stage" aria-label="모바일 청첩장 미리보기">
-          <div className="stage-orbit orbit-one" />
-          <div className="stage-orbit orbit-two" />
-          <motion.div
-            className="preview-paper"
-            initial={{ opacity: 0, y: 28, rotate: 3 }}
-            animate={{ opacity: 1, y: 0, rotate: -3 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="preview-paper-top">
-              <span>THE INVITATION</span>
-              <span>01 / 06</span>
-            </div>
-            <div className="preview-photo" style={{ backgroundImage: `url(${DEFAULT_DATA.hero})` }}>
-              <div className="preview-photo-wash" />
-              <span className="preview-date">SAT · 10 OCT · 2026</span>
-              <div className="preview-names">민수 <i>&</i> 서연</div>
-              <span className="preview-place"><MapPin size={12} /> 아펠가모 광화문</span>
-            </div>
-            <div className="preview-paper-bottom">
-              <span>소중한 분들을 초대합니다</span>
-              <span className="preview-heart"><Heart size={14} fill="currentColor" /></span>
-            </div>
-          </motion.div>
-          <motion.div className="stage-sticker sticker-calendar" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-            <CalendarDays size={16} /> <span>2026.10.10</span>
-          </motion.div>
-          <motion.div className="stage-sticker sticker-note" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
-            <Music2 size={15} /> <span>우리의 노래도 함께</span>
-          </motion.div>
-          <span className="stage-caption">a little page<br />for a big day</span>
+        <div className="hero-showcase" aria-label="민수와 서연의 모바일 청첩장 샘플">
+          <div className="showcase-topline"><span>THE INVITATION</span><span>SCROLL TO EXPLORE <ArrowRight size={12} /></span></div>
+          <div className="showcase-surface">
+            <div className="showcase-backdrop" />
+            <motion.div
+              className="hero-invite-card"
+              initial={{ opacity: 0, y: 26, rotate: 3 }}
+              animate={{ opacity: 1, y: 0, rotate: -4 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="hero-card-image" style={{ backgroundImage: `url(${DEFAULT_DATA.hero})` }}>
+                <div className="hero-card-wash" />
+                <div className="hero-card-date">SATURDAY<br /><strong>10.10</strong><br />2026</div>
+                <div className="hero-card-names">민수 <i>&</i> 서연</div>
+                <div className="hero-card-location"><MapPin size={11} /> 아펠가모 광화문</div>
+              </div>
+              <div className="hero-card-footer"><span>우리의 오늘에<br />당신을 초대합니다.</span><Heart size={14} fill="currentColor" /></div>
+            </motion.div>
+            <div className="hero-card-slip slip-one"><span>01</span><strong>OUR<br />DAY</strong><small>save the date</small></div>
+            <div className="hero-card-slip slip-two"><CalendarDays size={15} /><span>13:00<br />SAT</span></div>
+            <span className="showcase-caption">a little page<br />for a big day</span>
+          </div>
+          <div className="showcase-bottomline"><span>민수 &amp; 서연</span><span>2026. 10. 10 · 서울</span></div>
+        </div>
+      </section>
+
+      <section className="proof-strip">
+        <div className="proof-stat"><strong>16</strong><span>visual languages</span></div>
+        <div className="proof-stat"><strong>05</strong><span>min to first draft</span></div>
+        <div className="proof-stat"><strong>∞</strong><span>your own moments</span></div>
+        <p>청첩장은 한 번 보고 지나가는 링크가 아니라<br /><b>두 사람을 기억하게 하는 첫 장면</b>이어야 하니까요.</p>
+      </section>
+
+      <section id="samples" className="sample-panel section-shell">
+        <div className="section-heading-row sample-heading-row">
+          <div>
+            <p className="eyebrow eyebrow-coral">02 · browse the collection</p>
+            <h2>샘플에서<br /><em>마음에 닿는 결</em>을 찾으세요.</h2>
+          </div>
+          <div className="heading-aside"><span>세 장면을 먼저 골라봤어요.</span><Link to="/builder">전체 테마 보기 <ArrowUpRight size={14} /></Link></div>
+        </div>
+        <div className="sample-feature-grid">
+          {featuredThemes.map((theme, index) => theme && (
+            <button
+              key={theme.id}
+              type="button"
+              className={`sample-card sample-card-${index + 1}`}
+              onClick={() => openDemo(theme.id)}
+            >
+              <span className="sample-card-index">0{index + 1}</span>
+              <div className="sample-card-art" style={{ background: theme.preview.bg, color: theme.preview.text }}>
+                <div className="sample-card-frame" />
+                {index === 0 && <div className="sample-card-photo" style={{ backgroundImage: `url(${DEFAULT_DATA.gallery[1]})` }} />}
+                {index === 1 && <div className="sample-film-grid"><span>LOVE<br />STORY</span><i>FRAME 04 / 24</i></div>}
+                {index === 2 && <div className="sample-hanji-mark">민수<br /><span>그리고</span><br />서연</div>}
+                <span className="sample-card-arrow"><ArrowUpRight size={15} /></span>
+              </div>
+              <div className="sample-card-meta">
+                <span>{theme.name}</span>
+                <strong>{index === 0 ? '사진 한 장으로 시작하는 따뜻한 초대' : index === 1 ? '한 편의 영화처럼 흐르는 하루' : '한지 위에 남기는 오래된 약속'}</strong>
+                <small>샘플 보기 <ArrowRight size={13} /></small>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="workflow-panel">
+        <div className="section-shell workflow-inner">
+          <div className="workflow-intro">
+            <p className="eyebrow eyebrow-light"><WandSparkles size={14} /> no blank canvas</p>
+            <h2>빈 화면 앞에서<br /><em>막막하지 않게.</em></h2>
+            <p>샘플 문구와 실시간 미리보기를 보면서<br />두 사람의 이야기를 한 장면씩 채워요.</p>
+          </div>
+          <div className="workflow-steps">
+            {STEPS.map(({ icon: Icon, title, body }, index) => (
+              <article className="workflow-step" key={title}>
+                <div className="workflow-step-top"><span>0{index + 1}</span><Icon size={18} strokeWidth={1.7} /></div>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="event-panel section-shell">
         <div className="section-heading-row">
           <div>
-            <p className="eyebrow eyebrow-dark">01 · start with a feeling</p>
-            <h2>초대의 모양부터<br />고르세요.</h2>
+            <p className="eyebrow eyebrow-coral">03 · more than weddings</p>
+            <h2>결혼식이 아니어도,<br /><em>초대할 이유</em>는 충분해요.</h2>
           </div>
-          <p>가장 가까운 시작점을 고르면<br />문구와 구조가 함께 따라와요.</p>
+          <p>생일·돌잔치·집들이까지<br />같은 편집 방식으로 시작하세요.</p>
         </div>
         <div className="event-grid">
           {EVENT_LIST.map((eventType, index) => {
@@ -179,7 +248,7 @@ export function Home() {
               <motion.button
                 key={eventType}
                 type="button"
-                className={`event-card event-card-${index + 1}`}
+                className="event-card"
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => startWithEvent(eventType)}
@@ -195,42 +264,37 @@ export function Home() {
         </div>
       </section>
 
-      <section className="feature-band">
-        <div className="section-shell">
-          <div className="feature-intro">
-            <p className="eyebrow"><WandSparkles size={14} /> beyond the template</p>
-            <h2>완성된 링크보다,<br /><em>기억되는 순간</em>을.</h2>
+      <section className="feature-panel section-shell">
+        <div className="section-heading-row feature-heading-row">
+          <div>
+            <p className="eyebrow eyebrow-coral">04 · the details matter</p>
+            <h2>예쁜 첫 화면 뒤에<br /><em>필요한 것까지</em> 담았어요.</h2>
           </div>
-          <div className="feature-grid">
-            {FEATURES.map(({ icon: Icon, label, body }) => (
-              <article className="feature-item" key={label}>
-                <div className="feature-icon"><Icon size={18} strokeWidth={1.6} /></div>
-                <h3>{label}</h3>
-                <p>{body}</p>
-              </article>
-            ))}
-          </div>
+          <p>받는 사람은 한 번만 눌러도<br />정보를 찾을 수 있어야 하니까요.</p>
+        </div>
+        <div className="feature-grid">
+          {FEATURES.map(({ icon: Icon, label, body }, index) => (
+            <article className="feature-item" key={label}>
+              <div className="feature-icon"><Icon size={18} strokeWidth={1.6} /></div>
+              <span className="feature-index">0{index + 1}</span>
+              <h3>{label}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="theme-panel section-shell">
         <div className="section-heading-row theme-heading-row">
           <div>
-            <p className="eyebrow eyebrow-dark">02 · find your visual language</p>
-            <h2>테마가 아니라,<br />두 사람의 결을 고르세요.</h2>
+            <p className="eyebrow eyebrow-coral">05 · find your visual language</p>
+            <h2>테마를 고르는 일은<br /><em>우리의 말투</em>를 고르는 일.</h2>
           </div>
-          <p>먼저 마음에 닿는 결을 고르고,<br />빌더에서 이야기를 채워보세요.</p>
+          <p>마음에 닿는 결을 누르면<br />실제 샘플을 바로 볼 수 있어요.</p>
         </div>
         <div className="mood-tabs" role="tablist" aria-label="테마 무드 필터">
           {THEME_FILTERS.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={mood === item.id}
-              className={mood === item.id ? 'active' : ''}
-              onClick={() => setMood(item.id)}
-            >
+            <button key={item.id} type="button" role="tab" aria-selected={mood === item.id} className={mood === item.id ? 'active' : ''} onClick={() => setMood(item.id)}>
               <span>{item.label}</span><small>{item.detail}</small>
             </button>
           ))}
@@ -249,39 +313,18 @@ export function Home() {
                 if (event.key === 'Enter' || event.key === ' ') openDemo(theme.id);
               }}
             >
-              <div className="theme-tile-top">
-                <span>{String(theme.id).replaceAll('-', ' ')}</span>
-                <ArrowUpRight size={15} />
-              </div>
-              <div className="theme-tile-center" style={{ fontFamily: theme.fonts.display }}>
-                <span>민수</span><i>♥</i><span>서연</span>
-              </div>
-              <div className="theme-tile-bottom">
-                <span>{theme.name}</span>
-                <span className="theme-dots"><i style={{ background: theme.preview.accent }} /><i style={{ background: theme.preview.text, opacity: 0.35 }} /></span>
-              </div>
+              <div className="theme-tile-top"><span>{String(theme.id).replaceAll('-', ' ')}</span><ArrowUpRight size={15} /></div>
+              <div className="theme-tile-center" style={{ fontFamily: theme.fonts.display }}><span>민수</span><i>♥</i><span>서연</span></div>
+              <div className="theme-tile-bottom"><span>{theme.name}</span><span className="theme-dots"><i style={{ background: theme.preview.accent }} /><i style={{ background: theme.preview.text, opacity: 0.35 }} /></span></div>
             </motion.article>
           ))}
         </div>
-        <div className="theme-footer">
-          <span><Sparkles size={15} /> {THEMES.length}개 테마 · AI로 무한 확장</span>
-          <Link to="/builder" className="text-link">모든 테마로 시작하기 <ArrowUpRight size={15} /></Link>
-        </div>
+        <div className="theme-footer"><span><Sparkles size={15} /> {THEMES.length}개 테마 · AI로 무한 확장</span><Link to="/builder" className="text-link">모든 테마로 시작하기 <ArrowUpRight size={15} /></Link></div>
       </section>
 
       <section className="closing-panel section-shell">
-        <div className="closing-card">
-          <div>
-            <p className="eyebrow">your day, your page</p>
-            <h2>당신들의 장면을<br /><em>시작하세요.</em></h2>
-          </div>
-          <Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button>
-        </div>
-        <footer className="home-footer">
-          <span>moment. invitation atelier</span>
-          <span>가입 없음 · 평생 무료 · 내 데이터는 내 것</span>
-          <Link to="/privacy">개인정보 처리방침</Link>
-        </footer>
+        <div className="closing-card"><div><p className="eyebrow eyebrow-light">your day, your page</p><h2>당신들의 장면을<br /><em>첫 페이지로.</em></h2></div><Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button></div>
+        <footer className="home-footer"><span>moment. invitation atelier</span><span>가입 없음 · 평생 무료 · 내 데이터는 내 것</span><Link to="/privacy">개인정보 처리방침</Link></footer>
       </section>
       <Toast />
     </main>
