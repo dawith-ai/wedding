@@ -110,7 +110,7 @@ async function main() {
   r('home shows 16 theme cards', themeCardsCount >= 16, `count=${themeCardsCount}`);
 
   // Demo button
-  const demoBtn = await page.$('button:has-text("예시 청첩장")');
+  const demoBtn = await page.$('button:has-text("완성본 먼저 보기"), button:has-text("예시 청첩장")');
   r('home demo button present', !!demoBtn);
 
   await ctx.close();
