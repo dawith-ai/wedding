@@ -113,11 +113,11 @@ export function Home() {
 
       <section className="home-hero">
         <div className="hero-copy">
-          <p className="eyebrow"><Sparkles size={14} /> invitation atelier · 2026</p>
-          <h1>오늘의 초대가<br /><em>오래 남는 장면</em>이 되도록.</h1>
+          <p className="eyebrow"><Sparkles size={14} /> private invitation studio · 2026</p>
+          <h1>두 사람의 이야기를<br /><em>한 장면씩,</em><br />초대합니다.</h1>
           <p className="hero-lede">
-            사진 한 장, 두 사람의 이름, 그리고 초대하고 싶은 마음.<br />
-            취향을 고르면 나머지는 자연스럽게 이어집니다.
+            사진 한 장과 두 사람의 이름에서 시작해<br />
+            오래 남을 한 페이지를 함께 만듭니다.
           </p>
           <div className="hero-actions">
             <Button asChild size="lg" className="button button-dark"><Link to="/builder">내 초대장 만들기 <ArrowUpRight size={17} /></Link></Button>
@@ -168,7 +168,7 @@ export function Home() {
         <div className="section-heading-row">
           <div>
             <p className="eyebrow eyebrow-dark">01 · start with a feeling</p>
-            <h2>무슨 초대인가요?</h2>
+            <h2>초대의 모양부터<br />고르세요.</h2>
           </div>
           <p>가장 가까운 시작점을 고르면<br />문구와 구조가 함께 따라와요.</p>
         </div>
@@ -198,8 +198,8 @@ export function Home() {
       <section className="feature-band">
         <div className="section-shell">
           <div className="feature-intro">
-            <p className="eyebrow"><WandSparkles size={14} /> more than a template</p>
-            <h2>청첩장은<br /><em>작은 경험</em>이어야 하니까.</h2>
+            <p className="eyebrow"><WandSparkles size={14} /> beyond the template</p>
+            <h2>완성된 링크보다,<br /><em>기억되는 순간</em>을.</h2>
           </div>
           <div className="feature-grid">
             {FEATURES.map(({ icon: Icon, label, body }) => (
@@ -217,7 +217,7 @@ export function Home() {
         <div className="section-heading-row theme-heading-row">
           <div>
             <p className="eyebrow eyebrow-dark">02 · find your visual language</p>
-            <h2>우리의 무드를 고르세요.</h2>
+            <h2>테마가 아니라,<br />두 사람의 결을 고르세요.</h2>
           </div>
           <p>먼저 마음에 닿는 결을 고르고,<br />빌더에서 이야기를 채워보세요.</p>
         </div>
@@ -273,7 +273,7 @@ export function Home() {
         <div className="closing-card">
           <div>
             <p className="eyebrow">your day, your page</p>
-            <h2>이제, 두 사람의<br /><em>첫 페이지</em>를 만들어볼까요?</h2>
+            <h2>당신들의 장면을<br /><em>시작하세요.</em></h2>
           </div>
           <Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button>
         </div>
