@@ -1,0 +1,31 @@
+:root {
+  --ui-radius: 16px;
+  --ui-radius-lg: 24px;
+  --ui-shadow-soft: 0 12px 34px rgba(55, 43, 35, .08);
+  --ui-shadow-hover: 0 18px 42px rgba(55, 43, 35, .13);
+}
+.ui-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid transparent; border-radius: 999px; font: inherit; font-weight: 650; line-height: 1; white-space: nowrap; cursor: pointer; text-decoration: none; transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease; }
+.ui-button:hover { transform: translateY(-1px); }
+.ui-button:active { transform: translateY(0) scale(.98); }
+.ui-button:focus-visible { outline: 3px solid rgba(255, 128, 109, .28); outline-offset: 3px; }
+.ui-button-sm { min-height: 34px; padding: 0 13px; font-size: 11px; }
+.ui-button-md { min-height: 42px; padding: 0 17px; font-size: 12px; }
+.ui-button-lg { min-height: 50px; padding: 0 22px; font-size: 13px; }
+.ui-button-default { background: #252329; color: #fff; box-shadow: 0 8px 18px rgba(37, 35, 41, .14); }
+.ui-button-default:hover { background: #302d35; box-shadow: 0 12px 24px rgba(37, 35, 41, .2); }
+.ui-button-soft { background: #f5ddd6; border-color: #f0c9c0; color: #875044; box-shadow: 0 8px 18px rgba(198, 112, 92, .1); }
+.ui-button-soft:hover { background: #f1d3cc; }
+.ui-button-outline { background: rgba(255, 255, 255, .66); border-color: #ddd5cd; color: #68615b; box-shadow: 0 4px 12px rgba(55, 43, 35, .035); }
+.ui-button-outline:hover { background: #fff; border-color: #c6b8ad; color: #252329; }
+.ui-button-ghost { background: transparent; color: #777069; }
+.ui-button-ghost:hover { background: #f4eee8; color: #252329; }
+.ui-card { border: 1px solid rgba(224, 216, 207, .85); border-radius: var(--ui-radius-lg); background: rgba(255, 253, 249, .86); box-shadow: var(--ui-shadow-soft); }
+.ui-card-header { padding: 20px 22px 0; }
+.ui-card-title { margin: 0; }
+.ui-card-description { margin: 6px 0 0; color: #857d74; font-size: 12px; line-height: 1.6; }
+.ui-card-content { padding: 20px 22px 22px; }
+.ui-badge { display: inline-flex; align-items: center; gap: 5px; width: fit-content; padding: 6px 9px; border-radius: 999px; font: 700 9px/1 'Inter', sans-serif; letter-spacing: .08em; }
+.ui-badge-neutral { background: #f1ece5; color: #817970; }
+.ui-badge-success { background: #e6f0e2; color: #64805e; }
+.ui-badge-coral { background: #fbe5df; color: #b36857; }
+@media (prefers-reduced-motion: reduce) { .ui-button { transition: none; } }

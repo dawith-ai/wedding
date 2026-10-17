@@ -257,7 +257,13 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
 
         {data.rsvp.enabled && (
           <div className="fade-up">
-            <Rsvp inviteId={inviteId} deadline={data.rsvp.deadline} />
+            <Rsvp
+              inviteId={inviteId}
+              deadline={data.rsvp.deadline}
+              groomName={data.groom.name}
+              brideName={data.bride.name}
+              prompt={data.rsvp.prompt}
+            />
           </div>
         )}
 

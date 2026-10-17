@@ -48,9 +48,9 @@ export async function decodeData(s: string): Promise<WeddingData> {
   return JSON.parse(json) as WeddingData;
 }
 
-export function buildShareUrl(encoded: string): string {
+export function buildShareUrl(encoded: string, coupleId?: string): string {
   const base = window.location.origin + window.location.pathname.replace(/\/$/, '');
-  return `${base}/#/v/${encoded}`;
+  return coupleId ? `${base}/#/i/${encodeURIComponent(coupleId)}/${encoded}` : `${base}/#/v/${encoded}`;
 }
 
 /* Heuristic warning thresholds for messenger compatibility.

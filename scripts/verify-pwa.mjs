@@ -107,7 +107,7 @@ async function main() {
 
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
   const themeCardsCount = await page.$$eval('article, .theme-card', (els) => els.length).catch(() => 0);
-  r('home shows 12 theme cards', themeCardsCount >= 12, `count=${themeCardsCount}`);
+  r('home shows 16 theme cards', themeCardsCount >= 16, `count=${themeCardsCount}`);
 
   // Demo button
   const demoBtn = await page.$('button:has-text("예시 청첩장")');

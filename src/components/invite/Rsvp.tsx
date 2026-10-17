@@ -8,6 +8,9 @@ import { celebrateRsvp } from '../../lib/celebrate';
 interface Props {
   inviteId: string;
   deadline?: string;
+  groomName: string;
+  brideName: string;
+  prompt?: string;
 }
 
 function newId(): string {
@@ -16,20 +19,16 @@ function newId(): string {
 
 type Choice<T> = { label: string; value: T };
 const ATTENDING: Choice<'yes' | 'no'>[] = [
-  { label: '참석합니다', value: 'yes' },
-  { label: '참석 못해요', value: 'no' },
-];
-const SIDE: Choice<'groom' | 'bride'>[] = [
-  { label: '신랑측', value: 'groom' },
-  { label: '신부측', value: 'bride' },
+  { label: '기쁜 마음으로 갈게요', value: 'yes' },
+  { label: '마음으로 축하할게요', value: 'no' },
 ];
 const MEAL: Choice<'yes' | 'no' | 'undecided'>[] = [
-  { label: '식사함', value: 'yes' },
-  { label: '식사 안함', value: 'no' },
-  { label: '미정', value: 'undecided' },
+  { label: '같이 식사할게요', value: 'yes' },
+  { label: '괜찮아요', value: 'no' },
+  { label: '아직 몰라요', value: 'undecided' },
 ];
 
-export function Rsvp({ inviteId, deadline }: Props) {
+export function Rsvp({ inviteId, deadline, groomName, brideName, prompt }: Props) {
   const [side, setSide] = useState<'groom' | 'bride'>('groom');
   const [name, setName] = useState('');
   const [attending, setAttending] = useState<'yes' | 'no'>('yes');
@@ -76,29 +75,20 @@ export function Rsvp({ inviteId, deadline }: Props) {
 
   if (done) {
     return (
-      <section className="invite-section" style={{ background: 'var(--bg-alt)' }}>
-        <p className="section-title">RSVP</p>
-        <h2 className="section-heading">감사합니다</h2>
-        <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-muted)' }}>
-          소중한 응답 감사드립니다.
+      <section className="invite-section rsvp-section" style={{ background: 'var(--bg-alt)' }}>
+        <p className="section-label rsvp-kicker">A NOTE FOR US</p>
+        <h2 className="section-heading">마음 남겨주셔서 고마워요</h2>
+        <p className="rsvp-thanks">
+          {groomName} · {brideName}에게 소중한 응답이 잘 도착했어요.
         </p>
         <button
+          className="rsvp-secondary-action"
           onClick={() => {
             setDone(false);
             setName('');
             setPhone('');
             setMessage('');
             setCount(1);
-          }}
-          style={{
-            display: 'block',
-            margin: '16px auto 0',
-            background: 'transparent',
-            border: '1px solid var(--accent)',
-            color: 'var(--accent)',
-            padding: '8px 18px',
-            borderRadius: 999,
-            fontSize: 12,
           }}
         >
           새 응답 작성
@@ -108,20 +98,34 @@ export function Rsvp({ inviteId, deadline }: Props) {
   }
 
   return (
-    <section className="invite-section" style={{ background: 'var(--bg-alt)' }}>
-      <p className="section-title">RSVP</p>
-      <h2 className="section-heading">참석 의사 전달</h2>
+    <section className="invite-section rsvp-section" style={{ background: 'var(--bg-alt)' }}>
+      <p className="section-label rsvp-kicker">A NOTE FOR US</p>
+      <h2 className="section-heading">우리의 오늘, 함께해 주실래요?</h2>
+      <div className="rsvp-signature" aria-label={`${groomName} 그리고 ${brideName}`}>
+        <span>{groomName}</span>
+        <i aria-hidden="true">&amp;</i>
+        <span>{brideName}</span>
+      </div>
+      <p className="rsvp-intro">
+        {prompt?.trim() || `${groomName}와 ${brideName}의 새로운 장면에 함께하는 마음을 알려주세요.`}
+      </p>
       {deadline && (
-        <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: -16, marginBottom: 18 }}>
+        <p className="rsvp-deadline">
           {deadline.replace(/-/g, '.')}까지 응답 부탁드립니다
         </p>
       )}
 
       <form className="rsvp-form" onSubmit={submit}>
-        <div>
-          <label id="rsvp-side-label">구분</label>
+        <div className="rsvp-block">
+          <div className="rsvp-field-head">
+            <label id="rsvp-side-label">어느 쪽에서 오시나요?</label>
+            <span>01</span>
+          </div>
           <div className="rsvp-radios" role="group" aria-labelledby="rsvp-side-label">
-            {SIDE.map((c) => (
+            {[
+              { label: `${groomName} 쪽`, value: 'groom' as const },
+              { label: `${brideName} 쪽`, value: 'bride' as const },
+            ].map((c) => (
               <button
                 type="button"
                 key={c.value}
@@ -134,8 +138,11 @@ export function Rsvp({ inviteId, deadline }: Props) {
             ))}
           </div>
         </div>
-        <div>
-          <label id="rsvp-attending-label">참석 여부</label>
+        <div className="rsvp-block">
+          <div className="rsvp-field-head">
+            <label id="rsvp-attending-label">그날의 마음</label>
+            <span>02</span>
+          </div>
           <div className="rsvp-radios" role="group" aria-labelledby="rsvp-attending-label">
             {ATTENDING.map((c) => (
               <button
@@ -151,13 +158,13 @@ export function Rsvp({ inviteId, deadline }: Props) {
           </div>
         </div>
 
-        <div className="rsvp-row">
+        <div className="rsvp-row rsvp-block">
           <div>
-            <label htmlFor="rsvp-name">성함</label>
+            <div className="rsvp-field-head"><label htmlFor="rsvp-name">성함</label><span>03</span></div>
             <input id="rsvp-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={20} placeholder="홍길동" />
           </div>
           <div>
-            <label htmlFor="rsvp-count">인원수</label>
+            <label htmlFor="rsvp-count">함께 오는 사람</label>
             <input
               id="rsvp-count"
               type="number"
@@ -169,8 +176,11 @@ export function Rsvp({ inviteId, deadline }: Props) {
           </div>
         </div>
 
-        <div>
-          <label id="rsvp-meal-label">식사 여부</label>
+        <div className="rsvp-block">
+          <div className="rsvp-field-head">
+            <label id="rsvp-meal-label">식사도 함께할까요?</label>
+            <span>04</span>
+          </div>
           <div className="rsvp-radios" role="group" aria-labelledby="rsvp-meal-label">
             {MEAL.map((c) => (
               <button
@@ -186,7 +196,7 @@ export function Rsvp({ inviteId, deadline }: Props) {
           </div>
         </div>
 
-        <div>
+        <div className="rsvp-block">
           <label htmlFor="rsvp-phone">연락처 (선택)</label>
           <input
             id="rsvp-phone"
@@ -196,13 +206,13 @@ export function Rsvp({ inviteId, deadline }: Props) {
             inputMode="tel"
           />
         </div>
-        <div>
+        <div className="rsvp-block">
           <label htmlFor="rsvp-message">전하실 말씀 (선택)</label>
           <textarea id="rsvp-message" value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} />
         </div>
 
-        <button className="guestbook-submit" type="submit" disabled={busy}>
-          {busy ? '전송 중…' : '응답 전달하기'}
+        <button className="rsvp-submit" type="submit" disabled={busy}>
+          {busy ? '마음 보내는 중…' : '두 사람에게 마음 보내기'}
         </button>
       </form>
     </section>

@@ -4,20 +4,29 @@ import type { WeddingData } from '../types';
 import { decodeData } from '../lib/encode';
 import { inviteIdFromEncoded } from '../lib/storage';
 import { InviteView } from '../components/invite/InviteView';
+import { setFirebaseConfig } from '../lib/firebase';
 
 export function Invite() {
-  const { encoded = '' } = useParams<{ encoded: string }>();
+  const { encoded = '', coupleId } = useParams<{ encoded: string; coupleId?: string }>();
   const [data, setData] = useState<WeddingData | null>(null);
+  const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     decodeData(encoded)
       .then((d) => {
-        if (!cancelled) setData(d);
+        if (!cancelled) {
+          if (d.firebase?.apiKey && d.firebase.projectId) setFirebaseConfig(d.firebase);
+          setData(d);
+          setReady(true);
+        }
       })
       .catch((e: unknown) => {
-        if (!cancelled) setError(e instanceof Error ? e.message : '청첩장을 불러올 수 없습니다');
+        if (!cancelled) {
+          setError(e instanceof Error ? e.message : '청첩장을 불러올 수 없습니다');
+          setReady(true);
+        }
       });
     return () => {
       cancelled = true;
@@ -54,7 +63,7 @@ export function Invite() {
     );
   }
 
-  if (!data) {
+  if (!data || !ready) {
     return (
       <div style={{
         minHeight: '100vh', display: 'flex',
@@ -66,7 +75,7 @@ export function Invite() {
     );
   }
 
-  const inviteId = inviteIdFromEncoded(encoded);
+  const inviteId = coupleId || data.coupleId || inviteIdFromEncoded(encoded);
   const shareUrl = window.location.href;
 
   return <InviteView data={data} inviteId={inviteId} shareUrl={shareUrl} />;

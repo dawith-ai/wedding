@@ -18,7 +18,15 @@ import {
   setFirebaseConfig,
 } from '../../lib/firebase';
 import { getKakaoKey, hasKakaoKey, setKakaoKey } from '../../lib/kakao';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  Check,
+  FilePenLine,
+  Link2,
+  Save,
+  Settings2,
+  Sparkles,
+} from 'lucide-react';
 
 interface Props {
   data: WeddingData;
@@ -34,23 +42,70 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
     getFirebaseConfig() || { apiKey: '', authDomain: '', projectId: '' }
   );
 
+  const builderSteps = useMemo(() => [
+    { id: 'step-event', label: '행사', done: Boolean(data.eventType) },
+    { id: 'step-theme', label: '무드', done: Boolean(data.theme) },
+    { id: 'step-people', label: '주인공', done: Boolean(data.groom.name.trim() && data.bride.name.trim()) },
+    { id: 'step-venue', label: '일시·장소', done: Boolean(data.wedding.date && data.wedding.venue.trim()) },
+    { id: 'step-media', label: '사진·인사', done: Boolean(data.hero && data.greeting.body.trim()) },
+    { id: 'step-respond', label: '응답', done: Boolean(data.rsvp.enabled || data.guestbook.enabled) },
+    { id: 'step-share', label: '공유', done: Boolean(data.meta.title.trim()) },
+  ], [data]);
+
+  const completedSteps = builderSteps.filter((step) => step.done).length;
+
   function set<K extends keyof WeddingData>(k: K, v: WeddingData[K]) {
     onChange({ ...data, [k]: v });
+  }
+
+  function scrollToStep(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   return (
     <div className="builder-form">
       <div className="builder-toolbar">
-        <h1>청첩장 만들기</h1>
-        <button className="secondary" type="button" onClick={() => setShowSettings(true)}>설정</button>
-        <button type="button" onClick={onPublish}>공유 링크 생성</button>
+        <div className="builder-toolbar-title">
+          <Link2 size={16} />
+          <span>moment / studio</span>
+        </div>
+        <span className="builder-autosave"><Save size={13} /> 브라우저에 자동 저장</span>
+        <button className="secondary icon-button" type="button" onClick={() => setShowSettings(true)} aria-label="환경설정">
+          <Settings2 size={16} /> <span>설정</span>
+        </button>
+        <button className="publish-button" type="button" onClick={onPublish}>
+          <Link2 size={15} /> 공유 링크 생성
+        </button>
       </div>
+
+      <div className="builder-intro">
+        <div className="builder-intro-copy">
+          <p className="builder-eyebrow"><Sparkles size={14} /> invitation atelier</p>
+          <h1>두 사람의 장면을<br /><em>한 장의 초대</em>로.</h1>
+          <p>필수 정보만 먼저 채우고, 나머지는 마음이 가는 만큼 더해보세요.</p>
+        </div>
+        <div className="builder-completion">
+          <strong>{completedSteps}<small>/ {builderSteps.length}</small></strong>
+          <span>완성 단계</span>
+          <div className="completion-track"><i style={{ width: `${(completedSteps / builderSteps.length) * 100}%` }} /></div>
+        </div>
+      </div>
+
+      <nav className="builder-steps" aria-label="제작 단계">
+        {builderSteps.map((step, index) => (
+          <button type="button" key={step.id} onClick={() => scrollToStep(step.id)}>
+            <span className={step.done ? 'step-dot complete' : 'step-dot'}>{step.done ? <Check size={11} /> : index + 1}</span>
+            <span>{step.label}</span>
+          </button>
+        ))}
+      </nav>
 
       <div className="note-box">
-        💡 입력하시는 모든 내용은 <b>이 브라우저에만</b> 저장됩니다. 공유 링크를 만들면 모든 정보가 URL에 인코딩되어 누구나 그 링크로 청첩장을 볼 수 있어요.
+        <FilePenLine size={16} />
+        <span><b>지금은 초안이에요.</b> 입력 내용은 이 브라우저에 자동 저장되고, 공유 링크를 만들 때만 초대장으로 공개됩니다.</span>
       </div>
 
-      <h2>1. 어떤 행사인가요?</h2>
+      <h2 id="step-event">1. 어떤 행사인가요?</h2>
       <div className="event-type-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 8, marginBottom: 24 }}>
         {EVENT_LIST.map((ev) => {
           const meta = EVENT_LABELS[ev];
@@ -78,11 +133,11 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         })}
       </div>
 
-      <h2>2. 테마 선택</h2>
+      <h2 id="step-theme">2. 테마 선택</h2>
       <ThemePicker value={data.theme} onChange={(id: ThemeId) => set('theme', id)} />
       <CustomThemeEditor onSelect={(id) => set('theme', id)} />
 
-      <h2>3. 주인공 (신랑·신부)</h2>
+      <h2 id="step-people">3. 주인공 (신랑·신부)</h2>
       <div className="row-2">
         <div className="field">
           <label>신랑 이름</label>
@@ -148,7 +203,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </div>
       </div>
 
-      <h2>4. 일시·장소</h2>
+      <h2 id="step-venue">4. 일시·장소</h2>
       <div className="row-2">
         <div className="field">
           <label>날짜</label>
@@ -188,7 +243,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <input value={data.wedding.mapTmap || ''} onChange={(e) => set('wedding', { ...data.wedding, mapTmap: e.target.value })} />
       </div>
 
-      <h2>5. 메인 사진 & 인사말</h2>
+      <h2 id="step-media">5. 메인 사진 & 인사말</h2>
       <div className="field">
         <label>대표 사진 (세로 비율 권장)</label>
         <ImageUpload value={data.hero} onChange={(url) => set('hero', url)} aspectHint="세로 3:4 비율 추천" />
@@ -288,7 +343,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         <AccountEditor list={data.accounts.bride} onChange={(bride) => set('accounts', { ...data.accounts, bride })} />
       </div>
 
-      <h2>10. 방명록 / RSVP</h2>
+      <h2 id="step-respond">10. 방명록 / RSVP</h2>
       <label className="checkbox-row">
         <input
           type="checkbox"
@@ -342,10 +397,25 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         참석 의사(RSVP) 표시
       </label>
       {data.rsvp.enabled && (
-        <div className="field">
-          <label>RSVP 마감일 (선택)</label>
-          <input type="date" value={data.rsvp.deadline || ''} onChange={(e) => set('rsvp', { ...data.rsvp, deadline: e.target.value })} />
-        </div>
+        <>
+          <div className="field">
+            <label>참석 회신 마감일 (선택)</label>
+            <input type="date" value={data.rsvp.deadline || ''} onChange={(e) => set('rsvp', { ...data.rsvp, deadline: e.target.value })} />
+          </div>
+          <div className="field">
+            <label>두 분만의 초대 한마디 (선택)</label>
+            <textarea
+              value={data.rsvp.prompt || ''}
+              onChange={(e) => set('rsvp', { ...data.rsvp, prompt: e.target.value })}
+              maxLength={120}
+              rows={3}
+              placeholder="예: 우리의 첫 장면에 함께해 주실래요? 오시는 길까지 잘 챙겨둘게요."
+            />
+            <div className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+              비워두면 두 분의 이름을 넣은 기본 문구가 표시됩니다.
+            </div>
+          </div>
+        </>
       )}
       {!isFirebaseEnabled() && (
         <p className="muted-text">
@@ -900,7 +970,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         onChange={(next) => set('lifeEvents', next)}
       />
 
-      <h2>21. 공유 정보 (메타)</h2>
+      <h2 id="step-share">21. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />
@@ -958,9 +1028,9 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
               }}
             />
 
-            <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Firebase Firestore (방명록·RSVP 공유)</h4>
+            <h4 style={{ margin: '0 0 6px', fontSize: 13 }}>Firebase Firestore (커플별 응답 저장)</h4>
             <p className="muted-text" style={{ marginBottom: 6 }}>
-              Firestore 보안 규칙을 공개 read/write로 설정해야 합니다 (개인 청첩장이라 무방).
+              커플마다 다른 couple ID 아래에 방명록·RSVP·응원 데이터를 저장합니다. 저장한 웹 설정은 공개 링크에 포함되므로 Firestore 보안 규칙을 반드시 설정해주세요.
             </p>
             <input
               value={fb.apiKey}

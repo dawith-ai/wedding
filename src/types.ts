@@ -46,6 +46,14 @@ export interface LifeEvent {
 }
 
 export interface WeddingData {
+  /** Stable public namespace for this couple's invitation data. */
+  coupleId?: string;
+  /** Firebase web config is public client metadata, not a server credential. */
+  firebase?: {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+  };
   theme: ThemeId;
   eventType?: EventType;
   useCurtain: boolean;
@@ -100,6 +108,8 @@ export interface WeddingData {
   rsvp: {
     enabled: boolean;
     deadline?: string;
+    /** A couple-written invitation line shown above the RSVP form. */
+    prompt?: string;
   };
 
   likes: {
@@ -174,6 +184,18 @@ export interface WeddingData {
     title: string;
     description: string;
   };
+}
+
+export interface PublishedInvitation {
+  coupleId: string;
+  encoded: string;
+  title: string;
+  groomName: string;
+  brideName: string;
+  date: string;
+  createdAt: number;
+  updatedAt: number;
+  data: WeddingData;
 }
 
 export interface GuestbookEntry {

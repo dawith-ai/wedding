@@ -1,17 +1,42 @@
+import { motion } from 'motion/react';
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  CalendarDays,
+  Camera,
+  Check,
+  Heart,
+  MapPin,
+  MessageCircleHeart,
+  Music2,
+  Palette,
+  Sparkles,
+  Smartphone,
+  WandSparkles,
+} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { THEMES, loadThemeFonts } from '../data/themes';
-import type { BuiltInThemeId, EventType } from '../types';
+import { Toast } from '../components/invite/Toast';
 import { DEFAULT_DATA } from '../data/defaults';
-import { EVENT_LIST, EVENT_LABELS, applyEventTemplate } from '../data/events';
+import { EVENT_LABELS, EVENT_LIST, applyEventTemplate } from '../data/events';
+import { getThemeGenres, THEME_FILTERS, THEMES, loadThemeFonts } from '../data/themes';
 import { buildShareUrl, encodeData } from '../lib/encode';
 import { saveDraft } from '../lib/storage';
 import { showToast } from '../lib/toast';
-import { Toast } from '../components/invite/Toast';
+import type { BuiltInThemeId, EventType, ThemeId } from '../types';
+import { Button } from '../components/ui/Button';
+
+const FEATURES = [
+  { icon: Palette, label: '취향을 먼저 고르는 흐름', body: '행사와 무드를 고르면 어울리는 시작점을 바로 제안해요.' },
+  { icon: Camera, label: '사진이 주인공이 되는 화면', body: '세로 사진 한 장만으로도 첫 화면이 완성되도록 설계했어요.' },
+  { icon: MessageCircleHeart, label: '초대 뒤의 장면까지', body: 'RSVP, 방명록, 식순, 가족의 기록이 한 링크에 이어집니다.' },
+  { icon: Smartphone, label: '링크 하나로 오래', body: '가입 없이 만들고, 카톡·QR·홈 화면으로 자연스럽게 공유해요.' },
+];
 
 export function Home() {
   const navigate = useNavigate();
   const [demoUrls, setDemoUrls] = useState<Record<string, string>>({});
+  const [mood, setMood] = useState<(typeof THEME_FILTERS)[number]['id']>('all');
 
   useEffect(() => {
     THEMES.forEach(loadThemeFonts);
@@ -21,11 +46,14 @@ export function Home() {
     let cancelled = false;
     (async () => {
       const out: Record<string, string> = {};
-      for (const t of THEMES) {
+      for (const theme of THEMES) {
         try {
-          const data = { ...DEFAULT_DATA, theme: t.id, useCurtain: false };
-          out[t.id] = buildShareUrl(await encodeData(data));
-        } catch { /* skip */ }
+          out[theme.id] = buildShareUrl(
+            await encodeData({ ...DEFAULT_DATA, theme: theme.id, useCurtain: false }),
+          );
+        } catch {
+          // A preview is a progressive enhancement; keep the card usable if it fails.
+        }
       }
       if (!cancelled) setDemoUrls(out);
     })();
@@ -34,7 +62,12 @@ export function Home() {
     };
   }, []);
 
-  function openDemo(themeId: BuiltInThemeId, fallback: () => void) {
+  const visibleThemes = useMemo(() => {
+    if (mood === 'all') return THEMES;
+    return THEMES.filter((theme) => getThemeGenres(theme).includes(mood));
+  }, [mood]);
+
+  function openDemo(themeId: ThemeId) {
     const url = demoUrls[themeId];
     if (url) {
       const hashIndex = url.indexOf('/#/');
@@ -42,276 +75,215 @@ export function Home() {
         navigate(url.slice(hashIndex + 2));
         return;
       }
-      window.location.href = url;
+      window.open(url, '_self');
       return;
     }
-    fallback();
+    navigate(`/builder?theme=${themeId}`);
   }
 
-  async function openCurrentDemo() {
+  function openCurrentDemo() {
     showToast('데모 청첩장 여는 중…');
-    try {
-      const data = { ...DEFAULT_DATA, useCurtain: false };
-      const encoded = await encodeData(data);
-      navigate(`/v/${encoded}`);
-    } catch {
-      showToast('데모 열기 실패');
-    }
+    encodeData({ ...DEFAULT_DATA, useCurtain: false })
+      .then((encoded) => navigate(`/v/${encoded}`))
+      .catch(() => showToast('데모를 열지 못했어요'));
   }
 
-  function startWithEvent(ev: EventType) {
-    const seed = applyEventTemplate({ ...DEFAULT_DATA }, ev);
+  function startWithEvent(eventType: EventType, theme?: BuiltInThemeId) {
+    const seed = applyEventTemplate(
+      { ...DEFAULT_DATA, ...(theme ? { theme } : {}) },
+      eventType,
+    );
     saveDraft(seed);
     navigate('/builder');
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <header style={{ padding: '60px 24px 36px', textAlign: 'center', background: '#fff', borderBottom: '1px solid #eee' }}>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 44, margin: 0, letterSpacing: '0.05em' }}>
-          모바일 청첩장 <span style={{ color: '#b76e79' }}>♥</span>
-        </h1>
-        <p style={{ color: '#333', marginTop: 14, fontSize: 16, lineHeight: 1.65, fontWeight: 500 }}>
-          AI로 만드는 모바일 청첩장 · 평생 보관
-        </p>
-        <p style={{ color: '#666', marginTop: 8, fontSize: 13, lineHeight: 1.7 }}>
-          셀카 1장으로 웨딩 사진 합성 · 본인 목소리 음성 인사말 · 결혼 후에도 살아있는 가족 페이지
-        </p>
-        <div style={{ marginTop: 22, display: 'inline-flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Link
-            to="/builder"
-            style={{
-              background: '#222',
-              color: '#fff',
-              padding: '14px 36px',
-              borderRadius: 999,
-              fontSize: 15,
-              letterSpacing: '0.05em',
-            }}
-          >
-            지금 만들기 시작
-          </Link>
-          <button
-            onClick={openCurrentDemo}
-            type="button"
-            style={{
-              background: 'transparent',
-              border: '1px solid #222',
-              color: '#222',
-              padding: '14px 28px',
-              borderRadius: 999,
-              fontSize: 14,
-              letterSpacing: '0.05em',
-              cursor: 'pointer',
-            }}
-          >
-            예시 청첩장 둘러보기
-          </button>
+    <main className="home-shell">
+      <header className="home-nav">
+        <Link to="/" className="home-brand" aria-label="Moment home">
+          <span className="brand-mark"><Heart size={14} fill="currentColor" /></span>
+          <span>moment<span className="brand-dot">.</span></span>
+        </Link>
+        <div className="home-nav-meta">
+          <span className="nav-status"><span className="status-dot" /> 가입 없이 시작</span>
+          <Link to="/manage" className="nav-create">내 초대장</Link>
+          <Link to="/builder" className="nav-create">만들기 <ArrowUpRight size={15} /></Link>
         </div>
-        <p style={{ color: '#aaa', marginTop: 14, fontSize: 12 }}>
-          가입 없음 · 서버비 0원 · 카톡 공유 · 한 번 만들면 평생 보관
-        </p>
       </header>
 
-      <section style={{ padding: '40px 20px 12px', maxWidth: 1100, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 22, marginBottom: 8, fontWeight: 500 }}>
-          어떤 행사인가요?
-        </h2>
-        <p style={{ textAlign: 'center', color: '#888', fontSize: 13, marginBottom: 24 }}>
-          결혼식 외에도 다양한 초대장을 만들 수 있어요. 클릭하면 해당 톤으로 시작합니다.
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
-          {EVENT_LIST.map((ev) => {
-            const meta = EVENT_LABELS[ev];
+      <section className="home-hero">
+        <div className="hero-copy">
+          <p className="eyebrow"><Sparkles size={14} /> invitation atelier · 2026</p>
+          <h1>오늘의 초대가<br /><em>오래 남는 장면</em>이 되도록.</h1>
+          <p className="hero-lede">
+            사진 한 장, 두 사람의 이름, 그리고 초대하고 싶은 마음.<br />
+            취향을 고르면 나머지는 자연스럽게 이어집니다.
+          </p>
+          <div className="hero-actions">
+            <Button asChild size="lg" className="button button-dark"><Link to="/builder">내 초대장 만들기 <ArrowUpRight size={17} /></Link></Button>
+            <button type="button" className="button button-quiet" onClick={openCurrentDemo}>완성본 먼저 보기 <ArrowDownRight size={16} /></button>
+          </div>
+          <div className="hero-proof">
+            <span><Check size={13} /> 평생 무료</span>
+            <span><Check size={13} /> 링크 하나</span>
+            <span><Check size={13} /> 서버비 0원</span>
+          </div>
+        </div>
+
+        <div className="hero-stage" aria-label="모바일 청첩장 미리보기">
+          <div className="stage-orbit orbit-one" />
+          <div className="stage-orbit orbit-two" />
+          <motion.div
+            className="preview-paper"
+            initial={{ opacity: 0, y: 28, rotate: 3 }}
+            animate={{ opacity: 1, y: 0, rotate: -3 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="preview-paper-top">
+              <span>THE INVITATION</span>
+              <span>01 / 06</span>
+            </div>
+            <div className="preview-photo" style={{ backgroundImage: `url(${DEFAULT_DATA.hero})` }}>
+              <div className="preview-photo-wash" />
+              <span className="preview-date">SAT · 10 OCT · 2026</span>
+              <div className="preview-names">민수 <i>&</i> 서연</div>
+              <span className="preview-place"><MapPin size={12} /> 아펠가모 광화문</span>
+            </div>
+            <div className="preview-paper-bottom">
+              <span>소중한 분들을 초대합니다</span>
+              <span className="preview-heart"><Heart size={14} fill="currentColor" /></span>
+            </div>
+          </motion.div>
+          <motion.div className="stage-sticker sticker-calendar" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
+            <CalendarDays size={16} /> <span>2026.10.10</span>
+          </motion.div>
+          <motion.div className="stage-sticker sticker-note" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
+            <Music2 size={15} /> <span>우리의 노래도 함께</span>
+          </motion.div>
+          <span className="stage-caption">a little page<br />for a big day</span>
+        </div>
+      </section>
+
+      <section className="event-panel section-shell">
+        <div className="section-heading-row">
+          <div>
+            <p className="eyebrow eyebrow-dark">01 · start with a feeling</p>
+            <h2>무슨 초대인가요?</h2>
+          </div>
+          <p>가장 가까운 시작점을 고르면<br />문구와 구조가 함께 따라와요.</p>
+        </div>
+        <div className="event-grid">
+          {EVENT_LIST.map((eventType, index) => {
+            const meta = EVENT_LABELS[eventType];
             return (
-              <button
-                key={ev}
+              <motion.button
+                key={eventType}
                 type="button"
-                onClick={() => startWithEvent(ev)}
-                style={{
-                  background: '#fff',
-                  border: '1px solid #e6e2dc',
-                  borderRadius: 12,
-                  padding: '20px 14px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  transition: 'transform 0.12s, box-shadow 0.12s',
-                  fontFamily: 'inherit',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 18px rgba(0,0,0,0.06)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.transform = 'none';
-                  (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
-                }}
+                className={`event-card event-card-${index + 1}`}
+                whileHover={{ y: -5 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => startWithEvent(eventType)}
               >
-                <div style={{ fontSize: 32 }}>{meta.emoji}</div>
-                <div style={{ marginTop: 8, fontSize: 14, fontWeight: 600, color: '#333' }}>{meta.name}</div>
-                <div style={{ marginTop: 4, fontSize: 11, color: '#888', lineHeight: 1.5 }}>{meta.description}</div>
-              </button>
+                <span className="event-number">0{index + 1}</span>
+                <span className="event-emoji">{meta.emoji}</span>
+                <span className="event-name">{meta.name}</span>
+                <span className="event-description">{meta.description}</span>
+                <ArrowUpRight className="event-arrow" size={17} />
+              </motion.button>
             );
           })}
         </div>
       </section>
 
-      <section style={{ padding: '36px 20px 16px', maxWidth: 900, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 20, marginBottom: 18, fontWeight: 500, color: '#333' }}>
-          왜 우리 청첩장?
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>
-          <FeatureCard
-            emoji="🎀"
-            title="AI 사진 스튜디오"
-            body='셀카 1장으로 한복·드레스·턱시도 자동 합성. 야외/스튜디오/비치/한국 전통 무드까지. "스튜디오 촬영 200~400만원"을 우회하는 진짜 차별화.'
-          />
-          <FeatureCard
-            emoji="🎙️"
-            title="본인 목소리 인사말"
-            body='AI 음성으로 인사말을 한국어 mp3로 변환. 6가지 보이스 + 속도 조절. 텍스트 인사말의 10배 정서적 임팩트.'
-          />
-          <FeatureCard
-            emoji="∞"
-            title="평생 가족 페이지"
-            body="청첩장은 결혼식 그날로 끝나지 않아요. 1주년·돌·가족 여행·기념일이 시간이 갈수록 누적되는 라이프 페이지. 영구 URL이라 가능."
-          />
-          <FeatureCard
-            emoji="✨"
-            title="AI로 무한 테마"
-            body='"시카고 60년대 빈티지"처럼 묘사하면 AI가 우리만의 테마를 생성. 13개 고정 템플릿 한계 돌파, BYOK 방식이라 비용 0원 유지.'
-          />
-          <FeatureCard
-            emoji="💾"
-            title="평생 무료 + 만료 없음"
-            body="공유 링크 = 데이터 그 자체. 카톡에 한 번만 공유해도 영원히 그 모습 그대로. 데어무드/디얼디어처럼 만료되지 않음, 서버 비용 0원."
-          />
-          <FeatureCard
-            emoji="🎊"
-            title="결혼식 외 모든 행사"
-            body="돌잔치·환갑·칠순·생일파티·회사 행사·일반 모임까지. 6개 이벤트 타입을 한 빌더로."
-          />
+      <section className="feature-band">
+        <div className="section-shell">
+          <div className="feature-intro">
+            <p className="eyebrow"><WandSparkles size={14} /> more than a template</p>
+            <h2>청첩장은<br /><em>작은 경험</em>이어야 하니까.</h2>
+          </div>
+          <div className="feature-grid">
+            {FEATURES.map(({ icon: Icon, label, body }) => (
+              <article className="feature-item" key={label}>
+                <div className="feature-icon"><Icon size={18} strokeWidth={1.6} /></div>
+                <h3>{label}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section style={{ padding: '24px 20px 60px', maxWidth: 1100, margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 22, marginTop: 24, marginBottom: 8, fontWeight: 500 }}>
-          기본 제공 13개 테마
-        </h2>
-        <p style={{ textAlign: 'center', color: '#888', fontSize: 13, marginBottom: 28 }}>
-          카드를 누르면 실제 청첩장 데모를 볼 수 있어요. 빌더에서 AI 프롬프트로 무한 테마 추가도 가능.
-        </p>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: 16,
-          }}
-        >
-          {THEMES.map((t) => (
-            <article
-              key={t.id}
-              style={{
-                background: t.preview.bg,
-                border: `1px solid ${t.preview.text}20`,
-                borderRadius: 12,
-                padding: 24,
-                color: t.preview.text,
-                aspectRatio: '4 / 5',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                position: 'relative',
-                overflow: 'hidden',
-                fontFamily: t.fonts.body,
-                cursor: 'pointer',
-              }}
-              onClick={() =>
-                openDemo(t.id as BuiltInThemeId, () => {
-                  navigate(`/builder?theme=${t.id}`);
-                })
-              }
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  openDemo(t.id as BuiltInThemeId, () => {
-                    navigate(`/builder?theme=${t.id}`);
-                  });
-                }
-              }}
+      <section className="theme-panel section-shell">
+        <div className="section-heading-row theme-heading-row">
+          <div>
+            <p className="eyebrow eyebrow-dark">02 · find your visual language</p>
+            <h2>우리의 무드를 고르세요.</h2>
+          </div>
+          <p>먼저 마음에 닿는 결을 고르고,<br />빌더에서 이야기를 채워보세요.</p>
+        </div>
+        <div className="mood-tabs" role="tablist" aria-label="테마 무드 필터">
+          {THEME_FILTERS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={mood === item.id}
+              className={mood === item.id ? 'active' : ''}
+              onClick={() => setMood(item.id)}
             >
-              <div>
-                <p style={{ fontSize: 11, letterSpacing: '0.3em', opacity: 0.7, margin: 0 }}>
-                  {String(t.id).toUpperCase()}
-                </p>
-                <h3
-                  style={{
-                    fontFamily: t.fonts.display,
-                    fontSize: 26,
-                    fontWeight: 400,
-                    margin: '14px 0 8px',
-                    letterSpacing: '0.04em',
-                  }}
-                >
-                  {t.name}
-                </h3>
-                <p style={{ fontSize: 12, opacity: 0.75, lineHeight: 1.6, margin: 0 }}>
-                  {t.description}
-                </p>
-              </div>
-              <div style={{ display: 'flex', gap: 6, marginTop: 16, alignItems: 'center' }}>
-                <span style={{ width: 18, height: 18, borderRadius: '50%', background: t.preview.accent }} />
-                <span style={{ width: 18, height: 18, borderRadius: '50%', background: t.preview.text, opacity: 0.4 }} />
-                <Link
-                  to={`/builder?theme=${t.id}`}
-                  onClick={(e) => e.stopPropagation()}
-                  style={{
-                    fontSize: 11,
-                    marginLeft: 'auto',
-                    border: `1px solid ${t.preview.text}40`,
-                    padding: '3px 10px',
-                    borderRadius: 999,
-                    color: t.preview.text,
-                    textDecoration: 'none',
-                  }}
-                >
-                  이 테마로 만들기 →
-                </Link>
-              </div>
-            </article>
+              <span>{item.label}</span><small>{item.detail}</small>
+            </button>
           ))}
         </div>
-
-        <div style={{ marginTop: 56, textAlign: 'center', color: '#888', fontSize: 13, lineHeight: 1.9 }}>
-          <p style={{ margin: 0 }}>· 사진 / 영상 / BGM / 카카오톡 공유 / 식순 / 응원하기 / 방명록 / RSVP</p>
-          <p style={{ margin: 0 }}>· 공유 링크 = URL에 모든 데이터 인코딩 — 서버 비용 0원, 영구 작동</p>
-          <p style={{ margin: 0 }}>· PWA 지원, 홈 화면 추가, 오프라인 재오픈 가능</p>
-          <p style={{ margin: '14px 0 0' }}>
-            <Link to="/privacy" style={{ color: '#888', fontSize: 12 }}>
-              개인정보 처리방침
-            </Link>
-          </p>
+        <div className="theme-showcase">
+          {visibleThemes.map((theme, index) => (
+            <motion.article
+              key={theme.id}
+              className={`theme-tile theme-tile-${index + 1}`}
+              style={{ background: theme.preview.bg, color: theme.preview.text }}
+              whileHover={{ y: -6 }}
+              onClick={() => openDemo(theme.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') openDemo(theme.id);
+              }}
+            >
+              <div className="theme-tile-top">
+                <span>{String(theme.id).replaceAll('-', ' ')}</span>
+                <ArrowUpRight size={15} />
+              </div>
+              <div className="theme-tile-center" style={{ fontFamily: theme.fonts.display }}>
+                <span>민수</span><i>♥</i><span>서연</span>
+              </div>
+              <div className="theme-tile-bottom">
+                <span>{theme.name}</span>
+                <span className="theme-dots"><i style={{ background: theme.preview.accent }} /><i style={{ background: theme.preview.text, opacity: 0.35 }} /></span>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+        <div className="theme-footer">
+          <span><Sparkles size={15} /> {THEMES.length}개 테마 · AI로 무한 확장</span>
+          <Link to="/builder" className="text-link">모든 테마로 시작하기 <ArrowUpRight size={15} /></Link>
         </div>
       </section>
-      <Toast />
-    </div>
-  );
-}
 
-function FeatureCard({ emoji, title, body }: { emoji: string; title: string; body: string }) {
-  return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #eee',
-      borderRadius: 12,
-      padding: '20px 18px',
-    }}>
-      <div style={{ fontSize: 24, marginBottom: 8 }}>{emoji}</div>
-      <h3 style={{ fontSize: 15, margin: '0 0 6px', fontWeight: 600, color: '#222' }}>{title}</h3>
-      <p style={{ fontSize: 13, color: '#666', lineHeight: 1.7, margin: 0 }}>{body}</p>
-    </div>
+      <section className="closing-panel section-shell">
+        <div className="closing-card">
+          <div>
+            <p className="eyebrow">your day, your page</p>
+            <h2>이제, 두 사람의<br /><em>첫 페이지</em>를 만들어볼까요?</h2>
+          </div>
+          <Button asChild size="lg" variant="soft" className="button button-light"><Link to="/builder">5분 만에 시작하기 <ArrowUpRight size={17} /></Link></Button>
+        </div>
+        <footer className="home-footer">
+          <span>moment. invitation atelier</span>
+          <span>가입 없음 · 평생 무료 · 내 데이터는 내 것</span>
+          <Link to="/privacy">개인정보 처리방침</Link>
+        </footer>
+      </section>
+      <Toast />
+    </main>
   );
 }

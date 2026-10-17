@@ -1,4 +1,4 @@
-/* Run a critical-subset verification across ALL 12 themes.
+/* Run a critical-subset verification across ALL built-in themes.
  *
  * Per theme: hero renders, names visible, countdown ticks, calendar Google
  * URL valid, gallery viewer opens + ESC closes, account accordion opens +
@@ -14,7 +14,7 @@ const THEMES = [
   'original-warm', 'classic-elegant', 'modern-minimal', 'romantic-flower',
   'nature-green', 'luxury-gold', 'simple-clean', 'vintage-film',
   'watercolor-soft', 'midnight-navy', 'pastel-dream', 'korean-traditional',
-  'editorial-mono',
+  'editorial-mono', 'storybook-gouache', 'cinema-noir', 'travel-postcard',
 ];
 
 async function getInviteUrl(browser, theme) {

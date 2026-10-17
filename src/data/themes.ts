@@ -28,6 +28,7 @@ export type DividerKind =
   | 'tilde'
   | 'none';
 export type PhotoTreatment = 'none' | 'sepia' | 'vignette' | 'soft' | 'warm-tint' | 'dim';
+export type ThemeGenre = 'picturebook' | 'cinema' | 'editorial' | 'romantic' | 'nature' | 'heritage' | 'minimal' | 'night';
 
 export interface Theme {
   id: ThemeId;
@@ -39,7 +40,40 @@ export interface Theme {
   ornament: OrnamentKind;
   divider: DividerKind;
   photoTreatment: PhotoTreatment;
+  tags?: ThemeGenre[];
   vars: Record<string, string>;
+}
+
+export const THEME_FILTERS: Array<{ id: 'all' | ThemeGenre; label: string; detail: string }> = [
+  { id: 'all', label: '전체 무드', detail: '16가지 시선' },
+  { id: 'picturebook', label: '그림책', detail: '손으로 그린 장면' },
+  { id: 'cinema', label: '영화', detail: '한 편의 오프닝' },
+  { id: 'editorial', label: '에디토리얼', detail: '사진과 활자' },
+  { id: 'romantic', label: '로맨틱', detail: '꽃과 온기' },
+  { id: 'nature', label: '보타니컬', detail: '초록의 결' },
+  { id: 'heritage', label: '헤리티지', detail: '한국적인 결' },
+  { id: 'minimal', label: '미니멀', detail: '여백과 구조' },
+  { id: 'night', label: '애프터 다크', detail: '밤의 초대' },
+];
+
+const DEFAULT_THEME_TAGS: Record<string, ThemeGenre[]> = {
+  'original-warm': ['romantic', 'editorial'],
+  'classic-elegant': ['editorial', 'minimal'],
+  'modern-minimal': ['minimal', 'editorial'],
+  'romantic-flower': ['romantic', 'picturebook'],
+  'nature-green': ['nature', 'editorial'],
+  'luxury-gold': ['cinema', 'night'],
+  'simple-clean': ['minimal'],
+  'vintage-film': ['cinema', 'editorial'],
+  'watercolor-soft': ['picturebook', 'romantic'],
+  'midnight-navy': ['night', 'cinema'],
+  'pastel-dream': ['picturebook', 'romantic'],
+  'korean-traditional': ['heritage'],
+  'editorial-mono': ['cinema', 'editorial'],
+};
+
+export function getThemeGenres(theme: Theme): ThemeGenre[] {
+  return theme.tags?.length ? theme.tags : DEFAULT_THEME_TAGS[String(theme.id)] ?? [];
 }
 
 export const THEMES: Theme[] = [
@@ -336,6 +370,73 @@ export const THEMES: Theme[] = [
       '--text': '#ffffff', '--text-muted': '#999999',
       '--accent': '#ffffff', '--accent-soft': '#c3d9f3',
       '--divider': '#262626', '--shadow': '0 8px 32px rgba(0, 0, 0, 0.7)',
+    },
+  },
+  {
+    id: 'storybook-gouache',
+    name: '그림책 수채화',
+    description: '한 장면씩 넘겨보는 그림책, 부드러운 붓결과 작은 문장들',
+    tags: ['picturebook', 'romantic'],
+    preview: { bg: '#fff8ed', accent: '#d77b65', text: '#403126' },
+    fonts: {
+      display: "'Fraunces', 'Noto Serif KR', serif",
+      body: "'Noto Sans KR', sans-serif",
+      script: "'Caveat', cursive",
+      googleQuery: 'family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Caveat:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap',
+    },
+    layout: 'storybook',
+    ornament: 'watercolor-wash',
+    divider: 'floral-branch',
+    photoTreatment: 'soft',
+    vars: {
+      '--bg': '#fff8ed', '--bg-alt': '#f8ecdf', '--card': '#fffdf8',
+      '--text': '#403126', '--text-muted': '#8a7568', '--accent': '#d77b65',
+      '--accent-soft': '#f0b49a', '--divider': '#ead8c8', '--shadow': '0 8px 28px rgba(147, 96, 69, 0.12)',
+    },
+  },
+  {
+    id: 'cinema-noir',
+    name: '시네마 느와르',
+    description: '어두운 스크린, 한 줄의 타이틀, 영화 같은 첫 장면',
+    tags: ['cinema', 'night'],
+    preview: { bg: '#171518', accent: '#d9a85d', text: '#f4ede1' },
+    fonts: {
+      display: "'Bodoni Moda', 'Noto Serif KR', serif",
+      body: "'DM Sans', 'Noto Sans KR', sans-serif",
+      script: "'Italianno', cursive",
+      googleQuery: 'family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=DM+Sans:wght@400;500&family=Italianno&family=Noto+Serif+KR:wght@300;400;500&display=swap',
+    },
+    layout: 'overlay',
+    ornament: 'film-grain',
+    divider: 'gold-line',
+    photoTreatment: 'vignette',
+    vars: {
+      '--bg': '#171518', '--bg-alt': '#252126', '--card': '#211e22',
+      '--text': '#f4ede1', '--text-muted': '#afa39a', '--accent': '#d9a85d',
+      '--accent-soft': 'rgba(217, 168, 93, 0.25)', '--divider': 'rgba(244, 237, 225, 0.2)',
+      '--shadow': '0 10px 36px rgba(0, 0, 0, 0.65)',
+    },
+  },
+  {
+    id: 'travel-postcard',
+    name: '오후의 엽서',
+    description: '여행지에서 부친 엽서처럼, 가볍고 선명한 우리의 초대',
+    tags: ['editorial', 'nature'],
+    preview: { bg: '#edf4f5', accent: '#cf6d4e', text: '#173b4a' },
+    fonts: {
+      display: "'DM Serif Display', 'Noto Serif KR', serif",
+      body: "'DM Sans', 'Noto Sans KR', sans-serif",
+      script: "'Caveat', cursive",
+      googleQuery: 'family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&family=Caveat:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap',
+    },
+    layout: 'boardingpass',
+    ornament: 'none',
+    divider: 'double-dot',
+    photoTreatment: 'warm-tint',
+    vars: {
+      '--bg': '#edf4f5', '--bg-alt': '#e0ecee', '--card': '#f9fcfa',
+      '--text': '#173b4a', '--text-muted': '#60757a', '--accent': '#cf6d4e',
+      '--accent-soft': '#eab39d', '--divider': '#c9d9da', '--shadow': '0 5px 22px rgba(38, 91, 100, 0.11)',
     },
   },
 ];

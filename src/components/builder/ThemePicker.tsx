@@ -1,5 +1,6 @@
+import { useMemo, useState } from 'react';
 import type { ThemeId } from '../../types';
-import { THEMES, ALL_THEMES } from '../../data/themes';
+import { ALL_THEMES, getThemeGenres, THEME_FILTERS, THEMES } from '../../data/themes';
 
 interface Props {
   value: ThemeId;
@@ -9,9 +10,28 @@ interface Props {
 export function ThemePicker({ value, onChange }: Props) {
   const all = ALL_THEMES();
   const builtInIds = new Set(THEMES.map((t) => t.id));
+  const [filter, setFilter] = useState<(typeof THEME_FILTERS)[number]['id']>('all');
+  const visible = useMemo(
+    () => filter === 'all' ? all : all.filter((theme) => getThemeGenres(theme).includes(filter)),
+    [all, filter],
+  );
   return (
-    <div className="theme-grid">
-      {all.map((t) => (
+    <>
+      <div className="theme-filter-row" role="tablist" aria-label="테마 필터">
+        {THEME_FILTERS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={filter === item.id ? 'active' : ''}
+            onClick={() => setFilter(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="theme-result-count">{visible.length}개의 테마 · 첫 화면 구조까지 달라져요</div>
+      <div className="theme-grid">
+      {visible.map((t) => (
         <button
           key={t.id}
           type="button"
@@ -60,6 +80,7 @@ export function ThemePicker({ value, onChange }: Props) {
           <div className="theme-desc">{t.description}</div>
         </button>
       ))}
-    </div>
+      </div>
+    </>
   );
 }

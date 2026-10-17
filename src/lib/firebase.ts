@@ -1,6 +1,6 @@
 import type { GuestbookEntry, RsvpEntry } from '../types';
 
-interface FirebaseConfig {
+export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
   projectId: string;
@@ -41,6 +41,15 @@ function endpoint(path: string): string {
   return `https://firestore.googleapis.com/v1/projects/${c.projectId}/databases/(default)/documents/${path}?key=${c.apiKey}`;
 }
 
+/** Firestore REST path shared by all couple-scoped features. */
+export function firestoreDocumentUrl(path: string): string {
+  return endpoint(path);
+}
+
+function coupleCollection(coupleId: string, collection: 'guestbook' | 'rsvp' | 'likes'): string {
+  return `couples/${coupleId}/${collection}`;
+}
+
 function valToFs(v: unknown): unknown {
   if (typeof v === 'string') return { stringValue: v };
   if (typeof v === 'number') return { integerValue: String(v) };
@@ -70,7 +79,7 @@ function docToObj(doc: { fields?: Record<string, Record<string, unknown>> }): Re
 }
 
 export async function fbAddGuestbook(inviteId: string, entry: GuestbookEntry): Promise<void> {
-  const url = endpoint(`guestbook_${inviteId}/${entry.id}`);
+  const url = endpoint(`${coupleCollection(inviteId, 'guestbook')}/${entry.id}`);
   const res = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -80,7 +89,7 @@ export async function fbAddGuestbook(inviteId: string, entry: GuestbookEntry): P
 }
 
 export async function fbListGuestbook(inviteId: string): Promise<GuestbookEntry[]> {
-  const url = endpoint(`guestbook_${inviteId}`);
+  const url = endpoint(coupleCollection(inviteId, 'guestbook'));
   const res = await fetch(url);
   if (!res.ok) {
     if (res.status === 404) return [];
@@ -94,13 +103,13 @@ export async function fbListGuestbook(inviteId: string): Promise<GuestbookEntry[
 }
 
 export async function fbDeleteGuestbook(inviteId: string, id: string): Promise<void> {
-  const url = endpoint(`guestbook_${inviteId}/${id}`);
+  const url = endpoint(`${coupleCollection(inviteId, 'guestbook')}/${id}`);
   const res = await fetch(url, { method: 'DELETE' });
   if (!res.ok && res.status !== 404) throw new Error(`삭제 실패 (${res.status})`);
 }
 
 export async function fbAddRsvp(inviteId: string, entry: RsvpEntry): Promise<void> {
-  const url = endpoint(`rsvp_${inviteId}/${entry.id}`);
+  const url = endpoint(`${coupleCollection(inviteId, 'rsvp')}/${entry.id}`);
   const res = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -110,7 +119,7 @@ export async function fbAddRsvp(inviteId: string, entry: RsvpEntry): Promise<voi
 }
 
 export async function fbListRsvp(inviteId: string): Promise<RsvpEntry[]> {
-  const url = endpoint(`rsvp_${inviteId}`);
+  const url = endpoint(coupleCollection(inviteId, 'rsvp'));
   const res = await fetch(url);
   if (!res.ok) {
     if (res.status === 404) return [];

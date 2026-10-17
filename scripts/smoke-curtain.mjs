@@ -6,6 +6,7 @@ const themes = [
   'original-warm', 'classic-elegant', 'luxury-gold',
   'midnight-navy', 'nature-green', 'romantic-flower',
   'korean-traditional', 'editorial-mono',
+  'storybook-gouache', 'cinema-noir', 'travel-postcard',
 ];
 
 async function getInviteUrl(browser, theme) {

@@ -3,13 +3,21 @@ import { useSearchParams, Link } from 'react-router-dom';
 import type { ThemeId, WeddingData } from '../types';
 import { DEFAULT_DATA } from '../data/defaults';
 import { THEMES, loadThemeFonts } from '../data/themes';
-import { loadDraft, saveDraft, clearDraft } from '../lib/storage';
+import {
+  clearDraft,
+  createCoupleId,
+  getPublishedInvitation,
+  inviteIdFromEncoded,
+  loadDraft,
+  saveDraft,
+  savePublishedInvitation,
+} from '../lib/storage';
 import { buildShareUrl, encodeData, urlLengthWarning } from '../lib/encode';
+import { getFirebaseConfig } from '../lib/firebase';
 import { BuilderForm } from '../components/builder/BuilderForm';
 import { InviteView } from '../components/invite/InviteView';
 import { Toast } from '../components/invite/Toast';
 import { showToast } from '../lib/toast';
-import { inviteIdFromEncoded } from '../lib/storage';
 import { qrImageUrl } from '../lib/qrcode';
 import { ShareModal } from '../components/builder/ShareModal';
 import { THEME_MAP } from '../data/themes';
@@ -17,13 +25,16 @@ import { THEME_MAP } from '../data/themes';
 export function Builder() {
   const [params] = useSearchParams();
   const [data, setData] = useState<WeddingData>(() => {
+    const published = params.get('invite');
+    const publishedData = published ? getPublishedInvitation(published)?.data : null;
     const draft = loadDraft();
-    if (draft) return draft;
+    const seed = publishedData ?? draft;
+    if (seed) return { ...seed, coupleId: seed.coupleId || createCoupleId() };
     const themeParam = params.get('theme') as ThemeId | null;
     if (themeParam && THEMES.some((t) => t.id === themeParam)) {
-      return { ...DEFAULT_DATA, theme: themeParam };
+      return { ...DEFAULT_DATA, theme: themeParam, coupleId: createCoupleId() };
     }
-    return DEFAULT_DATA;
+    return { ...DEFAULT_DATA, coupleId: createCoupleId() };
   });
 
   const [shareUrl, setShareUrl] = useState<string>('');
@@ -45,8 +56,29 @@ export function Builder() {
 
   async function publish() {
     try {
-      const encoded = await encodeData(data);
-      const url = buildShareUrl(encoded);
+      const coupleId = data.coupleId || createCoupleId();
+      const publishData: WeddingData = {
+        ...data,
+        coupleId,
+        firebase: getFirebaseConfig() || data.firebase || undefined,
+      };
+      const encoded = await encodeData(publishData);
+      if (!data.coupleId || data.firebase !== publishData.firebase) setData(publishData);
+      const url = buildShareUrl(encoded, coupleId);
+      const now = Date.now();
+      const previous = getPublishedInvitation(coupleId);
+      const saved = savePublishedInvitation({
+        coupleId,
+        encoded,
+        title: data.meta.title,
+        groomName: data.groom.name,
+        brideName: data.bride.name,
+        date: data.wedding.date,
+        createdAt: previous?.createdAt ?? now,
+        updatedAt: now,
+        data: publishData,
+      });
+      if (!saved) showToast('배포 기록을 브라우저에 저장하지 못했어요. 링크는 계속 사용할 수 있습니다.');
       setShareUrl(url);
       setShareWarning(urlLengthWarning(url));
       setShowShare(true);
@@ -84,7 +116,7 @@ export function Builder() {
   function reset() {
     if (!confirm('모든 입력을 초기화할까요?')) return;
     clearDraft();
-    setData(DEFAULT_DATA);
+    setData({ ...DEFAULT_DATA, coupleId: createCoupleId() });
     showToast('초기화되었습니다');
   }
 

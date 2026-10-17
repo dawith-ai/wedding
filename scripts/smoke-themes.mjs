@@ -1,4 +1,4 @@
-/* Smoke-test all 12 themes via the live builder.
+/* Smoke-test all built-in themes via the live builder.
  *
  * For each theme:
  *   - open /#/builder?theme=<id>
@@ -31,6 +31,9 @@ const THEMES = [
   'pastel-dream',
   'korean-traditional',
   'editorial-mono',
+  'storybook-gouache',
+  'cinema-noir',
+  'travel-postcard',
 ];
 
 const BASE = process.env.BASE || 'http://localhost:5173';
@@ -152,7 +155,10 @@ async function smokeOne(browser, theme) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true,
+    ...(process.env.PW_EXECUTABLE_PATH ? { executablePath: process.env.PW_EXECUTABLE_PATH } : {}),
+  });
   const summary = [];
   let failed = 0;
   for (const theme of THEMES) {

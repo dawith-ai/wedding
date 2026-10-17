@@ -3,6 +3,7 @@ import {
   isFirebaseEnabled,
   fbListGuestbook,
   fbListRsvp,
+  firestoreDocumentUrl,
   getFirebaseConfig,
 } from '../../lib/firebase';
 
@@ -15,7 +16,7 @@ const LS_LIKE_COUNT = (id: string) => `wedding_likes_count_${id}`;
 async function fbReadLikes(inviteId: string): Promise<number> {
   const c = getFirebaseConfig();
   if (!c) return 0;
-  const url = `https://firestore.googleapis.com/v1/projects/${c.projectId}/databases/(default)/documents/likes_${inviteId}/counter?key=${c.apiKey}`;
+  const url = firestoreDocumentUrl(`couples/${inviteId}/likes/counter`);
   try {
     const res = await fetch(url);
     if (!res.ok) return 0;

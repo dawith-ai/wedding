@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { isFirebaseEnabled, getFirebaseConfig } from '../../lib/firebase';
+import { firestoreDocumentUrl, isFirebaseEnabled, getFirebaseConfig } from '../../lib/firebase';
 import { celebrateHeart } from '../../lib/celebrate';
 
 interface Props {
@@ -12,7 +12,7 @@ const LS_LIKED = (id: string) => `wedding_likes_liked_${id}`;
 async function fbReadLikes(inviteId: string): Promise<number> {
   const c = getFirebaseConfig();
   if (!c) return 0;
-  const url = `https://firestore.googleapis.com/v1/projects/${c.projectId}/databases/(default)/documents/likes_${inviteId}/counter?key=${c.apiKey}`;
+  const url = firestoreDocumentUrl(`couples/${inviteId}/likes/counter`);
   try {
     const res = await fetch(url);
     if (!res.ok) return 0;
@@ -26,7 +26,7 @@ async function fbReadLikes(inviteId: string): Promise<number> {
 async function fbWriteLikes(inviteId: string, n: number): Promise<void> {
   const c = getFirebaseConfig();
   if (!c) return;
-  const url = `https://firestore.googleapis.com/v1/projects/${c.projectId}/databases/(default)/documents/likes_${inviteId}/counter?key=${c.apiKey}`;
+  const url = firestoreDocumentUrl(`couples/${inviteId}/likes/counter`);
   await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },

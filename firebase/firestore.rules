@@ -1,0 +1,13 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public invitation responses are isolated by coupleId. The invitation
+    // payload itself stays in the share URL and is never stored here.
+    match /couples/{coupleId}/{collection}/{documentId} {
+      allow read, write: if collection == 'guestbook'
+        || collection == 'rsvp'
+        || collection == 'likes';
+    }
+  }
+}

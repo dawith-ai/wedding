@@ -41,7 +41,10 @@ async function getInviteUrl(browser) {
 }
 
 async function run() {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({
+    headless: true,
+    ...(process.env.PW_EXECUTABLE_PATH ? { executablePath: process.env.PW_EXECUTABLE_PATH } : {}),
+  });
   const inviteUrl = await getInviteUrl(browser);
   if (!inviteUrl.startsWith('http')) {
     console.error('Could not get invite URL');

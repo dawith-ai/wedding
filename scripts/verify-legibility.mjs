@@ -12,7 +12,7 @@
  *      (skipped for hero-overlay text where photo backdrop + shadow is
  *      a deliberate stylistic choice)
  *
- * Loops over all 12 themes at 360×800 (the most common Korean phone size).
+ * Loops over all built-in themes at 360×800 (the most common Korean phone size).
  *
  * Run: node scripts/verify-legibility.mjs
  */
@@ -23,7 +23,7 @@ const THEMES = [
   'original-warm', 'classic-elegant', 'modern-minimal', 'romantic-flower',
   'nature-green', 'luxury-gold', 'simple-clean', 'vintage-film',
   'watercolor-soft', 'midnight-navy', 'pastel-dream', 'korean-traditional',
-  'editorial-mono',
+  'editorial-mono', 'storybook-gouache', 'cinema-noir', 'travel-postcard',
 ];
 
 const SCAN = `(() => {

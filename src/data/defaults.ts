@@ -1,6 +1,7 @@
 import type { WeddingData } from '../types';
 
 export const DEFAULT_DATA: WeddingData = {
+  coupleId: '',
   theme: 'original-warm',
   eventType: 'wedding',
   useCurtain: true,

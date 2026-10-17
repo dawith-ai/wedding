@@ -350,7 +350,7 @@ export function AiPhotoStudio({ onPhotoReady, onVideoReady }: Props) {
             <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
               <button type="button" onClick={() => attach('hero')} style={primaryBtn()}>Hero 사진으로</button>
               <button type="button" onClick={() => attach('gallery')} style={secondaryBtn()}>갤러리에 추가</button>
-              <a href={resultUrl} download={`ai-wedding-${Date.now()}.png`} style={{ ...secondaryBtn(), textDecoration: 'none', display: 'inline-block' }}>
+              <a href={resultUrl} download="ai-wedding.png" style={{ ...secondaryBtn(), textDecoration: 'none', display: 'inline-block' }}>
                 다운로드
               </a>
               <button type="button" onClick={generate} style={secondaryBtn()}>다시 생성</button>

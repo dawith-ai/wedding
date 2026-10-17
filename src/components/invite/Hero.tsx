@@ -256,6 +256,48 @@ export function Hero({ data }: Props) {
         </>
       );
 
+    case 'storybook-gouache':
+      return (
+        <>
+          <StorybookSpread data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'cinema-noir':
+      return (
+        <>
+          <CinematicLetterbox data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
+    case 'travel-postcard':
+      return (
+        <>
+          <BoardingPass data={data} />
+          <section className="invite-section section-couple">
+            <ParentBlock data={data} />
+          </section>
+          <section className="invite-section section-cd">
+            <Countdown date={data.wedding.date} time={data.wedding.time} />
+            <CalendarButtons data={data} />
+          </section>
+        </>
+      );
+
     default:
       // Runtime fallback for malformed decoded data — render the warm signature.
       return (

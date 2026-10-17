@@ -1,6 +1,7 @@
-import type { GuestbookEntry, RsvpEntry, WeddingData } from '../types';
+import type { GuestbookEntry, PublishedInvitation, RsvpEntry, WeddingData } from '../types';
 
 const DRAFT_KEY = 'wedding_draft';
+const PUBLISHED_KEY = 'wedding_published_invitations';
 
 function safeSet(key: string, value: string): boolean {
   try {
@@ -37,6 +38,43 @@ export function clearDraft() {
   } catch {
     /* noop */
   }
+}
+
+export function createCoupleId(): string {
+  const random = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID().replaceAll('-', '').slice(0, 12)
+    : Math.random().toString(36).slice(2, 14);
+  return `c_${random}`;
+}
+
+function readPublished(): PublishedInvitation[] {
+  const raw = safeGet(PUBLISHED_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? (parsed as PublishedInvitation[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function listPublishedInvitations(): PublishedInvitation[] {
+  return readPublished().sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
+export function getPublishedInvitation(coupleId: string): PublishedInvitation | null {
+  return readPublished().find((item) => item.coupleId === coupleId) ?? null;
+}
+
+export function savePublishedInvitation(invitation: PublishedInvitation): boolean {
+  const list = readPublished().filter((item) => item.coupleId !== invitation.coupleId);
+  list.unshift(invitation);
+  return safeSet(PUBLISHED_KEY, JSON.stringify(list));
+}
+
+export function removePublishedInvitation(coupleId: string): boolean {
+  const list = readPublished().filter((item) => item.coupleId !== coupleId);
+  return safeSet(PUBLISHED_KEY, JSON.stringify(list));
 }
 
 function inviteKey(inviteId: string): string {

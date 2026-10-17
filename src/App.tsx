@@ -3,6 +3,7 @@ import { Home } from './pages/Home';
 import { Builder } from './pages/Builder';
 import { Invite } from './pages/Invite';
 import { Privacy } from './pages/Privacy';
+import { Manage } from './pages/Manage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
@@ -12,8 +13,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/builder" element={<Builder />} />
+          <Route path="/manage" element={<Manage />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/v/:encoded" element={<Invite />} />
+          <Route path="/i/:coupleId/:encoded" element={<Invite />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </HashRouter>
