@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import type { ThemeId, WeddingData } from '../types';
-import { DEFAULT_DATA } from '../data/defaults';
+import { DEFAULT_DATA, normalizeWeddingData } from '../data/defaults';
 import { THEMES, loadThemeFonts } from '../data/themes';
 import {
   clearDraft,
@@ -29,7 +29,7 @@ export function Builder() {
     const published = params.get('invite');
     const publishedData = published ? getPublishedInvitation(published)?.data : null;
     const draft = loadDraft();
-    const seed = publishedData ?? draft;
+    const seed = normalizeWeddingData(publishedData ?? draft);
     if (seed) return { ...seed, coupleId: seed.coupleId || createCoupleId() };
     const themeParam = params.get('theme') as ThemeId | null;
     if (themeParam && THEMES.some((t) => t.id === themeParam)) {

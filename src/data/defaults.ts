@@ -1,5 +1,22 @@
 import type { WeddingData } from '../types';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function stringList(value: unknown, fallback: string[]): string[] {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : fallback;
+}
+
+function accountList(value: unknown, fallback: WeddingData['accounts']['groom']): WeddingData['accounts']['groom'] {
+  if (!Array.isArray(value)) return fallback;
+  return value.filter(isRecord).map((account) => ({
+    role: typeof account.role === 'string' ? account.role : '',
+    bank: typeof account.bank === 'string' ? account.bank : '',
+    number: typeof account.number === 'string' ? account.number : '',
+  }));
+}
+
 export const DEFAULT_DATA: WeddingData = {
   coupleId: '',
   theme: 'original-warm',
@@ -164,3 +181,182 @@ export const DEFAULT_DATA: WeddingData = {
     description: '2026년 10월 10일 토요일, 소중한 분들을 초대합니다.',
   },
 };
+
+/**
+ * Merge drafts created by older app versions with the current schema.
+ * A malformed or empty draft is rejected so the builder can start cleanly.
+ */
+export function normalizeWeddingData(input: unknown): WeddingData | null {
+  if (!isRecord(input)) return null;
+
+  const source = input as Record<string, unknown>;
+  const groom = isRecord(source.groom) ? source.groom : {};
+  const bride = isRecord(source.bride) ? source.bride : {};
+  const wedding = isRecord(source.wedding) ? source.wedding : {};
+  const greeting = isRecord(source.greeting) ? source.greeting : {};
+  const story = isRecord(source.story) ? source.story : {};
+  const accounts = isRecord(source.accounts) ? source.accounts : {};
+  const guestbook = isRecord(source.guestbook) ? source.guestbook : {};
+  const rsvp = isRecord(source.rsvp) ? source.rsvp : {};
+  const likes = isRecord(source.likes) ? source.likes : {};
+  const timeline = isRecord(source.timeline) ? source.timeline : {};
+  const shuttle = isRecord(source.shuttle) ? source.shuttle : {};
+  const meta = isRecord(source.meta) ? source.meta : {};
+
+  return {
+    ...DEFAULT_DATA,
+    ...source,
+    coupleId: typeof source.coupleId === 'string' ? source.coupleId : DEFAULT_DATA.coupleId,
+    theme: typeof source.theme === 'string' && source.theme ? source.theme : DEFAULT_DATA.theme,
+    eventType: typeof source.eventType === 'string' ? source.eventType as WeddingData['eventType'] : DEFAULT_DATA.eventType,
+    useCurtain: typeof source.useCurtain === 'boolean' ? source.useCurtain : DEFAULT_DATA.useCurtain,
+    bgm: typeof source.bgm === 'string' ? source.bgm : DEFAULT_DATA.bgm,
+    groom: {
+      ...DEFAULT_DATA.groom,
+      ...groom,
+      name: typeof groom.name === 'string' ? groom.name : DEFAULT_DATA.groom.name,
+      father: typeof groom.father === 'string' ? groom.father : DEFAULT_DATA.groom.father,
+      mother: typeof groom.mother === 'string' ? groom.mother : DEFAULT_DATA.groom.mother,
+    },
+    bride: {
+      ...DEFAULT_DATA.bride,
+      ...bride,
+      name: typeof bride.name === 'string' ? bride.name : DEFAULT_DATA.bride.name,
+      father: typeof bride.father === 'string' ? bride.father : DEFAULT_DATA.bride.father,
+      mother: typeof bride.mother === 'string' ? bride.mother : DEFAULT_DATA.bride.mother,
+    },
+    wedding: {
+      ...DEFAULT_DATA.wedding,
+      ...wedding,
+      date: typeof wedding.date === 'string' ? wedding.date : DEFAULT_DATA.wedding.date,
+      time: typeof wedding.time === 'string' ? wedding.time : DEFAULT_DATA.wedding.time,
+      venue: typeof wedding.venue === 'string' ? wedding.venue : DEFAULT_DATA.wedding.venue,
+      venueDetail: typeof wedding.venueDetail === 'string' ? wedding.venueDetail : DEFAULT_DATA.wedding.venueDetail,
+      address: typeof wedding.address === 'string' ? wedding.address : DEFAULT_DATA.wedding.address,
+    },
+    greeting: {
+      ...DEFAULT_DATA.greeting,
+      ...greeting,
+      title: typeof greeting.title === 'string' ? greeting.title : DEFAULT_DATA.greeting.title,
+      body: typeof greeting.body === 'string' ? greeting.body : DEFAULT_DATA.greeting.body,
+    },
+    story: {
+      ...DEFAULT_DATA.story,
+      ...story,
+      enabled: typeof story.enabled === 'boolean' ? story.enabled : DEFAULT_DATA.story.enabled,
+      title: typeof story.title === 'string' ? story.title : DEFAULT_DATA.story.title,
+      body: typeof story.body === 'string' ? story.body : DEFAULT_DATA.story.body,
+      photos: stringList(story.photos, DEFAULT_DATA.story.photos),
+    },
+    hero: typeof source.hero === 'string' ? source.hero : DEFAULT_DATA.hero,
+    videoHero: typeof source.videoHero === 'string' ? source.videoHero : DEFAULT_DATA.videoHero,
+    gallery: stringList(source.gallery, DEFAULT_DATA.gallery),
+    accounts: {
+      groom: accountList(accounts.groom, DEFAULT_DATA.accounts.groom),
+      bride: accountList(accounts.bride, DEFAULT_DATA.accounts.bride),
+    },
+    guestbook: {
+      ...DEFAULT_DATA.guestbook,
+      ...guestbook,
+      enabled: typeof guestbook.enabled === 'boolean' ? guestbook.enabled : DEFAULT_DATA.guestbook.enabled,
+      hostPassword: typeof guestbook.hostPassword === 'string' ? guestbook.hostPassword : DEFAULT_DATA.guestbook.hostPassword,
+      blockedWords: stringList(guestbook.blockedWords, DEFAULT_DATA.guestbook.blockedWords ?? []),
+    },
+    rsvp: {
+      ...DEFAULT_DATA.rsvp,
+      ...rsvp,
+      enabled: typeof rsvp.enabled === 'boolean' ? rsvp.enabled : DEFAULT_DATA.rsvp.enabled,
+      deadline: typeof rsvp.deadline === 'string' ? rsvp.deadline : DEFAULT_DATA.rsvp.deadline,
+      prompt: typeof rsvp.prompt === 'string' ? rsvp.prompt : DEFAULT_DATA.rsvp.prompt,
+    },
+    likes: {
+      ...DEFAULT_DATA.likes,
+      ...likes,
+      enabled: typeof likes.enabled === 'boolean' ? likes.enabled : DEFAULT_DATA.likes.enabled,
+    },
+    timeline: {
+      ...DEFAULT_DATA.timeline,
+      ...timeline,
+      enabled: typeof timeline.enabled === 'boolean' ? timeline.enabled : DEFAULT_DATA.timeline.enabled,
+      title: typeof timeline.title === 'string' ? timeline.title : DEFAULT_DATA.timeline.title,
+      items: Array.isArray(timeline.items) ? timeline.items.filter(isRecord).map((item) => ({
+        time: typeof item.time === 'string' ? item.time : '',
+        label: typeof item.label === 'string' ? item.label : '',
+        ...(typeof item.note === 'string' ? { note: item.note } : {}),
+      })) : DEFAULT_DATA.timeline.items,
+    },
+    shuttle: {
+      ...DEFAULT_DATA.shuttle,
+      ...shuttle,
+      enabled: typeof shuttle.enabled === 'boolean' ? shuttle.enabled : DEFAULT_DATA.shuttle.enabled,
+      info: typeof shuttle.info === 'string' ? shuttle.info : DEFAULT_DATA.shuttle.info,
+    },
+    lifeEvents: isRecord(source.lifeEvents) ? {
+      ...DEFAULT_DATA.lifeEvents,
+      ...source.lifeEvents,
+      enabled: typeof source.lifeEvents.enabled === 'boolean' ? source.lifeEvents.enabled : DEFAULT_DATA.lifeEvents!.enabled,
+      title: typeof source.lifeEvents.title === 'string' ? source.lifeEvents.title : DEFAULT_DATA.lifeEvents!.title,
+      intro: typeof source.lifeEvents.intro === 'string' ? source.lifeEvents.intro : DEFAULT_DATA.lifeEvents!.intro,
+      items: Array.isArray(source.lifeEvents.items) ? source.lifeEvents.items : DEFAULT_DATA.lifeEvents!.items,
+    } : DEFAULT_DATA.lifeEvents,
+    interview: isRecord(source.interview) ? {
+      ...DEFAULT_DATA.interview,
+      ...source.interview,
+      enabled: typeof source.interview.enabled === 'boolean' ? source.interview.enabled : DEFAULT_DATA.interview!.enabled,
+      title: typeof source.interview.title === 'string' ? source.interview.title : DEFAULT_DATA.interview!.title,
+      items: Array.isArray(source.interview.items) ? source.interview.items : DEFAULT_DATA.interview!.items,
+    } : DEFAULT_DATA.interview,
+    dressCode: isRecord(source.dressCode) ? {
+      ...DEFAULT_DATA.dressCode,
+      ...source.dressCode,
+      enabled: typeof source.dressCode.enabled === 'boolean' ? source.dressCode.enabled : DEFAULT_DATA.dressCode!.enabled,
+      title: typeof source.dressCode.title === 'string' ? source.dressCode.title : DEFAULT_DATA.dressCode!.title,
+      note: typeof source.dressCode.note === 'string' ? source.dressCode.note : DEFAULT_DATA.dressCode!.note,
+      colors: stringList(source.dressCode.colors, DEFAULT_DATA.dressCode!.colors),
+    } : DEFAULT_DATA.dressCode,
+    notes: isRecord(source.notes) ? {
+      ...DEFAULT_DATA.notes,
+      ...source.notes,
+      enabled: typeof source.notes.enabled === 'boolean' ? source.notes.enabled : DEFAULT_DATA.notes!.enabled,
+      groom: typeof source.notes.groom === 'string' ? source.notes.groom : DEFAULT_DATA.notes!.groom,
+      bride: typeof source.notes.bride === 'string' ? source.notes.bride : DEFAULT_DATA.notes!.bride,
+    } : DEFAULT_DATA.notes,
+    pin: isRecord(source.pin) ? {
+      ...DEFAULT_DATA.pin,
+      ...source.pin,
+      enabled: typeof source.pin.enabled === 'boolean' ? source.pin.enabled : DEFAULT_DATA.pin!.enabled,
+      code: typeof source.pin.code === 'string' ? source.pin.code : DEFAULT_DATA.pin!.code,
+      hint: typeof source.pin.hint === 'string' ? source.pin.hint : DEFAULT_DATA.pin!.hint,
+    } : DEFAULT_DATA.pin,
+    meal: isRecord(source.meal) ? {
+      ...DEFAULT_DATA.meal,
+      ...source.meal,
+      enabled: typeof source.meal.enabled === 'boolean' ? source.meal.enabled : DEFAULT_DATA.meal!.enabled,
+      title: typeof source.meal.title === 'string' ? source.meal.title : DEFAULT_DATA.meal!.title,
+      note: typeof source.meal.note === 'string' ? source.meal.note : DEFAULT_DATA.meal!.note,
+      menu: stringList(source.meal.menu, DEFAULT_DATA.meal!.menu),
+    } : DEFAULT_DATA.meal,
+    gallery_opts: isRecord(source.gallery_opts) ? {
+      ...DEFAULT_DATA.gallery_opts,
+      ...source.gallery_opts,
+      slideshow: typeof source.gallery_opts.slideshow === 'boolean' ? source.gallery_opts.slideshow : DEFAULT_DATA.gallery_opts!.slideshow,
+      intervalSec: typeof source.gallery_opts.intervalSec === 'number' ? source.gallery_opts.intervalSec : DEFAULT_DATA.gallery_opts!.intervalSec,
+      layout: typeof source.gallery_opts.layout === 'string' ? source.gallery_opts.layout as NonNullable<WeddingData['gallery_opts']>['layout'] : DEFAULT_DATA.gallery_opts!.layout,
+    } : DEFAULT_DATA.gallery_opts,
+    guestPhotoWall: isRecord(source.guestPhotoWall) ? {
+      ...DEFAULT_DATA.guestPhotoWall,
+      ...source.guestPhotoWall,
+      enabled: typeof source.guestPhotoWall.enabled === 'boolean' ? source.guestPhotoWall.enabled : DEFAULT_DATA.guestPhotoWall!.enabled,
+      title: typeof source.guestPhotoWall.title === 'string' ? source.guestPhotoWall.title : DEFAULT_DATA.guestPhotoWall!.title,
+      intro: typeof source.guestPhotoWall.intro === 'string' ? source.guestPhotoWall.intro : DEFAULT_DATA.guestPhotoWall!.intro,
+      requireApproval: typeof source.guestPhotoWall.requireApproval === 'boolean' ? source.guestPhotoWall.requireApproval : DEFAULT_DATA.guestPhotoWall!.requireApproval,
+      allowVoting: typeof source.guestPhotoWall.allowVoting === 'boolean' ? source.guestPhotoWall.allowVoting : DEFAULT_DATA.guestPhotoWall!.allowVoting,
+    } : DEFAULT_DATA.guestPhotoWall,
+    meta: {
+      ...DEFAULT_DATA.meta,
+      ...meta,
+      title: typeof meta.title === 'string' ? meta.title : DEFAULT_DATA.meta.title,
+      description: typeof meta.description === 'string' ? meta.description : DEFAULT_DATA.meta.description,
+    },
+  };
+}
