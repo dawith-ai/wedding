@@ -108,7 +108,6 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     data.eventType,
     data.ogImage,
     data.hero,
-    theme,
     isPreview,
   ]);
 

@@ -1,15 +1,13 @@
 import type { WeddingData } from '../../types';
 import { showToast } from '../../lib/toast';
+import { copyText } from '../../lib/clipboard';
 
 interface Props {
   data: WeddingData;
 }
 
-function copy(text: string, msg = '복사되었습니다') {
-  navigator.clipboard?.writeText(text).then(
-    () => showToast(msg),
-    () => showToast('복사에 실패했어요')
-  );
+async function copy(text: string, msg = '복사되었습니다') {
+  showToast(await copyText(text) ? msg : '복사에 실패했어요');
 }
 
 function defaultKakao(addr: string, venue: string) {

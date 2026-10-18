@@ -14,6 +14,7 @@ import {
   upsertCustomTheme,
 } from '../../lib/customThemes';
 import { showToast } from '../../lib/toast';
+import { copyText } from '../../lib/clipboard';
 import type { ThemeId } from '../../types';
 
 interface Props {
@@ -95,10 +96,11 @@ export function CustomThemeEditor({ onSelect }: Props) {
 
   function copyPrompt() {
     const prompt = buildAiPrompt(mood);
-    navigator.clipboard.writeText(prompt).then(
-      () => showToast('AI 프롬프트가 복사되었어요. ChatGPT/Claude에 붙여넣고 결과 JSON을 받아오세요.'),
-      () => showToast('복사 실패')
-    );
+    void copyText(prompt).then((copied) => showToast(
+      copied
+        ? 'AI 프롬프트가 복사되었어요. ChatGPT/Claude에 붙여넣고 결과 JSON을 받아오세요.'
+        : '복사 실패',
+    ));
   }
 
   function importPasted() {

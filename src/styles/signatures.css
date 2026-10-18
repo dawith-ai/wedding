@@ -1563,6 +1563,7 @@
   position: absolute;
   bottom: 22px;
   right: 18px;
+  width: 100px;
   border: 2px solid var(--accent);
   color: var(--accent);
   padding: 5px 10px;
@@ -1571,7 +1572,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  transform: rotate(-12deg);
+  transform: none;
   opacity: 0.82;
   font-size: 8px;
   letter-spacing: 0.18em;
@@ -1588,11 +1589,11 @@
 .bp-stamp::before {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: 0;
   border: 2px solid currentColor;
   border-radius: 4px;
   opacity: 0.35;
-  transform: rotate(2deg) scale(1.05);
+  transform: rotate(2deg) scale(0.98);
   pointer-events: none;
 }
 .bp-stamp strong {
@@ -1952,13 +1953,14 @@
   position: absolute;
   top: 16px;
   right: 18px;
+  width: 104px;
   border: 1.5px solid var(--accent);
   border-radius: 4px;
   padding: 4px 10px 4px 8px;
   display: flex;
   flex-direction: column;
   gap: 0;
-  transform: rotate(4deg);
+  transform: none;
   font-family: var(--font-display);
   background:
     radial-gradient(ellipse at 30% 30%, transparent 50%, rgba(255, 255, 255, 0.18) 90%);
@@ -1970,11 +1972,11 @@
 .sb-date-stamp::before {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: 0;
   border: 1.5px solid var(--accent);
   border-radius: 4px;
   opacity: 0.28;
-  transform: rotate(-3deg) scale(1.06);
+  transform: rotate(-3deg) scale(0.98);
   pointer-events: none;
 }
 .sb-date-label {

@@ -438,6 +438,21 @@
   text-align: center;
   opacity: 0.8;
 }
+.rsvp-closed {
+  display: grid;
+  gap: 8px;
+  max-width: 410px;
+  margin: 30px auto 0;
+  padding: 22px 20px;
+  border: 1px solid var(--rsvp-line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 78%, transparent);
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.7;
+}
+.rsvp-closed strong { color: var(--text); font-size: 14px; }
+.rsvp-closed span { font-size: 12px; }
 .rsvp-form {
   gap: 18px;
   max-width: 410px;

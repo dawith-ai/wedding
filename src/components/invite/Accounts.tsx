@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Account, EventType } from '../../types';
 import { showToast } from '../../lib/toast';
 import { getEventLabels } from '../../data/events';
+import { copyText } from '../../lib/clipboard';
 
 interface Props {
   groom: Account[];
@@ -9,11 +10,8 @@ interface Props {
   eventType?: EventType;
 }
 
-function copy(text: string) {
-  navigator.clipboard?.writeText(text).then(
-    () => showToast('계좌번호가 복사되었습니다'),
-    () => showToast('복사에 실패했어요')
-  );
+async function copy(text: string) {
+  showToast(await copyText(text) ? '계좌번호가 복사되었습니다' : '복사에 실패했어요');
 }
 
 function Group({ title, list }: { title: string; list: Account[] }) {

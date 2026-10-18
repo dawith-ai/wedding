@@ -21,6 +21,7 @@ import { showToast } from '../lib/toast';
 import { qrImageUrl } from '../lib/qrcode';
 import { ShareModal } from '../components/builder/ShareModal';
 import { THEME_MAP } from '../data/themes';
+import { copyText } from '../lib/clipboard';
 
 export function Builder() {
   const [params] = useSearchParams();
@@ -87,11 +88,12 @@ export function Builder() {
     }
   }
 
-  function copyUrl(url: string) {
-    navigator.clipboard?.writeText(url).then(
-      () => showToast('링크가 복사되었습니다'),
-      () => showToast('복사에 실패했어요')
-    );
+  async function copyUrl(url: string) {
+    if (await copyText(url)) {
+      showToast('링크가 복사되었습니다');
+    } else {
+      showToast('복사에 실패했어요. 주소를 길게 눌러 복사해주세요');
+    }
   }
 
   function nativeShare(url: string) {

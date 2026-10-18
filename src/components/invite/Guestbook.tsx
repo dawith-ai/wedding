@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { GuestbookEntry } from '../../types';
 import {
   addGuestbook as lsAdd,
@@ -41,7 +41,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     if (isFirebaseEnabled()) {
       try {
         setEntries(await fbListGuestbook(inviteId));
@@ -51,11 +51,11 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
       }
     }
     setEntries(lsList(inviteId));
-  }
+  }, [inviteId]);
 
   useEffect(() => {
-    refresh();
-  }, [inviteId]);
+    void refresh();
+  }, [refresh]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -87,7 +87,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
       setPassword('');
       setMessage('');
       showToast('등록되었습니다');
-      refresh();
+      void refresh();
     } catch (err) {
       showToast((err as Error).message);
     } finally {
@@ -117,7 +117,7 @@ export function Guestbook({ inviteId, hostPassword, blockedWords }: Props) {
         lsRemove(inviteId, entry.id, isHost ? entry.password : pw);
       }
       showToast(isHost ? '호스트 권한으로 삭제했습니다' : '삭제되었습니다');
-      refresh();
+      void refresh();
     } catch {
       showToast('삭제에 실패했어요');
     }

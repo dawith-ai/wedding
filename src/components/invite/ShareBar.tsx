@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { showToast } from '../../lib/toast';
 import { hasKakaoKey, shareToKakao } from '../../lib/kakao';
 import { celebrateSparkle } from '../../lib/celebrate';
+import { copyText } from '../../lib/clipboard';
 
 interface Props {
   title: string;
@@ -21,11 +22,13 @@ export function ShareBar({ title, description, url, imageUrl = '' }: Props) {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  function copyLink() {
-    navigator.clipboard?.writeText(url).then(
-      () => { showToast('링크가 복사되었습니다'); celebrateSparkle(); },
-      () => showToast('복사에 실패했어요')
-    );
+  async function copyLink() {
+    if (await copyText(url)) {
+      showToast('링크가 복사되었습니다');
+      celebrateSparkle();
+    } else {
+      showToast('복사에 실패했어요. 주소를 길게 눌러 복사해주세요');
+    }
   }
 
   function nativeShare() {

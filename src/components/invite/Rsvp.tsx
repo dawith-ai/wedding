@@ -17,6 +17,15 @@ function newId(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
+function isPastDeadline(value?: string): boolean {
+  if (!value) return false;
+  const [year, month, day] = value.split('-').map(Number);
+  if (![year, month, day].every(Number.isFinite)) return false;
+  // Treat the selected date as open through 23:59:59 in the visitor's local time.
+  const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  return endOfDay.getTime() < Date.now();
+}
+
 type Choice<T> = { label: string; value: T };
 const ATTENDING: Choice<'yes' | 'no'>[] = [
   { label: '기쁜 마음으로 갈게요', value: 'yes' },
@@ -38,9 +47,14 @@ export function Rsvp({ inviteId, deadline, groomName, brideName, prompt }: Props
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  const deadlineClosed = isPastDeadline(deadline);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (deadlineClosed) {
+      showToast('참석 의사 전달 기간이 마감되었어요');
+      return;
+    }
     if (!name.trim()) {
       showToast('성함을 입력해주세요');
       return;
@@ -111,11 +125,16 @@ export function Rsvp({ inviteId, deadline, groomName, brideName, prompt }: Props
       </p>
       {deadline && (
         <p className="rsvp-deadline">
-          {deadline.replace(/-/g, '.')}까지 응답 부탁드립니다
+          {deadline.replace(/-/g, '.')}까지 {deadlineClosed ? '응답을 받았어요' : '응답 부탁드립니다'}
         </p>
       )}
 
-      <form className="rsvp-form" onSubmit={submit}>
+      {deadlineClosed ? (
+        <div className="rsvp-closed" role="status">
+          <strong>응답이 마감되었어요</strong>
+          <span>참석 여부가 변경되었다면 두 사람에게 직접 알려주세요.</span>
+        </div>
+      ) : <form className="rsvp-form" onSubmit={submit}>
         <div className="rsvp-block">
           <div className="rsvp-field-head">
             <label id="rsvp-side-label">어느 쪽에서 오시나요?</label>
@@ -214,7 +233,7 @@ export function Rsvp({ inviteId, deadline, groomName, brideName, prompt }: Props
         <button className="rsvp-submit" type="submit" disabled={busy}>
           {busy ? '마음 보내는 중…' : '두 사람에게 마음 보내기'}
         </button>
-      </form>
+      </form>}
     </section>
   );
 }

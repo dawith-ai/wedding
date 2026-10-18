@@ -41,6 +41,10 @@ const SCAN = `(() => {
   for (const el of all) {
     if (seen.has(el)) continue;
     seen.add(el);
+    // SVG text bounds are glyph geometry, not CSS layout boxes. A glyph can
+    // legitimately extend beyond its SVG text node's clientWidth without
+    // being clipped by the parent SVG viewport.
+    if (el.tagName.toLowerCase() === 'text') continue;
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
     const cw = el.clientWidth;

@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react';
-import { CalendarDays, Check, Copy, Database, ExternalLink, Heart, Pencil, Plus, Trash2 } from 'lucide-react';
+import { CalendarDays, Check, ChevronDown, Copy, Database, Download, ExternalLink, Heart, MessageCircle, Pencil, Plus, Trash2, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { buildShareUrl } from '../lib/encode';
 import { showToast } from '../lib/toast';
-import { listPublishedInvitations, removePublishedInvitation } from '../lib/storage';
-import type { PublishedInvitation } from '../types';
+import { listGuestbook, listPublishedInvitations, listRsvp, removePublishedInvitation } from '../lib/storage';
+import { fbListGuestbook, fbListRsvp, setFirebaseConfig } from '../lib/firebase';
+import { downloadCsv } from '../lib/csv';
+import type { GuestbookEntry, PublishedInvitation, RsvpEntry } from '../types';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
+import { copyText } from '../lib/clipboard';
 
 function formatDate(value: string): string {
   if (!value) return '날짜 미정';
@@ -25,22 +28,83 @@ function publicUrl(invitation: PublishedInvitation): string {
   return buildShareUrl(invitation.encoded, invitation.coupleId);
 }
 
+interface ResponseData {
+  rsvps: RsvpEntry[];
+  guestbook: GuestbookEntry[];
+}
+
 export function Manage() {
   const [items, setItems] = useState(() => listPublishedInvitations());
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [responseData, setResponseData] = useState<Record<string, ResponseData>>({});
+  const [loadingId, setLoadingId] = useState<string | null>(null);
 
   const countLabel = useMemo(() => `${items.length}개의 초대장`, [items.length]);
 
   async function copyUrl(invitation: PublishedInvitation) {
     const url = publicUrl(invitation);
-    try {
-      await navigator.clipboard.writeText(url);
+    if (await copyText(url)) {
       setCopiedId(invitation.coupleId);
       showToast('커플 전용 링크를 복사했어요');
       window.setTimeout(() => setCopiedId(null), 1800);
-    } catch {
+    } else {
       showToast('복사하지 못했어요. 미리보기에서 주소를 복사해주세요.');
     }
+  }
+
+  async function loadResponses(invitation: PublishedInvitation) {
+    if (openId === invitation.coupleId) {
+      setOpenId(null);
+      return;
+    }
+    setOpenId(invitation.coupleId);
+    if (responseData[invitation.coupleId]) return;
+
+    setLoadingId(invitation.coupleId);
+    try {
+      const remote = Boolean(invitation.data.firebase?.apiKey && invitation.data.firebase.projectId);
+      if (remote) setFirebaseConfig(invitation.data.firebase!);
+      const [rsvps, guestbook] = remote
+        ? await Promise.all([fbListRsvp(invitation.coupleId), fbListGuestbook(invitation.coupleId)])
+        : [listRsvp(invitation.coupleId), listGuestbook(invitation.coupleId)];
+      setResponseData((current) => ({ ...current, [invitation.coupleId]: { rsvps, guestbook } }));
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '응답을 불러오지 못했어요');
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  function exportRsvps(invitation: PublishedInvitation, entries: RsvpEntry[]) {
+    downloadCsv(
+      `rsvp-${invitation.groomName}-${invitation.brideName}.csv`,
+      ['이름', '측', '참석', '인원', '식사', '연락처', '메시지', '응답일시'],
+      entries.map((entry) => ({
+        이름: entry.name,
+        측: entry.side === 'groom' ? invitation.groomName : invitation.brideName,
+        참석: entry.attending === 'yes' ? '참석' : '불참',
+        인원: entry.count,
+        식사: entry.meal === 'yes' ? '식사' : entry.meal === 'no' ? '식사 안 함' : '미정',
+        연락처: entry.phone,
+        메시지: entry.message,
+        응답일시: new Date(entry.createdAt).toLocaleString('ko-KR'),
+      })),
+    );
+    showToast('RSVP 목록을 CSV로 저장했어요');
+  }
+
+  function exportGuestbook(invitation: PublishedInvitation, entries: GuestbookEntry[]) {
+    downloadCsv(
+      `guestbook-${invitation.groomName}-${invitation.brideName}.csv`,
+      ['이름', '메시지', '작성일시'],
+      entries.map((entry) => ({
+        이름: entry.name,
+        메시지: entry.message,
+        작성일시: new Date(entry.createdAt).toLocaleString('ko-KR'),
+      })),
+    );
+    showToast('방명록을 CSV로 저장했어요');
   }
 
   function remove(invitation: PublishedInvitation) {
@@ -110,8 +174,45 @@ export function Manage() {
                     {copiedId === invitation.coupleId ? <Check size={15} /> : <Copy size={15} />}
                     {copiedId === invitation.coupleId ? '복사됨' : '링크 복사'}
                   </Button>
+                  <Button type="button" variant="soft" size="sm" className="manage-action" onClick={() => void loadResponses(invitation)}>
+                    <Users size={15} /> 응답 관리 <ChevronDown size={14} className={openId === invitation.coupleId ? 'manage-chevron-open' : ''} />
+                  </Button>
                   <Button type="button" variant="ghost" size="sm" className="manage-action manage-action-danger" onClick={() => remove(invitation)}><Trash2 size={15} /> 목록에서 삭제</Button>
                 </CardContent>
+                {openId === invitation.coupleId && (
+                  <div className="manage-responses">
+                    {loadingId === invitation.coupleId ? <p className="manage-response-loading">응답을 불러오는 중…</p> : (() => {
+                      const records = responseData[invitation.coupleId];
+                      if (!records) return null;
+                      const attending = records.rsvps.filter((entry) => entry.attending === 'yes');
+                      const people = attending.reduce((sum, entry) => sum + entry.count, 0);
+                      return (
+                        <>
+                          <div className="manage-response-head">
+                            <div>
+                              <span className="manage-card-label">RESPONSE DESK</span>
+                              <strong>{attending.length}명 참석 · 총 {people}자리</strong>
+                            </div>
+                            <span className="manage-response-count"><MessageCircle size={14} /> 방명록 {records.guestbook.length}</span>
+                          </div>
+                          <div className="manage-response-actions">
+                            <Button type="button" variant="outline" size="sm" onClick={() => exportRsvps(invitation, records.rsvps)}><Download size={14} /> RSVP CSV</Button>
+                            <Button type="button" variant="outline" size="sm" onClick={() => exportGuestbook(invitation, records.guestbook)}><Download size={14} /> 방명록 CSV</Button>
+                          </div>
+                          {records.rsvps.length === 0 && records.guestbook.length === 0 ? (
+                            <p className="manage-response-empty">아직 도착한 응답이 없어요. Firebase를 연결하면 방문자의 응답이 이곳에 모입니다.</p>
+                          ) : (
+                            <div className="manage-response-preview">
+                              {records.rsvps.slice(0, 5).map((entry) => (
+                                <div key={entry.id}><span>{entry.name}</span><span>{entry.attending === 'yes' ? `참석 ${entry.count}명` : '불참'}</span></div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
               </Card>
             );
           })
