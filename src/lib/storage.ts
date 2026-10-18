@@ -1,4 +1,4 @@
-import type { GuestbookEntry, PublishedInvitation, RsvpEntry, WeddingData } from '../types';
+import type { GuestPhoto, GuestPhotoVote, GuestbookEntry, PublishedInvitation, RsvpEntry, WeddingData } from '../types';
 
 const DRAFT_KEY = 'wedding_draft';
 const PUBLISHED_KEY = 'wedding_published_invitations';
@@ -85,6 +85,14 @@ function rsvpKey(inviteId: string): string {
   return `wedding_rsvp_${inviteId}`;
 }
 
+function guestPhotoKey(inviteId: string): string {
+  return `wedding_guest_photos_${inviteId}`;
+}
+
+function guestPhotoVoteKey(inviteId: string): string {
+  return `wedding_guest_photo_votes_${inviteId}`;
+}
+
 function safeGet(key: string): string | null {
   try {
     return localStorage.getItem(key);
@@ -133,6 +141,51 @@ export function addRsvp(inviteId: string, entry: RsvpEntry) {
   const list = listRsvp(inviteId);
   list.unshift(entry);
   safeSet(rsvpKey(inviteId), JSON.stringify(list));
+}
+
+export function listGuestPhotos(inviteId: string): GuestPhoto[] {
+  const raw = safeGet(guestPhotoKey(inviteId));
+  if (!raw) return [];
+  try {
+    return (JSON.parse(raw) as GuestPhoto[]).sort((a, b) => b.createdAt - a.createdAt);
+  } catch {
+    return [];
+  }
+}
+
+export function addGuestPhoto(inviteId: string, entry: GuestPhoto) {
+  const list = listGuestPhotos(inviteId);
+  list.unshift(entry);
+  safeSet(guestPhotoKey(inviteId), JSON.stringify(list));
+}
+
+export function updateGuestPhoto(inviteId: string, id: string, patch: Partial<GuestPhoto>): boolean {
+  const list = listGuestPhotos(inviteId);
+  const index = list.findIndex((entry) => entry.id === id);
+  if (index < 0) return false;
+  list[index] = { ...list[index], ...patch };
+  return safeSet(guestPhotoKey(inviteId), JSON.stringify(list));
+}
+
+export function removeGuestPhoto(inviteId: string, id: string): boolean {
+  return safeSet(guestPhotoKey(inviteId), JSON.stringify(listGuestPhotos(inviteId).filter((entry) => entry.id !== id)));
+}
+
+export function listGuestPhotoVotes(inviteId: string): GuestPhotoVote[] {
+  const raw = safeGet(guestPhotoVoteKey(inviteId));
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw) as GuestPhotoVote[];
+  } catch {
+    return [];
+  }
+}
+
+export function addGuestPhotoVote(inviteId: string, entry: GuestPhotoVote): boolean {
+  const list = listGuestPhotoVotes(inviteId);
+  if (list.some((vote) => vote.photoId === entry.photoId && vote.voterId === entry.voterId)) return false;
+  list.push(entry);
+  return safeSet(guestPhotoVoteKey(inviteId), JSON.stringify(list));
 }
 
 export function inviteIdFromEncoded(encoded: string): string {

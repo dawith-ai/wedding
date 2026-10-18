@@ -33,6 +33,18 @@ export function ShareModal({
   const [displayUrl, setDisplayUrl] = useState(shareUrl);
   const [shortening, setShortening] = useState(false);
   const [shortAttempted, setShortAttempted] = useState(false);
+  const [guestName, setGuestName] = useState('');
+
+  function makeGuestLink() {
+    const name = guestName.trim();
+    if (!name) {
+      showToast('받는 분 이름을 입력해주세요');
+      return;
+    }
+    setDisplayUrl(`${shareUrl}${shareUrl.includes('?') ? '&' : '?'}to=${encodeURIComponent(name)}`);
+    setShortAttempted(false);
+    showToast(`${name}님 전용 초대 주소를 만들었어요`);
+  }
 
   useEffect(() => {
     lockBodyScroll();
@@ -54,14 +66,15 @@ export function ShareModal({
   const qr = qrImageUrl(displayUrl, 280);
   const canNativeShare =
     typeof navigator !== 'undefined' && !!navigator.share;
-  const isShortened = displayUrl !== shareUrl;
+  const hasGuestRecipient = displayUrl.includes('to=');
+  const isShortened = displayUrl !== shareUrl && !hasGuestRecipient;
 
   async function handleShorten() {
     if (shortening) return;
     setShortening(true);
     setShortAttempted(true);
     try {
-      const short = await shortenUrl(shareUrl);
+      const short = await shortenUrl(displayUrl);
       setDisplayUrl(short);
       showToast('짧은 링크로 변환됐어요');
     } catch (e) {
@@ -109,6 +122,7 @@ export function ShareModal({
             </div>
             <div className="url-meta">
               <span className="url-len">{displayUrl.length}자</span>
+              {hasGuestRecipient && <span className="url-badge">개인 링크</span>}
               {isShortened && <span className="url-badge">짧은 링크</span>}
             </div>
 
@@ -131,8 +145,25 @@ export function ShareModal({
             <p className="muted-text" style={{ marginTop: 12 }}>
               {isShortened
                 ? '단축 링크는 외부 서비스(cleanuri/is.gd)를 거치므로, 원본 영구 링크도 함께 보관해주세요.'
+                : hasGuestRecipient
+                ? '이 링크를 보내면 초대장 상단에 받는 분 이름이 표시됩니다.'
                 : '모든 정보가 URL에 인코딩되므로 서버 비용이 들지 않으며, 링크는 영구적으로 작동합니다.'}
             </p>
+            <div className="personal-link-box">
+              <label htmlFor="guest-link-name">받는 분별 짧은 초대 주소</label>
+              <div>
+                <input
+                  id="guest-link-name"
+                  value={guestName}
+                  onChange={(event) => setGuestName(event.target.value)}
+                  onKeyDown={(event) => { if (event.key === 'Enter') makeGuestLink(); }}
+                  placeholder="예: 지은"
+                  maxLength={20}
+                />
+                <button type="button" onClick={makeGuestLink}>개인 링크 만들기</button>
+              </div>
+              <small>이름이 링크에 붙어 해당 손님에게만 보이는 인사로 사용할 수 있어요. 이후 ‘짧은 링크’로 한 번 더 줄일 수 있습니다.</small>
+            </div>
           </div>
         </div>
 

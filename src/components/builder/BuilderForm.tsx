@@ -961,7 +961,64 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         </div>
       )}
 
-      <h2>20. 평생 가족 페이지 (선택)</h2>
+      <h2>20. 결혼식 사진 수집함 (선택)</h2>
+      <label className="checkbox-row">
+        <input
+          type="checkbox"
+          checked={data.guestPhotoWall?.enabled ?? false}
+          onChange={(e) =>
+            set('guestPhotoWall', {
+              enabled: e.target.checked,
+              title: data.guestPhotoWall?.title ?? '오늘의 포토제닉',
+              intro: data.guestPhotoWall?.intro ?? '결혼식에서 찍은 사진을 올려주세요. 두 사람이 가장 좋아하는 장면을 골라볼게요.',
+              requireApproval: data.guestPhotoWall?.requireApproval ?? true,
+              allowVoting: data.guestPhotoWall?.allowVoting ?? true,
+            })
+          }
+        />
+        하객 사진 수집함 표시
+      </label>
+      {data.guestPhotoWall?.enabled && (
+        <>
+          <div className="field">
+            <label>섹션 제목</label>
+            <input
+              value={data.guestPhotoWall.title ?? ''}
+              onChange={(e) => set('guestPhotoWall', { ...data.guestPhotoWall!, title: e.target.value })}
+            />
+          </div>
+          <div className="field">
+            <label>초대 문구</label>
+            <textarea
+              rows={2}
+              value={data.guestPhotoWall.intro ?? ''}
+              onChange={(e) => set('guestPhotoWall', { ...data.guestPhotoWall!, intro: e.target.value })}
+              placeholder="오늘 찍은 사진을 한 장씩 남겨주세요."
+            />
+          </div>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={data.guestPhotoWall.requireApproval ?? true}
+              onChange={(e) => set('guestPhotoWall', { ...data.guestPhotoWall!, requireApproval: e.target.checked })}
+            />
+            사진을 승인한 뒤 공개하기
+          </label>
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={data.guestPhotoWall.allowVoting ?? true}
+              onChange={(e) => set('guestPhotoWall', { ...data.guestPhotoWall!, allowVoting: e.target.checked })}
+            />
+            하객이 포토제닉 후보에 투표하기
+          </label>
+          <p className="hint" style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+            Firebase를 연결하면 여러 휴대폰의 사진이 한 커플 공간에 모이고, 내 초대장 관리 화면에서 승인·선정을 할 수 있어요.
+          </p>
+        </>
+      )}
+
+      <h2>21. 평생 가족 페이지 (선택)</h2>
       <LifeEventsEditor
         enabled={data.lifeEvents?.enabled ?? false}
         title={data.lifeEvents?.title ?? '결혼 그 후'}
@@ -970,7 +1027,7 @@ export function BuilderForm({ data, onChange, onPublish }: Props) {
         onChange={(next) => set('lifeEvents', next)}
       />
 
-      <h2 id="step-share">21. 공유 정보 (메타)</h2>
+      <h2 id="step-share">22. 공유 정보 (메타)</h2>
       <div className="field">
         <label>공유 시 제목</label>
         <input value={data.meta.title} onChange={(e) => set('meta', { ...data.meta, title: e.target.value })} />

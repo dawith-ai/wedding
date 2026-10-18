@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
 import type { WeddingData } from '../types';
 import { decodeData } from '../lib/encode';
 import { inviteIdFromEncoded } from '../lib/storage';
@@ -8,6 +8,7 @@ import { setFirebaseConfig } from '../lib/firebase';
 
 export function Invite() {
   const { encoded = '', coupleId } = useParams<{ encoded: string; coupleId?: string }>();
+  const location = useLocation();
   const [data, setData] = useState<WeddingData | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +78,7 @@ export function Invite() {
 
   const inviteId = coupleId || data.coupleId || inviteIdFromEncoded(encoded);
   const shareUrl = window.location.href;
+  const guestName = new URLSearchParams(location.search).get('to')?.trim() || undefined;
 
-  return <InviteView data={data} inviteId={inviteId} shareUrl={shareUrl} />;
+  return <InviteView data={data} inviteId={inviteId} shareUrl={shareUrl} guestName={guestName} />;
 }

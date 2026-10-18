@@ -152,6 +152,13 @@ export const DEFAULT_DATA: WeddingData = {
     intervalSec: 4,
     layout: 'grid',
   },
+  guestPhotoWall: {
+    enabled: false,
+    title: '오늘의 포토제닉',
+    intro: '결혼식에서 찍은 사진을 올려주세요. 두 사람이 가장 좋아하는 장면을 골라볼게요.',
+    requireApproval: true,
+    allowVoting: true,
+  },
   meta: {
     title: '김민수 ♥ 박서연 결혼합니다',
     description: '2026년 10월 10일 토요일, 소중한 분들을 초대합니다.',

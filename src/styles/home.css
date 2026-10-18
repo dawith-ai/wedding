@@ -138,17 +138,30 @@
 .sample-card-photo { position: absolute; inset: 0; background-position: center; background-size: cover; filter: saturate(.72); }
 .sample-card-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(18, 36, 59, .02), rgba(18, 36, 59, .72)); }
 .sample-card-1 .sample-card-art { background-image: radial-gradient(circle at 20% 20%, rgba(243, 162, 79, .18), transparent 24%), linear-gradient(180deg, #fff7d6, #f8edc5); }
-.sample-doodle-scene { position: relative; width: min(86%, 320px); transform: rotate(-1deg); }
+.sample-doodle-scene { position: relative; width: min(92%, 336px); transform: rotate(-1deg); }
 .sample-doodle-scene svg { display: block; width: 100%; height: auto; }
-.sample-doodle-scene path { fill: none; stroke: #2d463c; stroke-linecap: round; stroke-linejoin: round; stroke-width: 4; }
-.sample-doodle-scene .doodle-sun { fill: #f3a24f; stroke: #e45f4b; }
-.sample-doodle-scene .doodle-cloud { fill: #d7e7de; stroke: #71917b; }
-.sample-doodle-scene .doodle-hill { fill: #b8cf9b; stroke: #6f8d67; }
-.sample-doodle-scene .doodle-house { fill: #f8d3a9; stroke: #e45f4b; }
-.sample-doodle-scene .doodle-roof { stroke: #e45f4b; }
+.sample-doodle-scene path { fill: none; stroke: #2d463c; stroke-linecap: round; stroke-linejoin: round; stroke-width: 3.4; }
+.sample-doodle-scene .doodle-sun-rays { stroke: #e45f4b; stroke-width: 2.5; }
+.sample-doodle-scene .doodle-sun { fill: #f3a24f; stroke: #e45f4b; stroke-width: 3.5; }
+.sample-doodle-scene .doodle-cloud { fill: #d7e7de; stroke: #71917b; stroke-width: 3.5; }
+.sample-doodle-scene .doodle-bird { stroke: #71917b; stroke-width: 2.5; }
+.sample-doodle-scene .doodle-hill-back { fill: #d7e2b8; stroke: #8aa16d; stroke-width: 3.5; }
+.sample-doodle-scene .doodle-hill { fill: #b8cf9b; stroke: #6f8d67; stroke-width: 3.5; }
+.sample-doodle-scene .doodle-house { fill: #f8d3a9; stroke: #e45f4b; stroke-width: 3.5; }
+.sample-doodle-scene .doodle-roof { stroke: #e45f4b; stroke-width: 4; }
+.sample-doodle-scene .doodle-window { fill: #c8e0dc; stroke: #2d463c; stroke-width: 2.7; }
+.sample-doodle-scene .doodle-door { fill: #f6b56c; stroke: #2d463c; stroke-width: 3; }
+.sample-doodle-scene .doodle-door-knob { fill: #e45f4b; stroke: none; }
 .sample-doodle-scene .doodle-person { stroke: #2d463c; }
-.sample-doodle-scene .doodle-heart { stroke: #e45f4b; stroke-width: 5; }
-.doodle-caption { position: absolute; left: 10%; bottom: 7%; color: #e45f4b; font: 700 21px/1.08 'Gaegu', 'Noto Sans KR', sans-serif; letter-spacing: -.08em; transform: rotate(-4deg); }
+.sample-doodle-scene .doodle-face { fill: #ffd7aa; stroke: #2d463c; stroke-width: 2.8; }
+.sample-doodle-scene .doodle-hair { stroke-width: 3.2; }
+.sample-doodle-scene .doodle-eye, .sample-doodle-scene .doodle-smile { fill: #2d463c; stroke: none; }
+.sample-doodle-scene .doodle-shirt-one { fill: #e98670; stroke: #2d463c; stroke-width: 2.8; }
+.sample-doodle-scene .doodle-shirt-two { fill: #8fb9ae; stroke: #2d463c; stroke-width: 2.8; }
+.sample-doodle-scene .doodle-arm, .sample-doodle-scene .doodle-leg, .sample-doodle-scene .doodle-shoe { stroke-width: 2.8; }
+.sample-doodle-scene .doodle-heart { stroke: #e45f4b; stroke-width: 4.5; }
+.sample-doodle-scene .doodle-flower { stroke: #8b6c9f; stroke-width: 2.8; }
+.sample-doodle-scene .flower-two { stroke: #71917b; }
 .sample-film-grid { width: 62%; aspect-ratio: 1 / 1.18; display: flex; flex-direction: column; justify-content: space-between; padding: 21px; background: #152335; color: #f5efe4; box-shadow: 9px 12px 0 rgba(18, 36, 59, .16); transform: rotate(-7deg); }
 .sample-film-grid::before { content: ''; width: 100%; height: 57%; background: linear-gradient(135deg, #768b9a, #243b57); mix-blend-mode: screen; }
 .sample-film-grid span { font: 500 29px/.9 'Noto Serif KR', serif; letter-spacing: -.09em; }

@@ -1,4 +1,4 @@
-import type { GuestbookEntry, RsvpEntry } from '../types';
+import type { GuestPhoto, GuestPhotoVote, GuestbookEntry, RsvpEntry } from '../types';
 
 export interface FirebaseConfig {
   apiKey: string;
@@ -46,7 +46,7 @@ export function firestoreDocumentUrl(path: string): string {
   return endpoint(path);
 }
 
-function coupleCollection(coupleId: string, collection: 'guestbook' | 'rsvp' | 'likes'): string {
+function coupleCollection(coupleId: string, collection: 'guestbook' | 'rsvp' | 'likes' | 'guest_photos' | 'photo_votes'): string {
   return `couples/${coupleId}/${collection}`;
 }
 
@@ -130,4 +130,63 @@ export async function fbListRsvp(inviteId: string): Promise<RsvpEntry[]> {
   return docs
     .map((d) => docToObj(d) as unknown as RsvpEntry)
     .sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function fbAddGuestPhoto(inviteId: string, entry: GuestPhoto): Promise<void> {
+  const url = endpoint(`${coupleCollection(inviteId, 'guest_photos')}/${entry.id}`);
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: objToFields(entry as unknown as Record<string, unknown>) }),
+  });
+  if (!res.ok) throw new Error(`사진 저장 실패 (${res.status})`);
+}
+
+export async function fbListGuestPhotos(inviteId: string): Promise<GuestPhoto[]> {
+  const url = endpoint(coupleCollection(inviteId, 'guest_photos'));
+  const res = await fetch(url);
+  if (!res.ok) {
+    if (res.status === 404) return [];
+    throw new Error(`사진 조회 실패 (${res.status})`);
+  }
+  const json = (await res.json()) as { documents?: Array<{ fields?: Record<string, Record<string, unknown>> }> };
+  return (json.documents || [])
+    .map((doc) => docToObj(doc) as unknown as GuestPhoto)
+    .sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function fbUpdateGuestPhoto(inviteId: string, id: string, patch: Partial<GuestPhoto>): Promise<void> {
+  const url = endpoint(`${coupleCollection(inviteId, 'guest_photos')}/${id}`);
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: objToFields(patch as Record<string, unknown>) }),
+  });
+  if (!res.ok) throw new Error(`사진 상태 변경 실패 (${res.status})`);
+}
+
+export async function fbDeleteGuestPhoto(inviteId: string, id: string): Promise<void> {
+  const res = await fetch(endpoint(`${coupleCollection(inviteId, 'guest_photos')}/${id}`), { method: 'DELETE' });
+  if (!res.ok && res.status !== 404) throw new Error(`사진 삭제 실패 (${res.status})`);
+}
+
+export async function fbAddGuestPhotoVote(inviteId: string, entry: GuestPhotoVote): Promise<void> {
+  const url = endpoint(`${coupleCollection(inviteId, 'photo_votes')}/${entry.id}`);
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields: objToFields(entry as unknown as Record<string, unknown>) }),
+  });
+  if (!res.ok) throw new Error(`포토제닉 투표 실패 (${res.status})`);
+}
+
+export async function fbListGuestPhotoVotes(inviteId: string): Promise<GuestPhotoVote[]> {
+  const url = endpoint(coupleCollection(inviteId, 'photo_votes'));
+  const res = await fetch(url);
+  if (!res.ok) {
+    if (res.status === 404) return [];
+    throw new Error(`투표 조회 실패 (${res.status})`);
+  }
+  const json = (await res.json()) as { documents?: Array<{ fields?: Record<string, Record<string, unknown>> }> };
+  return (json.documents || []).map((doc) => docToObj(doc) as unknown as GuestPhotoVote);
 }

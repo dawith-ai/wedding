@@ -20,6 +20,7 @@
   position: relative;
   overflow: hidden;
 }
+.invite-personal-note { position: relative; z-index: 4; padding: 9px 16px; background: color-mix(in srgb, var(--accent) 12%, var(--bg)); color: var(--accent); font-size: 11px; letter-spacing: .04em; text-align: center; }
 @media (min-width: 600px) {
   .invite-frame { box-shadow: 0 0 60px rgba(0, 0, 0, 0.1); }
 }

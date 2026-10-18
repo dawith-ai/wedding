@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
-import { CalendarDays, Check, ChevronDown, Copy, Database, Download, ExternalLink, Heart, MessageCircle, Pencil, Plus, Trash2, Users } from 'lucide-react';
+import { CalendarDays, Check, ChevronDown, Copy, Database, Download, ExternalLink, Heart, MessageCircle, Pencil, Plus, Star, Trash2, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { buildShareUrl } from '../lib/encode';
 import { showToast } from '../lib/toast';
-import { listGuestbook, listPublishedInvitations, listRsvp, removePublishedInvitation } from '../lib/storage';
-import { fbListGuestbook, fbListRsvp, setFirebaseConfig } from '../lib/firebase';
+import { listGuestPhotoVotes, listGuestPhotos, listGuestbook, listPublishedInvitations, listRsvp, removeGuestPhoto, removePublishedInvitation, updateGuestPhoto } from '../lib/storage';
+import { fbDeleteGuestPhoto, fbListGuestPhotoVotes, fbListGuestPhotos, fbListGuestbook, fbListRsvp, fbUpdateGuestPhoto, setFirebaseConfig } from '../lib/firebase';
 import { downloadCsv } from '../lib/csv';
-import type { GuestbookEntry, PublishedInvitation, RsvpEntry } from '../types';
+import type { GuestPhoto, GuestPhotoVote, GuestbookEntry, PublishedInvitation, RsvpEntry } from '../types';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
@@ -31,6 +31,8 @@ function publicUrl(invitation: PublishedInvitation): string {
 interface ResponseData {
   rsvps: RsvpEntry[];
   guestbook: GuestbookEntry[];
+  photos: GuestPhoto[];
+  votes: GuestPhotoVote[];
 }
 
 export function Manage() {
@@ -65,14 +67,69 @@ export function Manage() {
     try {
       const remote = Boolean(invitation.data.firebase?.apiKey && invitation.data.firebase.projectId);
       if (remote) setFirebaseConfig(invitation.data.firebase!);
-      const [rsvps, guestbook] = remote
-        ? await Promise.all([fbListRsvp(invitation.coupleId), fbListGuestbook(invitation.coupleId)])
-        : [listRsvp(invitation.coupleId), listGuestbook(invitation.coupleId)];
-      setResponseData((current) => ({ ...current, [invitation.coupleId]: { rsvps, guestbook } }));
+      const [rsvps, guestbook, photos, votes] = remote
+        ? await Promise.all([
+            fbListRsvp(invitation.coupleId),
+            fbListGuestbook(invitation.coupleId),
+            fbListGuestPhotos(invitation.coupleId),
+            fbListGuestPhotoVotes(invitation.coupleId),
+          ])
+        : [
+            listRsvp(invitation.coupleId),
+            listGuestbook(invitation.coupleId),
+            listGuestPhotos(invitation.coupleId),
+            listGuestPhotoVotes(invitation.coupleId),
+          ];
+      setResponseData((current) => ({ ...current, [invitation.coupleId]: { rsvps, guestbook, photos, votes } }));
     } catch (error) {
       showToast(error instanceof Error ? error.message : '응답을 불러오지 못했어요');
     } finally {
       setLoadingId(null);
+    }
+  }
+
+  async function updatePhoto(invitation: PublishedInvitation, photo: GuestPhoto, patch: Partial<GuestPhoto>) {
+    try {
+      const remote = Boolean(invitation.data.firebase?.apiKey && invitation.data.firebase.projectId);
+      if (remote) {
+        setFirebaseConfig(invitation.data.firebase!);
+        await fbUpdateGuestPhoto(invitation.coupleId, photo.id, patch);
+      } else {
+        updateGuestPhoto(invitation.coupleId, photo.id, patch);
+      }
+      setResponseData((current) => ({
+        ...current,
+        [invitation.coupleId]: {
+          ...current[invitation.coupleId],
+          photos: current[invitation.coupleId].photos.map((item) => item.id === photo.id ? { ...item, ...patch } : item),
+        },
+      }));
+      showToast(patch.featured ? '포토제닉으로 선정했어요' : patch.approved ? '사진을 공개했어요' : '사진 상태를 바꿨어요');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '사진 상태를 바꾸지 못했어요');
+    }
+  }
+
+  async function deletePhoto(invitation: PublishedInvitation, photo: GuestPhoto) {
+    if (!confirm('이 하객 사진을 삭제할까요?')) return;
+    try {
+      const remote = Boolean(invitation.data.firebase?.apiKey && invitation.data.firebase.projectId);
+      if (remote) {
+        setFirebaseConfig(invitation.data.firebase!);
+        await fbDeleteGuestPhoto(invitation.coupleId, photo.id);
+      } else {
+        removeGuestPhoto(invitation.coupleId, photo.id);
+      }
+      setResponseData((current) => ({
+        ...current,
+        [invitation.coupleId]: {
+          ...current[invitation.coupleId],
+          photos: current[invitation.coupleId].photos.filter((item) => item.id !== photo.id),
+        },
+      }));
+      showToast('사진을 삭제했어요');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '사진을 삭제하지 못했어요');
     }
   }
 
@@ -193,19 +250,40 @@ export function Manage() {
                               <span className="manage-card-label">RESPONSE DESK</span>
                               <strong>{attending.length}명 참석 · 총 {people}자리</strong>
                             </div>
-                            <span className="manage-response-count"><MessageCircle size={14} /> 방명록 {records.guestbook.length}</span>
+                            <span className="manage-response-count"><MessageCircle size={14} /> 방명록 {records.guestbook.length} · 사진 {records.photos.length}</span>
                           </div>
                           <div className="manage-response-actions">
                             <Button type="button" variant="outline" size="sm" onClick={() => exportRsvps(invitation, records.rsvps)}><Download size={14} /> RSVP CSV</Button>
                             <Button type="button" variant="outline" size="sm" onClick={() => exportGuestbook(invitation, records.guestbook)}><Download size={14} /> 방명록 CSV</Button>
                           </div>
-                          {records.rsvps.length === 0 && records.guestbook.length === 0 ? (
+                          {records.rsvps.length === 0 && records.guestbook.length === 0 && records.photos.length === 0 ? (
                             <p className="manage-response-empty">아직 도착한 응답이 없어요. Firebase를 연결하면 방문자의 응답이 이곳에 모입니다.</p>
                           ) : (
                             <div className="manage-response-preview">
                               {records.rsvps.slice(0, 5).map((entry) => (
                                 <div key={entry.id}><span>{entry.name}</span><span>{entry.attending === 'yes' ? `참석 ${entry.count}명` : '불참'}</span></div>
                               ))}
+                            </div>
+                          )}
+                          {records.photos.length > 0 && (
+                            <div className="manage-photo-desk">
+                              <div className="manage-photo-desk-head">
+                                <strong><Star size={14} /> 하객 사진 수집함</strong>
+                                <span>{records.photos.filter((photo) => photo.approved).length} 공개 · {records.photos.filter((photo) => !photo.approved).length} 대기</span>
+                              </div>
+                              <div className="manage-photo-grid">
+                                {records.photos.map((photo) => (
+                                  <div className={`manage-photo-item${photo.featured ? ' is-featured' : ''}`} key={photo.id}>
+                                    <img src={photo.image} alt="" />
+                                    <div className="manage-photo-info"><b>{photo.name}</b><span>{photo.caption || '메모 없음'} · ♥ {records.votes.filter((vote) => vote.photoId === photo.id).length}</span></div>
+                                    <div className="manage-photo-actions">
+                                      <Button type="button" variant={photo.approved ? 'soft' : 'outline'} size="sm" onClick={() => void updatePhoto(invitation, photo, { approved: !photo.approved })}>{photo.approved ? '공개됨' : '승인'}</Button>
+                                      <Button type="button" variant={photo.featured ? 'soft' : 'ghost'} size="sm" onClick={() => void updatePhoto(invitation, photo, { featured: !photo.featured })}><Star size={13} fill={photo.featured ? 'currentColor' : 'none'} /></Button>
+                                      <Button type="button" variant="ghost" size="sm" className="manage-action-danger" onClick={() => void deletePhoto(invitation, photo)}>삭제</Button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </>

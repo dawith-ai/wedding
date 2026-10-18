@@ -7,6 +7,7 @@ import { Hero } from './Hero';
 import { Greeting } from './Greeting';
 import { Story } from './Story';
 import { Gallery } from './Gallery';
+import { GuestPhotoWall } from './GuestPhotoWall';
 import { Location } from './Location';
 import { Accounts } from './Accounts';
 import { Guestbook } from './Guestbook';
@@ -34,10 +35,11 @@ interface Props {
   data: WeddingData;
   inviteId: string;
   shareUrl: string;
+  guestName?: string;
   isPreview?: boolean;
 }
 
-export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Props) {
+export function InviteView({ data, inviteId, shareUrl, guestName, isPreview = false }: Props) {
   const theme = THEME_MAP[data.theme] || THEME_MAP['original-warm'];
 
   // PIN gate — gated on first visit until the user enters the code.
@@ -61,6 +63,7 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
     isPreview,
     data.story.enabled,
     data.gallery.length,
+    data.guestPhotoWall?.enabled,
     data.shuttle.enabled,
     data.timeline.enabled && data.timeline.items.length,
     data.rsvp.enabled,
@@ -134,6 +137,11 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
         />
       )}
       <main className="invite-frame">
+        {guestName && (
+          <div className="invite-personal-note" role="note">
+            <span>{guestName}님을 위해 준비한 초대장</span>
+          </div>
+        )}
         {!isPreview && data.useCurtain && pinUnlocked && (
           <Curtain
             groomName={data.groom.name}
@@ -195,6 +203,12 @@ export function InviteView({ data, inviteId, shareUrl, isPreview = false }: Prop
               }
               layout={data.gallery_opts?.layout ?? 'grid'}
             />
+          </div>
+        )}
+
+        {data.guestPhotoWall?.enabled && (
+          <div className="fade-up">
+            <GuestPhotoWall inviteId={inviteId} config={data.guestPhotoWall} isPreview={isPreview} />
           </div>
         )}
 

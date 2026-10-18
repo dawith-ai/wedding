@@ -188,6 +188,15 @@ export interface WeddingData {
     layout?: 'grid' | 'masonry' | 'mosaic';
   };
 
+  /** Guest-submitted wedding-day photos, optionally moderated by the couple. */
+  guestPhotoWall?: {
+    enabled: boolean;
+    title?: string;
+    intro?: string;
+    requireApproval?: boolean;
+    allowVoting?: boolean;
+  };
+
   meta: {
     title: string;
     description: string;
@@ -223,5 +232,22 @@ export interface RsvpEntry {
   meal: 'yes' | 'no' | 'undecided';
   phone?: string;
   message?: string;
+  createdAt: number;
+}
+
+export interface GuestPhoto {
+  id: string;
+  name: string;
+  image: string;
+  caption?: string;
+  createdAt: number;
+  approved: boolean;
+  featured: boolean;
+}
+
+export interface GuestPhotoVote {
+  id: string;
+  photoId: string;
+  voterId: string;
   createdAt: number;
 }

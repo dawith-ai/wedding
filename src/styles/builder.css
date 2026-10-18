@@ -287,6 +287,12 @@
 }
 .url-shorten:hover { background: #18582f; }
 .url-shorten:disabled { opacity: 0.6; cursor: wait; }
+.personal-link-box { margin-top: 18px; padding-top: 15px; border-top: 1px solid #ebe5dc; }
+.personal-link-box > label { display: block; margin-bottom: 7px; color: #625b54; font-size: 11px; font-weight: 700; }
+.personal-link-box > div { display: flex; gap: 6px; }
+.personal-link-box input { min-width: 0; flex: 1; border: 1px solid #ded8cf; border-radius: 9px; padding: 9px 10px; background: #fffdf9; color: #302d29; font: inherit; font-size: 11px; }
+.personal-link-box button { flex: 0 0 auto; border: 0; border-radius: 9px; padding: 9px 10px; background: #25384a; color: #fff; font-size: 10px; cursor: pointer; }
+.personal-link-box small { display: block; margin-top: 7px; color: #918981; font-size: 10px; line-height: 1.5; }
 .modal-card .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 .modal-card .actions button {
   padding: 9px 16px; border-radius: 999px;
