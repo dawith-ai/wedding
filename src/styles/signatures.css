@@ -1314,7 +1314,7 @@
 .doodle-book-art {
   position: relative;
   max-width: 350px;
-  margin: 0 auto 8px;
+  margin: 0 auto 14px;
   transform: rotate(0.9deg);
 }
 .doodle-book-art svg { display: block; width: 100%; height: auto; }
@@ -1325,15 +1325,35 @@
   stroke-linejoin: round;
   stroke-width: 4;
 }
+.doodle-book-art svg { overflow: visible; }
+.doodle-sun-rays { stroke: #f3a24f; stroke-width: 3; }
 .doodle-sun { fill: #f3a24f !important; stroke: #e45f4b; }
 .doodle-cloud { fill: #d7e7de !important; stroke: #71917b; }
+.doodle-bird { stroke: #71917b; stroke-width: 2.5; }
+.doodle-hill-back { fill: #c9d9a6 !important; stroke: #86a06e; stroke-width: 3.5; }
 .doodle-hill { fill: #b8cf9b !important; stroke: #6f8d67; }
 .doodle-house { fill: #f8d3a9 !important; stroke: #e45f4b; }
 .doodle-roof { stroke: #e45f4b; }
+.doodle-roof-detail { stroke: #f39a55; stroke-width: 2.5; }
+.doodle-chimney { fill: #f4c491 !important; stroke: #e45f4b; stroke-width: 3.5; }
+.doodle-window { fill: #b9d8d1 !important; stroke: #2d463c; stroke-width: 3; }
 .doodle-door { stroke: #2d463c; }
-.doodle-person { stroke: #2d463c; }
+.doodle-door-knob { fill: #e45f4b; stroke: none; }
+.doodle-house-detail { stroke: #e89152; stroke-width: 2.5; }
+.doodle-person { stroke: #2d463c; stroke-width: 3.5; }
+.doodle-face { fill: #f8c6a7; stroke: #2d463c; stroke-width: 3; }
+.doodle-hair { fill: none; stroke: #2d463c; stroke-width: 4; }
+.doodle-eye { fill: #2d463c; stroke: none; }
+.doodle-smile { fill: none; stroke: #2d463c; stroke-width: 2; }
+.doodle-shirt { stroke: #2d463c; stroke-width: 3; }
+.doodle-shirt-one { fill: #f3a24f !important; }
+.doodle-shirt-two { fill: #8fb9ae !important; }
+.doodle-arm, .doodle-leg, .doodle-shoe { fill: none; stroke: #2d463c; stroke-width: 3.5; }
 .doodle-heart { stroke: #e45f4b; stroke-width: 5; }
-.doodle-flower { stroke: #8b6c9f; }
+.doodle-flower { stroke: #8b6c9f; stroke-width: 3; }
+.doodle-flower circle { fill: #f3a24f; stroke: #e45f4b; stroke-width: 2; }
+.doodle-flower-two { stroke: #71917b; }
+.doodle-grass { stroke: #6f8d67; stroke-width: 2.5; }
 .doodle-book-note {
   position: relative;
   margin: 3px 0 8px;

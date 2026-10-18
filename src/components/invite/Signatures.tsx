@@ -489,16 +489,53 @@ export function ChildDoodleBook({ data }: { data: WeddingData }) {
         <p className="doodle-book-kicker">우리 둘의 작은 그림책</p>
         <div className="doodle-book-art" aria-hidden>
           <svg viewBox="0 0 360 410" role="presentation">
-            <path className="doodle-sun" d="M62 76c20-19 49-13 55 10 21-2 32 13 22 29-11 16-40 13-57 8-20 8-42-7-35-25 3-9 8-16 15-22Z" />
-            <path className="doodle-cloud" d="M245 91c9-19 38-17 45 4 19-8 37 8 32 25-4 14-21 19-43 15-18 8-42 3-44-17-1-11 3-21 10-27Z" />
-            <path className="doodle-hill" d="M-8 331c62-62 111-70 164-27 40 33 67 32 105 0 41-35 72-22 108 21v112H-8Z" />
-            <path className="doodle-house" d="M124 267 181 218l59 49v94h-116Z" />
-            <path className="doodle-roof" d="m113 270 68-59 70 59" />
-            <path className="doodle-door" d="M170 361v-50h25v50" />
-            <path className="doodle-person person-one" d="M89 327c-5-29 5-48 23-49 18 1 25 20 18 49m-19-49c-2-12 3-22 13-22 11 0 16 10 13 22m-24 7 18 0" />
-            <path className="doodle-person person-two" d="M253 326c-4-28 5-47 22-48 18 1 26 20 19 48m-18-48c-2-12 3-22 13-22 10 0 15 10 12 22m-24 8 18 0" />
-            <path className="doodle-heart" d="M181 172c-13-18-38 1 0 30 38-29 13-48 0-30Z" />
-            <path className="doodle-flower" d="M54 373c3-35 2-55 18-80m-17 31c-20-13-24-30-10-36 17-6 22 18 10 36Zm1-8c22-12 36-5 35 10-1 16-25 18-35-10Z" />
+            <path className="doodle-sun-rays" d="M60 38v-13m-25 23-9-10m51 10 9-10M28 69H14m86 0h14" />
+            <path className="doodle-sun" d="M38 72c8-21 29-29 48-18 8-7 25-4 31 7 18-2 31 10 30 24-1 18-21 25-43 21-18 8-44 4-58-8-12-10-13-17-8-26Z" />
+            <path className="doodle-cloud" d="M239 91c8-20 34-24 48-8 16-7 36 4 38 20 4 20-17 30-39 26-17 8-42 4-49-10-5-10-4-20 2-28Z" />
+            <path className="doodle-bird" d="M160 78q8-8 16 0 8-8 16 0M193 96q6-6 12 0" />
+            <path className="doodle-hill-back" d="M-12 331c44-53 90-65 133-41 42 24 72 28 111 3 50-32 90-15 140 35v100H-12Z" />
+            <path className="doodle-hill" d="M-10 350c55-53 106-55 145-27 30 22 56 20 88-2 43-30 87-22 145 25v82H-10Z" />
+            <path className="doodle-house" d="M108 278 180 214l72 64v91H108Z" />
+            <path className="doodle-roof" d="m97 280 83-76 83 76" />
+            <path className="doodle-roof-detail" d="m111 273 69-62 69 62" />
+            <path className="doodle-chimney" d="M219 237v-42h22v60" />
+            <path className="doodle-window" d="M128 285h34v31h-34Zm6 0v31m-6-15h34" />
+            <path className="doodle-window" d="M199 285h34v31h-34Zm6 0v31m-6-15h34" />
+            <path className="doodle-door" d="M170 369v-59h28v59" />
+            <circle className="doodle-door-knob" cx="191" cy="341" r="2.5" />
+            <path className="doodle-house-detail" d="M153 253q27-16 54 0M157 374h54" />
+            <path className="doodle-heart" d="M180 158c-11-18-37-4-28 13 5 10 18 20 28 29 10-9 23-19 28-29 9-17-17-31-28-13Z" />
+            <g className="doodle-person doodle-person-one">
+              <circle className="doodle-face" cx="67" cy="274" r="16" />
+              <path className="doodle-hair" d="M51 273c-2-22 10-31 23-29 15 2 20 17 15 31m-28-18q8-11 20-7" />
+              <circle className="doodle-eye" cx="62" cy="275" r="2" />
+              <circle className="doodle-eye" cx="73" cy="275" r="2" />
+              <path className="doodle-smile" d="M63 283q5 5 10 0" />
+              <path className="doodle-shirt doodle-shirt-one" d="M50 296q17-10 34 0l9 37q-21 11-48 0Z" />
+              <path className="doodle-arm" d="M53 303q-18 12-19 31m39-32q15 6 21 22" />
+              <path className="doodle-leg" d="M57 333v29m23-30 5 29" />
+              <path className="doodle-shoe" d="M54 362q8 6 15 0m10 0q7 6 14 0" />
+            </g>
+            <g className="doodle-person doodle-person-two">
+              <circle className="doodle-face" cx="293" cy="273" r="16" />
+              <path className="doodle-hair" d="M277 273c-2-21 9-30 23-29 15 1 20 17 15 31m-27-18q9-10 21-7" />
+              <circle className="doodle-eye" cx="288" cy="275" r="2" />
+              <circle className="doodle-eye" cx="299" cy="275" r="2" />
+              <path className="doodle-smile" d="M289 283q5 5 10 0" />
+              <path className="doodle-shirt doodle-shirt-two" d="M277 296q17-10 34 0l10 38q-23 9-51 0Z" />
+              <path className="doodle-arm" d="M280 303q-14 9-20 25m39-25q16 10 19 28" />
+              <path className="doodle-leg" d="M283 334v28m23-28 4 28" />
+              <path className="doodle-shoe" d="M279 362q8 6 15 0m10 0q7 6 14 0" />
+            </g>
+            <g className="doodle-flower doodle-flower-one">
+              <path d="M38 385c2-30 6-48 17-67m-15 38c-18-10-23-25-12-31 14-7 20 14 12 31Zm3-11c16-13 29-7 28 6-2 14-22 17-28-6Z" />
+              <circle cx="55" cy="318" r="5" />
+            </g>
+            <g className="doodle-flower doodle-flower-two">
+              <path d="M318 388c-2-29-4-45-13-65m12 35c17-12 24-25 14-32-14-8-21 13-14 32Zm-2-9c-16-11-28-4-26 9 3 13 22 14 26-9Z" />
+              <circle cx="304" cy="322" r="5" />
+            </g>
+            <path className="doodle-grass" d="M17 388q7-11 14 0m294 0q7-11 14 0M102 388q6-9 12 0m144 0q6-9 12 0" />
           </svg>
         </div>
         <p className="doodle-book-note">우리가 만난 날부터<br />오늘까지, 그리고 오래오래</p>
